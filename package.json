@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p shared && tsc -p tools"
+    "typecheck": "tsc -p shared && tsc -p tools",
+    "content:check": "tsx tools/src/cli/check.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
