@@ -71,6 +71,8 @@ export function sampleHerb(id: string, name: string, family = 'plantaginaceae') 
     latin: 'Testus herbus L.',
     family,
     status: 'draft',
+    life_form: 'herb',
+    sourcing: ['wild', 'pharmacy'],
     photos: [{ file: 'plant.webp', kind: 'plant' }],
     description: 'Описание внешнего вида',
     habitats: ['meadow'],

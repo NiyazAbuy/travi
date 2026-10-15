@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   EVIDENCE_LEVELS,
   HERB_STATUSES,
+  LIFE_FORMS,
   PHOTO_KINDS,
   SAFETY_STATUSES,
   SOURCE_TYPES,
+  SOURCING_OPTIONS,
   TOXICITY_LEVELS,
   USAGE_FORMS,
 } from '../src/enums';
@@ -16,6 +18,7 @@ import { SCHEMA_VERSION } from '../src/schema';
  * перечисления (например, форма применения "syrup") оно отвергнет целиком и молча останется на старой базе.
  * Поэтому изменение любого перечисления — несовместимое изменение: увеличьте SCHEMA_VERSION
  * (приложение покажет «обновите приложение») и только потом обновите снимок ниже.
+ * LIFE_FORMS и SOURCING_OPTIONS добавлены до первой установки приложения, поэтому версия осталась 1.
  */
 const PINNED = {
   schemaVersion: 1,
@@ -27,6 +30,8 @@ const PINNED = {
     TOXICITY_LEVELS: ['none', 'low', 'moderate', 'high'],
     USAGE_FORMS: ['infusion', 'decoction', 'tincture', 'rinse', 'bath', 'compress', 'tea', 'other'],
     PHOTO_KINDS: ['plant', 'closeup', 'raw'],
+    LIFE_FORMS: ['herb', 'subshrub', 'shrub', 'tree', 'vine'],
+    SOURCING_OPTIONS: ['wild', 'garden', 'pharmacy'],
   },
 };
 
@@ -42,6 +47,8 @@ describe('совместимость базы', () => {
         TOXICITY_LEVELS,
         USAGE_FORMS,
         PHOTO_KINDS,
+        LIFE_FORMS,
+        SOURCING_OPTIONS,
       },
     }).toEqual(PINNED);
   });

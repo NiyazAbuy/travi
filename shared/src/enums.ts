@@ -26,3 +26,9 @@ export type UsageForm = (typeof USAGE_FORMS)[number];
 
 export const PHOTO_KINDS = ['plant', 'closeup', 'raw'] as const;
 export type PhotoKind = (typeof PHOTO_KINDS)[number];
+
+export const LIFE_FORMS = ['herb', 'subshrub', 'shrub', 'tree', 'vine'] as const;
+export type LifeForm = (typeof LIFE_FORMS)[number];
+
+export const SOURCING_OPTIONS = ['wild', 'garden', 'pharmacy'] as const;
+export type Sourcing = (typeof SOURCING_OPTIONS)[number];

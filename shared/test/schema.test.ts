@@ -168,3 +168,30 @@ describe('числа в YAML без кавычек', () => {
     expect(messages(inputSchemas.source, { ...base, isbn: 9785170000000 }).join('\n')).toMatch(/в кавычки/);
   });
 });
+
+describe('жизненная форма и где взять', () => {
+  it('трава с life_form и sourcing принимается', () => {
+    const parsed = inputSchemas.herbInput.parse(sampleHerb('x', 'X'));
+    expect(parsed.life_form).toBe('herb');
+    expect(parsed.sourcing).toEqual(['wild', 'pharmacy']);
+  });
+  it('life_form обязательна', () => {
+    const { life_form: _lifeForm, ...herb } = sampleHerb('x', 'X');
+    expect(messages(inputSchemas.herbInput, herb).join('\n')).toMatch(/^life_form:/m);
+  });
+  it('неизвестная жизненная форма — ошибка', () => {
+    expect(messages(inputSchemas.herbInput, { ...sampleHerb('x', 'X'), life_form: 'bush' }).join('\n')).toMatch(
+      /^life_form:/m,
+    );
+  });
+  it('sourcing: нужен хотя бы один вариант', () => {
+    expect(messages(inputSchemas.herbInput, { ...sampleHerb('x', 'X'), sourcing: [] })).toContain(
+      'sourcing: укажите, где взять: wild, garden или pharmacy',
+    );
+  });
+  it('sourcing: неизвестное значение — ошибка', () => {
+    expect(messages(inputSchemas.herbInput, { ...sampleHerb('x', 'X'), sourcing: ['market'] }).join('\n')).toMatch(
+      /^sourcing\.0:/m,
+    );
+  });
+});

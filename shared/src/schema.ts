@@ -2,9 +2,11 @@ import { z } from 'zod';
 import {
   EVIDENCE_LEVELS,
   HERB_STATUSES,
+  LIFE_FORMS,
   PHOTO_KINDS,
   SAFETY_STATUSES,
   SOURCE_TYPES,
+  SOURCING_OPTIONS,
   TOXICITY_LEVELS,
   USAGE_FORMS,
 } from './enums';
@@ -168,6 +170,8 @@ function makeSchemas(o: ObjectMaker) {
     latin: text,
     family: idSchema,
     status: z.enum(HERB_STATUSES),
+    life_form: z.enum(LIFE_FORMS),
+    sourcing: z.array(z.enum(SOURCING_OPTIONS)).min(1, 'укажите, где взять: wild, garden или pharmacy'),
     description: text,
     habitats: z.array(idSchema),
     harvest: z.array(harvest).min(1, 'нужна хотя бы одна запись о сборе'),
