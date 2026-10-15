@@ -1340,7 +1340,7 @@ type ReadResult = { ok: true; value: unknown } | { ok: false };
 async function readYaml(contentDir: string, rel: string, errors: ContentError[]): Promise<ReadResult> {
   try {
     // BOM от Блокнота Windows: yaml спотыкается о него перед списком ("- id: …")
-    const text = (await readFile(path.join(contentDir, rel), 'utf8')).replace(/^﻿/, '');
+    const text = (await readFile(path.join(contentDir, rel), 'utf8')).replace(/^\uFEFF/, '');
     return { ok: true, value: parse(text) ?? null };
   } catch (e) {
     const message =
