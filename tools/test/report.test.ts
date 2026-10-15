@@ -90,6 +90,17 @@ describe('renderReport', () => {
     expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
     expect(html).not.toContain('<script>');
   });
+
+  it('предостережения отдельно от противопоказаний', () => {
+    const tree = sampleTree();
+    Object.assign(tree.herbs[0]!.safety, {
+      contraindications: ['Аллергия на астровые'],
+      warnings: ['При желчнокаменной болезни — с осторожностью'],
+    });
+    const html = render(tree);
+    expect(html).toContain('<li>Противопоказание: Аллергия на астровые</li>');
+    expect(html).toContain('<li>Предостережение: При желчнокаменной болезни — с осторожностью</li>');
+  });
 });
 
 describe('escapeHtml', () => {

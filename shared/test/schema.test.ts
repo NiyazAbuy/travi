@@ -195,3 +195,20 @@ describe('жизненная форма и где взять', () => {
     );
   });
 });
+
+describe('предостережения', () => {
+  it('safety.warnings необязательно и по умолчанию пустое', () => {
+    expect(inputSchemas.herbInput.parse(sampleHerb('x', 'X')).safety.warnings).toEqual([]);
+  });
+  it('safety.warnings принимает список строк', () => {
+    const herb = sampleHerb('x', 'X');
+    const parsed = inputSchemas.herbInput.parse({ ...herb, safety: { ...herb.safety, warnings: ['Избегать УФ-облучения'] } });
+    expect(parsed.safety.warnings).toEqual(['Избегать УФ-облучения']);
+  });
+  it('пустая строка в safety.warnings — ошибка', () => {
+    const herb = sampleHerb('x', 'X');
+    expect(messages(inputSchemas.herbInput, { ...herb, safety: { ...herb.safety, warnings: [' '] } })).toContain(
+      'safety.warnings.0: не должно быть пустым',
+    );
+  });
+});

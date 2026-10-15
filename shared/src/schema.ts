@@ -148,6 +148,7 @@ function makeSchemas(o: ObjectMaker) {
     children: o({ status: safetyStatus, from_age: z.number().int().min(0).max(18).optional() }),
     toxicity: z.enum(TOXICITY_LEVELS),
     contraindications: z.array(text).default([]),
+    warnings: z.array(text).default([]),
     side_effects: z.array(text).default([]),
     interactions: z.array(text).default([]),
     sources: sourceRefs,

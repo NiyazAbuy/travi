@@ -158,6 +158,7 @@ export function renderReport(content: LoadedContent, opts: ReportOptions): strin
       safety('Дети', children.status, childrenText),
       `<li>Токсичность: ${TOXICITY_LABELS[h.safety.toxicity]}</li>`,
       ...h.safety.contraindications.map((x) => `<li>Противопоказание: ${e(x)}</li>`),
+      ...h.safety.warnings.map((x) => `<li>Предостережение: ${e(x)}</li>`),
       ...h.safety.side_effects.map((x) => `<li>Побочное действие: ${e(x)}</li>`),
       ...h.safety.interactions.map((x) => `<li>Взаимодействие: ${e(x)}</li>`),
     ];

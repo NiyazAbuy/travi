@@ -154,7 +154,7 @@ content/*.yaml ──► tools/build ──► dist/
 - `pregnancy`, `lactation` — `ok` | `caution` | `contraindicated` | `unknown`
 - `children` — `{ status: ok | caution | contraindicated | unknown, from_age?: int }`
 - `toxicity` — `none` | `low` | `moderate` | `high`
-- `contraindications`, `side_effects`, `interactions` — string[]
+- `contraindications` (EMA 4.3 и прямые «избегать»), `warnings` (предостережения EMA 4.4, необязательно), `side_effects`, `interactions` — string[]
 - `sources` — ≥1
 
 **Lookalike:** `herb` (ref → herbs, если двойник есть в базе) либо `name` + `latin`; `poisonous` (bool); `differences` (string, обяз.); `photo` (Photo, необяз.).
