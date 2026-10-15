@@ -1,0 +1,21 @@
+{
+  "name": "travy",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "shared"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p shared"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
