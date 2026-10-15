@@ -242,15 +242,6 @@
   url: "https://cyberleninka.ru/article/n/harakteristika-mentolnyh-form-myaty-i-ih-vozdelyvanie-na-voznesenskoy-opytnoy-stantsii-vniimk"
   note: "Вып. 2 (141), 2009. Мята перечная — естественный межвидовой гибрид мяты водной и колосистой, размножается вегетативно; период цветения мяты в условиях Западного Предкавказья — июль–август."
 
-- id: abipov-2021-chamomile
-  type: article
-  title: "Биологические особенности и лекарственные значения ромашки аптечной (Matricaria recutita)"
-  authors: ["Абипов Р. К.", "Бекбанов А. Ж."]
-  year: 2021
-  journal: "Мировая наука"
-  url: "https://cyberleninka.ru/article/n/biologicheskie-osobennosti-i-lekarstvennye-znacheniya-romashki-aptechnoy-matricaria-recutita"
-  note: "Каракалпакский государственный университет. Слабый источник: использован только для периода цветения («с конца мая по сентябрь»); при появлении флоры или справочника с месяцами цветения заменить."
-
 - id: plantarium-matricaria-recutita
   type: reference_book
   title: "Ромашка аптечная — Matricaria recutita L. — Описание таксона"
@@ -258,3 +249,11 @@
   year: 2026
   url: "https://www.plantarium.ru/page/view/item/23776.html"
   note: "Определитель-галерея растений. Использован раздел «Ключевые признаки → Местообитание» (обочина дороги, пашня или огород, пустырь, залежь и др.). Страница обновляется постоянно, открыта 16.10.2026."
+
+- id: bayreuth-artenkenntnis-matricaria-chamomilla
+  type: reference_book
+  title: "Matricaria chamomilla, Echte Kamille (Qualifizierung Feldbotanik – Bronze)"
+  authors: ["Ökologisch-Botanischer Garten der Universität Bayreuth (Zertifizierung Artenkenntnis, BayCEER)"]
+  year: 2022
+  url: "https://www.bayceer.uni-bayreuth.de/zertifizierung_artenkenntnis/de/allgemein/5001/0/7654/Matricaria_chamomilla.pdf"
+  note: "Видовой лист курса полевой ботаники, данные для Средней Европы (Германия). Даты на самом листе нет: 2022 — дата файла (HTTP Last-Modified и CreationDate 16.03.2022). Использованные фразы: «Die Blütezeit reicht von Mai bis August» (период цветения); «Der Blütenboden ist kegelförmig, hohl (!) und ohne Spreublätter»; «Die ähnlichen Arten Tripleurospermum perforatum und Anthemis arvensis besitzen beide zum Unterschied zu M. chamomilla einen markigen Blütenboden» (у двойников цветоложе плотное, мозговидное)."
