@@ -1,0 +1,48 @@
+import { describe, expect, it } from 'vitest';
+import {
+  EVIDENCE_LEVELS,
+  HERB_STATUSES,
+  PHOTO_KINDS,
+  SAFETY_STATUSES,
+  SOURCE_TYPES,
+  TOXICITY_LEVELS,
+  USAGE_FORMS,
+} from '../src/enums';
+import { SCHEMA_VERSION } from '../src/schema';
+
+/**
+ * Охранный тест совместимости базы.
+ * Установленное приложение проверяет скачанный content.json схемой СВОЕЙ версии: новое значение
+ * перечисления (например, форма применения "syrup") оно отвергнет целиком и молча останется на старой базе.
+ * Поэтому изменение любого перечисления — несовместимое изменение: увеличьте SCHEMA_VERSION
+ * (приложение покажет «обновите приложение») и только потом обновите снимок ниже.
+ */
+const PINNED = {
+  schemaVersion: 1,
+  enums: {
+    EVIDENCE_LEVELS: ['proven', 'traditional', 'folk', 'refuted'],
+    SOURCE_TYPES: ['pharmacopoeia', 'monograph', 'systematic_review', 'rct', 'article', 'book', 'reference_book'],
+    HERB_STATUSES: ['draft', 'checked'],
+    SAFETY_STATUSES: ['ok', 'caution', 'contraindicated', 'unknown'],
+    TOXICITY_LEVELS: ['none', 'low', 'moderate', 'high'],
+    USAGE_FORMS: ['infusion', 'decoction', 'tincture', 'rinse', 'bath', 'compress', 'tea', 'other'],
+    PHOTO_KINDS: ['plant', 'closeup', 'raw'],
+  },
+};
+
+describe('совместимость базы', () => {
+  it('перечисления меняются только вместе с SCHEMA_VERSION', () => {
+    expect({
+      schemaVersion: SCHEMA_VERSION,
+      enums: {
+        EVIDENCE_LEVELS,
+        SOURCE_TYPES,
+        HERB_STATUSES,
+        SAFETY_STATUSES,
+        TOXICITY_LEVELS,
+        USAGE_FORMS,
+        PHOTO_KINDS,
+      },
+    }).toEqual(PINNED);
+  });
+});

@@ -110,6 +110,16 @@ describe('verifySource', () => {
     expect(result).toMatchObject({ status: 'error', detail: 'ECONNRESET' });
   });
 
+  it('зависший сервер не вешает проверку: запрос прерывается по таймауту', async () => {
+    const hanging = ((_input: string | URL | Request, init?: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () => reject(init.signal!.reason));
+      })) as typeof fetch;
+    const [result] = await verifySource(source({ doi: '10.1/x' }), hanging, 50);
+    expect(result).toMatchObject({ status: 'error' });
+    expect(result!.detail).toMatch(/нет ответа/);
+  }, 3000);
+
   it('источник только с ISBN не проверяется', async () => {
     expect(await verifySource(source({ isbn: '978-5-00-000000-0' }), fakeFetch({}))).toEqual([]);
   });

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { stringify } from 'yaml';
 import { loadContent } from '../src/load';
-import { sampleHerb } from '../../shared/test/sample';
+import { sampleHerb, sampleRecipe } from '../../shared/test/sample';
 import { cleanupTempDirs, sampleTree, writeContentTree } from './helpers';
 
 afterEach(cleanupTempDirs);
@@ -97,5 +97,33 @@ describe('loadContent', () => {
     await writeFile(path.join(dir, 'sources.yaml'), 'id: book-test\n');
     const { errors } = await loadContent(dir);
     expect(errors[0]!.message).toMatch(/ожидался список/);
+  });
+
+  it('файлы с другим расширением не пропадают молча', async () => {
+    const dir = await writeContentTree(sampleTree());
+    const herb = stringify(sampleHerb('matricaria-chamomilla', 'Ромашка'));
+    await writeFile(path.join(dir, 'herbs', 'matricaria-chamomilla.yml'), herb);
+    await writeFile(path.join(dir, 'herbs', 'ромашка.YAML'), herb);
+    await writeFile(path.join(dir, 'herbs', 'calendula.yaml.txt'), herb);
+    await writeFile(path.join(dir, 'recipes', 'blend.yml'), stringify(sampleRecipe()));
+    await writeFile(path.join(dir, 'herbs', '.gitkeep'), '');
+    const { errors } = await loadContent(dir);
+    expect(errors.map((e) => e.file).sort()).toEqual([
+      'herbs/calendula.yaml.txt',
+      'herbs/matricaria-chamomilla.yml',
+      'herbs/ромашка.YAML',
+      'recipes/blend.yml',
+    ]);
+    expect(errors[0]!.message).toMatch(/ожидается расширение \.yaml/);
+  });
+
+  it('встроенные сообщения zod тоже на русском', async () => {
+    const dir = await writeContentTree(sampleTree());
+    const herb = { ...sampleHerb('plantago-major', 'Подорожник большой'), nmae: 'опечатка', status: 'готово' };
+    await writeFile(path.join(dir, 'herbs', 'plantago-major.yaml'), stringify(herb));
+    const { errors } = await loadContent(dir);
+    const text = errors.map((e) => e.message).join('\n');
+    expect(text).toMatch(/Нераспознанный ключ: "nmae"/);
+    expect(text).toMatch(/Неверный вариант/);
   });
 });

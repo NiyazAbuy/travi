@@ -155,3 +155,16 @@ describe('manifest', () => {
     expect(messages(manifestSchema, { ...manifest, content: { ...manifest.content, sha256: 'xyz' } })).not.toEqual([]);
   });
 });
+
+describe('числа в YAML без кавычек', () => {
+  const base = { id: 'x-2009', type: 'rct', title: 'T', authors: ['A'], year: 2009 };
+  it('pmid без кавычек принимается и становится строкой', () => {
+    expect(inputSchemas.source.parse({ ...base, pmid: 19593179 }).pmid).toBe('19593179');
+  });
+  it('номер страницы без кавычек принимается и становится строкой', () => {
+    expect(inputSchemas.sourceRef.parse({ id: 'book-test', page: 45 }).page).toBe('45');
+  });
+  it('ISBN без кавычек — подсказка взять его в кавычки', () => {
+    expect(messages(inputSchemas.source, { ...base, isbn: 9785170000000 }).join('\n')).toMatch(/в кавычки/);
+  });
+});

@@ -24,6 +24,7 @@ jobs:
       - name: Проверка DOI/PMID (только предупреждение)
         run: npm run sources:verify
         continue-on-error: true
+        timeout-minutes: 10
       - uses: actions/upload-pages-artifact@v4
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:

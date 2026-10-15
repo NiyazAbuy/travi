@@ -9,7 +9,12 @@ import {
   USAGE_FORMS,
 } from './enums';
 
-/** Версия формата базы. Увеличивать только при несовместимом изменении схемы (спецификация §5.7). */
+/**
+ * Версия формата базы. Увеличивать при несовместимом изменении схемы (спецификация §5.7).
+ * Совместимо: новое необязательное поле. Несовместимо: новое значение перечисления, новое обязательное поле,
+ * смена типа, ослабление или ужесточение правил (min, regex, refine) — старое приложение отвергнет такую базу.
+ * Перечисления закреплены охранным тестом shared/test/compat.test.ts.
+ */
 export const SCHEMA_VERSION = 1;
 
 export const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -26,6 +31,18 @@ const idSchema = z
   .string()
   .regex(ID_PATTERN, 'id: только латиница в нижнем регистре, цифры и одиночные дефисы (пример: matricaria-chamomilla)');
 const text = z.string().trim().min(1, 'не должно быть пустым');
+// В YAML `pmid: 19593179` и `page: 45` без кавычек — числа; принимаем их как строку.
+const textOrNumber = z.union([text, z.number().int().nonnegative().transform(String)]);
+// ISBN числом приводить нельзя: YAML отбросит ведущий ноль у ISBN-10.
+const isbnSchema = z
+  .string({
+    error: (issue) =>
+      typeof issue.input === 'number'
+        ? 'ISBN без кавычек читается как число и может потерять ведущий ноль — возьмите его в кавычки: isbn: "978-5-…"'
+        : undefined,
+  })
+  .trim()
+  .min(1, 'не должно быть пустым');
 const licenseSchema = z.string().regex(LICENSE_PATTERN, 'лицензия должна быть CC0, PD, CC BY x.y или CC BY-SA x.y');
 const photoFileSchema = z
   .string()
@@ -44,7 +61,7 @@ function isValidLookalike(l: LookalikeIdentity): boolean {
 const LOOKALIKE_RULE = { message: 'укажите либо herb (id травы из базы), либо name и latin', path: ['herb'] };
 
 function makeSchemas(o: ObjectMaker) {
-  const sourceRef = o({ id: idSchema, page: text.optional() });
+  const sourceRef = o({ id: idSchema, page: textOrNumber.optional() });
   const sourceRefs = z.array(sourceRef).min(1, 'нужен хотя бы один источник');
   const evidence = o({ level: z.enum(EVIDENCE_LEVELS), note: text });
   const synonyms = z.array(text).default([]);
@@ -57,9 +74,9 @@ function makeSchemas(o: ObjectMaker) {
     year: z.number().int().min(1500).max(2100),
     publisher: text.optional(),
     journal: text.optional(),
-    isbn: text.optional(),
+    isbn: isbnSchema.optional(),
     doi: text.optional(),
-    pmid: text.optional(),
+    pmid: textOrNumber.optional(),
     url: z.url().optional(),
     note: text.optional(),
   }).refine((s) => Boolean(s.isbn || s.doi || s.pmid || s.url), {

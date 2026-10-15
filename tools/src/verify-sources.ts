@@ -64,28 +64,40 @@ async function check(
   url: string,
   parseTitle: (json: unknown) => string | null,
   fetchFn: typeof fetch,
+  timeoutMs: number,
 ): Promise<VerifyResult> {
   const base = { sourceId: source.id, kind, value };
   try {
-    const response = await fetchFn(url, { headers: { 'User-Agent': USER_AGENT } });
+    const response = await fetchFn(url, {
+      headers: { 'User-Agent': USER_AGENT },
+      signal: AbortSignal.timeout(timeoutMs),
+    });
     if (response.status === 404) return { ...base, status: 'not_found' };
     if (!response.ok) return { ...base, status: 'error', detail: `HTTP ${response.status}` };
     const found = parseTitle(await response.json());
     if (found === null) return { ...base, status: 'not_found' };
     return { ...base, status: titlesMatch(source.title, found) ? 'ok' : 'mismatch', found };
   } catch (e) {
-    return { ...base, status: 'error', detail: (e as Error).message };
+    const detail =
+      (e as Error).name === 'TimeoutError' ? `нет ответа за ${timeoutMs / 1000} с` : (e as Error).message;
+    return { ...base, status: 'error', detail };
   }
 }
 
-export async function verifySource(source: Source, fetchFn: typeof fetch = fetch): Promise<VerifyResult[]> {
+/** Таймаут одного запроса: зависший Crossref/PubMed не должен задерживать публикацию (спецификация §8.3). */
+export const REQUEST_TIMEOUT_MS = 20_000;
+
+export async function verifySource(
+  source: Source,
+  fetchFn: typeof fetch = fetch,
+  timeoutMs = REQUEST_TIMEOUT_MS,
+): Promise<VerifyResult[]> {
   const results: VerifyResult[] = [];
   if (source.doi) {
     const doi = normalizeDoi(source.doi);
     const encoded = doi.split('/').map(encodeURIComponent).join('/');
-    results.push(
-      await check(source, 'doi', doi, `https://api.crossref.org/works/${encoded}`, parseCrossrefTitle, fetchFn),
-    );
+    const url = `https://api.crossref.org/works/${encoded}`;
+    results.push(await check(source, 'doi', doi, url, parseCrossrefTitle, fetchFn, timeoutMs));
   }
   if (source.pmid) {
     const pmid = normalizePmid(source.pmid);
@@ -99,7 +111,9 @@ export async function verifySource(source: Source, fetchFn: typeof fetch = fetch
       });
     } else {
       const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=${pmid}`;
-      results.push(await check(source, 'pmid', pmid, url, (json) => parsePubmedTitle(json, pmid), fetchFn));
+      results.push(
+        await check(source, 'pmid', pmid, url, (json) => parsePubmedTitle(json, pmid), fetchFn, timeoutMs),
+      );
     }
   }
   return results;
@@ -110,10 +124,11 @@ export async function verifySources(
   sources: Source[],
   fetchFn: typeof fetch = fetch,
   delayMs = 400,
+  timeoutMs = REQUEST_TIMEOUT_MS,
 ): Promise<VerifyResult[]> {
   const all: VerifyResult[] = [];
   for (const source of sources) {
-    const results = await verifySource(source, fetchFn);
+    const results = await verifySource(source, fetchFn, timeoutMs);
     all.push(...results);
     if (results.length > 0 && delayMs > 0) await new Promise((resolve) => setTimeout(resolve, delayMs));
   }

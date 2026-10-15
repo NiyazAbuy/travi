@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parse, YAMLError } from 'yaml';
-import type { z } from 'zod';
+import { z } from 'zod';
 import {
   DICTIONARY_FILES,
   inputSchemas,
@@ -14,6 +14,9 @@ import {
   type Source,
 } from '@travy/shared';
 import type { ContentError } from './errors';
+
+// Встроенные сообщения zod (опечатка в ключе, неверный вариант, нет поля) — на русском, как и наши.
+z.config(z.locales.ru());
 
 export interface LoadedContent {
   herbs: HerbInput[];
@@ -86,9 +89,20 @@ async function loadList<T>(
   return items;
 }
 
-async function listYamlFiles(dir: string): Promise<string[]> {
-  if (!existsSync(dir)) return [];
-  return (await readdir(dir)).filter((name) => name.endsWith('.yaml')).sort();
+/** Файлы .yaml папки; остальные (кроме скрытых, вроде .gitkeep) — ошибка, чтобы трава не пропала молча. */
+async function listYamlFiles(contentDir: string, dir: string, errors: ContentError[]): Promise<string[]> {
+  const fullDir = path.join(contentDir, dir);
+  if (!existsSync(fullDir)) return [];
+  const names = (await readdir(fullDir)).sort();
+  for (const name of names) {
+    if (!name.startsWith('.') && !name.endsWith('.yaml')) {
+      errors.push({
+        file: `${dir}/${name}`,
+        message: 'файл пропущен: ожидается расширение .yaml (например, matricaria-chamomilla.yaml)',
+      });
+    }
+  }
+  return names.filter((name) => name.endsWith('.yaml'));
 }
 
 async function loadEntities<T extends { id: string }>(
@@ -98,7 +112,7 @@ async function loadEntities<T extends { id: string }>(
   errors: ContentError[],
 ): Promise<T[]> {
   const result: T[] = [];
-  for (const name of await listYamlFiles(path.join(contentDir, dir))) {
+  for (const name of await listYamlFiles(contentDir, dir, errors)) {
     const rel = `${dir}/${name}`;
     const raw = await readYaml(contentDir, rel, errors);
     if (!raw.ok) continue;
