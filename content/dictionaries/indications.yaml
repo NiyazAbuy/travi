@@ -1,2 +1,25 @@
 # Словарь. Формат — README.md, раздел «Словари».
-[]
+- id: gi-minor-complaints
+  name: Вздутие и лёгкие спазмы в кишечнике
+  organ_system: digestive
+  synonyms: ["вздутие живота", "спазмы кишечника"]
+- id: dyspepsia-flatulence
+  name: Расстройство пищеварения и метеоризм
+  organ_system: digestive
+  synonyms: ["диспепсия", "газы в кишечнике"]
+- id: common-cold
+  name: Симптомы простуды
+  organ_system: immune
+  synonyms: ["простуда", "ОРВИ"]
+- id: mouth-throat-inflammation
+  name: Воспаление и мелкие язвочки во рту и горле
+  organ_system: oral
+  synonyms: ["воспаление слизистой рта", "воспаление горла"]
+- id: anogenital-irritation
+  name: Раздражение кожи и слизистых в анальной и половой области
+  organ_system: skin
+  synonyms: []
+- id: skin-minor-inflammation
+  name: Лёгкое воспаление кожи и поверхностные раны
+  organ_system: skin
+  synonyms: ["солнечный ожог", "небольшие фурункулы"]

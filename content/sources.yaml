@@ -149,3 +149,112 @@
   year: 2024
   url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-15/2/2-3/lipy-tsvetki/"
   note: "Раздел 2.5. Утверждена приказом Минздрава России от 13.03.2024 № 120, в действие с 13.03.2024; взамен ФС.2.5.0024.15. Статья охватывает липу сердцевидную и липу широколистную."
+
+# --- Общие фармакопейные статьи и руководства (сушка, хранение, заготовка) ---
+
+- id: gf15-khranenie-lrs
+  type: pharmacopoeia
+  title: "ОФС.1.1.0011 Хранение лекарственного растительного сырья и лекарственных растительных препаратов. Государственная фармакопея Российской Федерации, XV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2023
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-15/1/1-1/khranenie-lekarstvennogo-rastitelnogo-syrya-i-lekarstvennykh-rastitelnykh-preparatov/"
+  note: "Раздел 1.1. Утверждена приказом Минздрава России от 20.07.2023 № 377, в действие с 01.09.2023; взамен ОФС.1.1.0011.15. На неё ссылаются фармакопейные статьи на цветки ромашки и листья мяты в разделе «Хранение». Общей ОФС о сушке сырья с режимами в ГФ нет — для сушки см. ema-gacp-2025."
+
+- id: ema-gacp-2025
+  type: reference_book
+  title: "Guideline on Good Agricultural and Collection Practice (GACP) for starting materials of herbal origin"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2025
+  url: "https://www.ema.europa.eu/en/documents/scientific-guideline/guideline-good-agricultural-collection-practice-gacp-starting-materials-herbal-origin-revision-1_en.pdf"
+  note: "EMA/HMPC/246816/2005 Rev. 1, Final, 9 July 2025. Раздел 12 «Primary processing» — общие требования к сушке лекарственных растений без конкретных температур."
+
+# --- Оценочные отчёты EMA (основа монографий) ---
+
+- id: ema-ar-matricariae-flos
+  type: monograph
+  title: "Assessment report on Matricaria recutita L., flos and Matricaria recutita L., aetheroleum"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2015
+  url: "https://www.ema.europa.eu/en/documents/herbal-report/final-assessment-report-matricaria-recutita-l-flos-and-matricaria-recutita-l-aetheroleum-first-version_en.pdf"
+  note: "EMA/HMPC/55837/2011, Final, 7 July 2015. Оценочный отчёт к монографии ema-matricariae-flos; раздел 1.1 — состав сырья."
+
+- id: ema-ar-menthae-piperitae
+  type: monograph
+  title: "Assessment report on Mentha x piperita L., folium and aetheroleum"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2020
+  url: "https://www.ema.europa.eu/en/documents/herbal-report/assessment-report-mentha-x-piperita-l-folium-and-aetheroleum-revision-1_en.pdf"
+  note: "EMA/HMPC/522409/2013, Final – Revision 1, 15 January 2020. Отчёт общий для листа и масла; в карточке использованы только части о листе (раздел 1.1 — состав, раздел 6 — выводы по листу)."
+
+# --- Справочники и статьи ---
+
+- id: bre-romashka
+  type: reference_book
+  title: "Ромашка"
+  authors: ["Чернева О. В."]
+  publisher: "Большая российская энциклопедия"
+  year: 2015
+  url: "https://bigenc.ru/c/romashka-4457e9"
+  note: "Статья БРЭ, первая публикация 2015, на портале с 25.07.2022. Открыта через архивную копию страницы (web.archive.org, 13.12.2024): основной адрес сейчас перенаправляет на зеркало."
+
+- id: bre-myata
+  type: reference_book
+  title: "Мята"
+  authors: ["Харченко В. А."]
+  publisher: "Большая российская энциклопедия"
+  year: 2012
+  url: "https://bigenc.ru/c/miata-bd397a"
+  note: "Статья БРЭ про род Mentha, первая публикация 2012, актуализация 2016. Открыта через архивную копию страницы (web.archive.org, 13.12.2024)."
+
+- id: nsc-catalog-asian-russia
+  type: reference_book
+  title: "Электронный каталог сосудистых растений Азиатской России"
+  authors: ["Центральный сибирский ботанический сад СО РАН"]
+  year: 2010
+  url: "http://www.nsc.ru/win/elbib/atlas/flora/"
+  note: "Флорный каталог по «Флоре Сибири» (т. 13). Страницы видов: .../flora/582.html — Chamomilla recutita (ромашка аптечная), .../flora/580.html — Matricaria perforata = Tripleurospermum inodorum (ромашка непахучая), .../flora/534.html — Leucanthemum vulgare (нивяник обыкновенный). Страницы видов обновлялись в 2000–2004 гг."
+
+- id: prokusheva-2024-chamomile
+  type: article
+  title: "Assessment of the Possibility of Using the Trace Element Status of a Herbal Drug as an Additional Quality Criterion: Chamomile Flowers as a Case Study"
+  authors: ["Прокушева Д. Л.", "Круглов Д. С.", "Величко В. В."]
+  year: 2024
+  journal: "Регуляторные исследования и экспертиза лекарственных средств (Regulatory Research and Medicine Evaluation)"
+  doi: "10.30895/1991-2919-2024-639"
+  note: "Русское название: «Оценка возможности использования микроэлементного статуса лекарственного растительного сырья в качестве дополнительного критерия доброкачественности на примере сырья «Ромашки аптечной цветки»» (в Crossref зарегистрировано английское). 2024;14(6):663–672. Во введении перечислены ромашковидные растения, которые нельзя путать с ромашкой аптечной при заготовке (ромашка душистая, пупавки, нивяник, трёхрёберник непахучий, пиретрум девичий)."
+
+- id: ostovar-2025-chamomile-ae
+  type: systematic_review
+  title: "Chamomile: A systematic review of adverse events"
+  authors: ["Ostovar M.", "Rezaee Z.", "Najibi S. M.", "Hashempur M. H."]
+  year: 2025
+  journal: "Complementary Therapies in Medicine"
+  doi: "10.1016/j.ctim.2025.103192"
+  pmid: "40374153"
+  note: "72 исследования и 11 описаний случаев; вывод — при контролируемых дозах в целом безопасна, возможны аллергические реакции, данных о беременности и лактации недостаточно. Прочитано по аннотации в PubMed."
+
+- id: shuvaeva-2009-mentol-mints
+  type: article
+  title: "Характеристика ментольных форм мяты и их возделывание на Вознесенской опытной станции ВНИИМК"
+  authors: ["Шуваева Т. П.", "Солоницкая В. Б.", "Бородкина А. П.", "Зеленцов С. В."]
+  year: 2009
+  journal: "Масличные культуры. Научно-технический бюллетень ВНИИМК"
+  url: "https://cyberleninka.ru/article/n/harakteristika-mentolnyh-form-myaty-i-ih-vozdelyvanie-na-voznesenskoy-opytnoy-stantsii-vniimk"
+  note: "Вып. 2 (141), 2009. Мята перечная — естественный межвидовой гибрид мяты водной и колосистой, размножается вегетативно; период цветения мяты в условиях Западного Предкавказья — июль–август."
+
+- id: abipov-2021-chamomile
+  type: article
+  title: "Биологические особенности и лекарственные значения ромашки аптечной (Matricaria recutita)"
+  authors: ["Абипов Р. К.", "Бекбанов А. Ж."]
+  year: 2021
+  journal: "Мировая наука"
+  url: "https://cyberleninka.ru/article/n/biologicheskie-osobennosti-i-lekarstvennye-znacheniya-romashki-aptechnoy-matricaria-recutita"
+  note: "Каракалпакский государственный университет. Слабый источник: использован только для периода цветения («с конца мая по сентябрь»); при появлении флоры или справочника с месяцами цветения заменить."
+
+- id: plantarium-matricaria-recutita
+  type: reference_book
+  title: "Ромашка аптечная — Matricaria recutita L. — Описание таксона"
+  authors: ["Плантариум: растения и лишайники России и сопредельных стран"]
+  year: 2026
+  url: "https://www.plantarium.ru/page/view/item/23776.html"
+  note: "Определитель-галерея растений. Использован раздел «Ключевые признаки → Местообитание» (обочина дороги, пашня или огород, пустырь, залежь и др.). Страница обновляется постоянно, открыта 16.10.2026."

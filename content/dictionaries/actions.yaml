@@ -1,2 +1,13 @@
 # Словарь. Формат — README.md, раздел «Словари».
-[]
+- id: anti-inflammatory
+  name: Противовоспалительное
+  synonyms: []
+- id: antispasmodic
+  name: Спазмолитическое
+  synonyms: ["расслабляет гладкую мускулатуру"]
+- id: carminative
+  name: Ветрогонное
+  synonyms: ["против вздутия"]
+- id: choleretic
+  name: Желчегонное
+  synonyms: []

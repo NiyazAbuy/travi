@@ -1,2 +1,41 @@
 # Словарь. Формат — README.md, раздел «Словари».
-[]
+- id: essential-oil
+  name: Эфирное масло
+  class: essential-oils
+  synonyms: []
+- id: chamazulene
+  name: Хамазулен
+  class: essential-oils
+  synonyms: ["азулены"]
+- id: bisabolol
+  name: α-Бисаболол
+  class: essential-oils
+  synonyms: ["бисаболол"]
+- id: menthol
+  name: Ментол
+  class: essential-oils
+  synonyms: []
+- id: menthone
+  name: Ментон
+  class: essential-oils
+  synonyms: []
+- id: apigenin
+  name: Апигенин и его гликозиды
+  class: flavonoids
+  synonyms: ["апигенин-7-глюкозид"]
+- id: luteolin
+  name: Лютеолин и другие флавоноиды мяты
+  class: flavonoids
+  synonyms: ["эриоцитрин", "гесперидин"]
+- id: herniarin-umbelliferone
+  name: Кумарины (герниарин, умбеллиферон)
+  class: coumarins
+  synonyms: []
+- id: mucilage
+  name: Слизистые вещества
+  class: polysaccharides
+  synonyms: ["полисахариды"]
+- id: rosmarinic-acid
+  name: Розмариновая кислота
+  class: phenolic-acids
+  synonyms: []
