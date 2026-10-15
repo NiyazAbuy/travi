@@ -1,2 +1,19 @@
-# Словарь. Формат — README.md, раздел «Словари».
-[]
+# Части растения (лекарственное сырьё).
+- id: flowers
+  name: Цветки
+- id: herb
+  name: Трава (надземная часть)
+- id: leaf
+  name: Листья
+- id: root
+  name: Корни
+- id: rhizome-roots
+  name: Корневища с корнями
+- id: fruit
+  name: Плоды
+- id: seeds
+  name: Семена
+- id: bark
+  name: Кора
+- id: buds
+  name: Почки

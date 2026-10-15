@@ -1,2 +1,151 @@
 # Список источников. Формат — README.md, раздел «Источники».
-[]
+
+# --- Монографии EMA (Комитет по травяным лекарственным средствам, HMPC) ---
+
+- id: ema-matricariae-flos
+  type: monograph
+  title: "European Union herbal monograph on Matricaria recutita L., flos"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2015
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-european-union-herbal-monograph-matricaria-recutita-l-flos-first-version_en.pdf"
+  note: "EMA/HMPC/55843/2011, Final, 7 July 2015."
+
+- id: ema-menthae-piperitae-folium
+  type: monograph
+  title: "European Union herbal monograph on Mentha x piperita L., folium"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2020
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/european-union-herbal-monograph-mentha-x-piperita-l-folium-revision-1_en.pdf"
+  note: "EMA/HMPC/572705/2014, Final – Revision 1, 15 January 2020."
+
+- id: ema-hyperici-herba
+  type: monograph
+  title: "European Union herbal monograph on Hypericum perforatum L., herba"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2022
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-european-union-herbal-monograph-hypericum-perforatum-l-herba-revision-1_en.pdf"
+  note: "EMA/HMPC/7695/2021, Final – Revision 1, 23 November 2022. Содержит разделы well-established use и traditional use."
+
+- id: ema-calendulae-flos
+  type: monograph
+  title: "European Union herbal monograph on Calendula officinalis L., flos"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2018
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-european-union-herbal-monograph-calendula-officinalis-l-flos-revision-1_en.pdf"
+  note: "EMA/HMPC/437450/2017, Final, 27 March 2018."
+
+- id: ema-millefolii-herba
+  type: monograph
+  title: "European Union herbal monograph on Achillea millefolium L., herba"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2020
+  url: "https://www.ema.europa.eu/en/documents/herbal-opinion/final-european-union-herbal-monograph-achillea-millefolium-l-herba-revision-1_en.pdf"
+  note: "EMA/HMPC/376416/2019, Final – Revision 1, 23 September 2020."
+
+- id: ema-valerianae-radix
+  type: monograph
+  title: "European Union herbal monograph on Valeriana officinalis L., radix"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2016
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-european-union-herbal-monograph-valeriana-officinalis-l-radix_en.pdf"
+  note: "EMA/HMPC/150848/2015, Corr.1, Final, 02 February 2016."
+
+- id: ema-urticae-folium
+  type: monograph
+  title: "Community herbal monograph on Urtica dioica L.; Urtica urens L., folium"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2010
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-community-herbal-monograph-urtica-dioica-l-urtica-urens-l-folium_en.pdf"
+  note: "EMA/HMPC/508015/2007, Final, 14 January 2010."
+
+- id: ema-tiliae-flos
+  type: monograph
+  title: "Community herbal monograph on Tilia cordata Miller, Tilia platyphyllos Scop., Tilia x vulgaris Heyne or their mixtures, flos"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2012
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-community-herbal-monograph-tilia-cordata-miller-tilia-platyphyllos-scop-tilia-x-vulgaris-heyne-or-their-mixtures-flos-first-version_en.pdf"
+  note: "EMA/HMPC/337066/2011, Final, 22 May 2012."
+
+# --- Государственная фармакопея Российской Федерации (фармакопейные статьи на сырьё) ---
+# Берётся последнее издание, в котором статья есть на pharmacopoeia.regmed.ru:
+# XV (приказ Минздрава России от 13.03.2024 № 120), иначе XIV (приказ от 31.10.2018 № 749).
+
+- id: gf14-chamomillae-flores
+  type: pharmacopoeia
+  title: "ФС.2.5.0037.15 Ромашки аптечной цветки. Государственная фармакопея Российской Федерации, XIV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2018
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-14/2/2-5/romashki-aptechnoy-tsvetki/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 31.10.2018 № 749, в действие с 01.12.2018."
+
+- id: gf14-menthae-piperitae-folia
+  type: pharmacopoeia
+  title: "ФС.2.5.0029.15 Мяты перечной листья. Государственная фармакопея Российской Федерации, XIV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2018
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-14/2/2-5/myaty-perechnoy-listya/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 31.10.2018 № 749, в действие с 01.12.2018."
+
+- id: gf14-hyperici-herba
+  type: pharmacopoeia
+  title: "ФС.2.5.0015.15 Зверобоя трава. Государственная фармакопея Российской Федерации, XIV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2018
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-14/2/2-5/zveroboya-trava/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 31.10.2018 № 749, в действие с 01.12.2018. Статья охватывает зверобой продырявленный и зверобой пятнистый."
+
+- id: gf14-calendulae-flores
+  type: pharmacopoeia
+  title: "ФС.2.5.0030.15 Календулы лекарственной цветки. Государственная фармакопея Российской Федерации, XIV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2018
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-14/2/2-5/kalenduly-lekarstvennoy-tsvetki/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 31.10.2018 № 749, в действие с 01.12.2018."
+
+- id: gf15-achilleae-millefolii-herba
+  type: pharmacopoeia
+  title: "ФС.2.5.0101 Тысячелистника обыкновенного трава. Государственная фармакопея Российской Федерации, XV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2024
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-15/2/2-3/tysyachelistnika-obyknovennogo-trava/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 13.03.2024 № 120, в действие с 13.03.2024; взамен ФС.2.5.0101.18."
+
+- id: gf14-plantaginis-majoris-folia
+  type: pharmacopoeia
+  title: "ФС.2.5.0032.15 Подорожника большого листья. Государственная фармакопея Российской Федерации, XIV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2018
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-14/2/2-5/podorozhnika-bolshogo-listya/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 31.10.2018 № 749, в действие с 01.12.2018."
+
+- id: gf15-valerianae-rhizomata-cum-radicibus
+  type: pharmacopoeia
+  title: "ФС.2.5.0009 Валерианы лекарственной корневища с корнями. Государственная фармакопея Российской Федерации, XV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2024
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-15/2/2-3/valeriany-lekarstvennoy-kornevishcha-s-kornyami/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 13.03.2024 № 120, в действие с 13.03.2024; взамен ФС.2.5.0009.15."
+
+- id: gf14-urticae-dioicae-folia
+  type: pharmacopoeia
+  title: "ФС.2.5.0019.15 Крапивы двудомной листья. Государственная фармакопея Российской Федерации, XIV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2018
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-14/2/2-5/krapivy-dvudomnoy-listya/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 31.10.2018 № 749, в действие с 01.12.2018."
+
+- id: gf15-rosae-fructus-hypovitaminosus
+  type: pharmacopoeia
+  title: "ФС.2.5.0134 Шиповника плоды низковитаминные. Государственная фармакопея Российской Федерации, XV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2024
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-15/2/2-3/shipovnika-plody-nizkovitaminnye/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 13.03.2024 № 120, в действие с 13.03.2024. Статья прямо называет шиповник собачий (Rosa canina L.); в отдельной статье ФС.2.5.0106 «Шиповника плоды» R. canina не названа (перечислены R. majalis, R. acicularis, R. davurica и др.)."
+
+- id: gf15-tiliae-flores
+  type: pharmacopoeia
+  title: "ФС.2.5.0024 Липы цветки. Государственная фармакопея Российской Федерации, XV издание"
+  authors: ["Министерство здравоохранения Российской Федерации"]
+  year: 2024
+  url: "https://pharmacopoeia.regmed.ru/pharmacopoeia/izdanie-15/2/2-3/lipy-tsvetki/"
+  note: "Раздел 2.5. Утверждена приказом Минздрава России от 13.03.2024 № 120, в действие с 13.03.2024; взамен ФС.2.5.0024.15. Статья охватывает липу сердцевидную и липу широколистную."

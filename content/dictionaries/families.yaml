@@ -1,2 +1,25 @@
-# Словарь. Формат — README.md, раздел «Словари».
-[]
+# Ботанические семейства.
+- id: asteraceae
+  name: Астровые (сложноцветные)
+  latin: Asteraceae
+- id: lamiaceae
+  name: Яснотковые (губоцветные)
+  latin: Lamiaceae
+- id: hypericaceae
+  name: Зверобойные
+  latin: Hypericaceae
+- id: plantaginaceae
+  name: Подорожниковые
+  latin: Plantaginaceae
+- id: caprifoliaceae
+  name: Жимолостные
+  latin: Caprifoliaceae
+- id: urticaceae
+  name: Крапивные
+  latin: Urticaceae
+- id: rosaceae
+  name: Розовые
+  latin: Rosaceae
+- id: malvaceae
+  name: Мальвовые
+  latin: Malvaceae

@@ -1,2 +1,19 @@
-# Словарь. Формат — README.md, раздел «Словари».
-[]
+# Где растёт.
+- id: meadow
+  name: Луг
+- id: wet-meadow
+  name: Сырой луг
+- id: field
+  name: Поле
+- id: forest
+  name: Лес
+- id: forest-edge
+  name: Опушка и поляна
+- id: riverbank
+  name: Берег водоёма
+- id: roadside
+  name: Обочина дороги
+- id: wasteland
+  name: Пустырь
+- id: garden
+  name: Огород и сад

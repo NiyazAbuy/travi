@@ -1,2 +1,21 @@
-# Словарь. Формат — README.md, раздел «Словари».
-[]
+# Системы органов. Показание (indications.yaml) ссылается на одну из них через organ_system.
+- id: nervous
+  name: Нервная система и сон
+- id: digestive
+  name: Пищеварение
+- id: respiratory
+  name: Дыхательная система
+- id: oral
+  name: Полость рта и горло
+- id: skin
+  name: Кожа и раны
+- id: urinary
+  name: Мочевыделительная система
+- id: cardiovascular
+  name: Сердце и сосуды
+- id: musculoskeletal
+  name: Суставы и мышцы
+- id: immune
+  name: Простуда и иммунитет
+- id: reproductive
+  name: Женское и мужское здоровье

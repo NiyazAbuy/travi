@@ -1,2 +1,33 @@
-# Словарь. Формат — README.md, раздел «Словари».
-[]
+# Классы действующих веществ. Вещество (substances.yaml) ссылается на класс через class.
+- id: essential-oils
+  name: Эфирные масла и их компоненты
+- id: flavonoids
+  name: Флавоноиды
+- id: tannins
+  name: Дубильные вещества
+- id: coumarins
+  name: Кумарины
+- id: polysaccharides
+  name: Полисахариды и слизи
+- id: phenolic-acids
+  name: Фенолкарбоновые кислоты
+- id: triterpenes
+  name: Тритерпены и сапонины
+- id: carotenoids
+  name: Каротиноиды
+- id: vitamins
+  name: Витамины
+- id: organic-acids
+  name: Органические кислоты
+- id: minerals
+  name: Минеральные вещества
+- id: naphthodianthrones
+  name: Нафтодиантроны
+- id: phloroglucinols
+  name: Флороглюцины
+- id: iridoids
+  name: Иридоиды
+- id: sesquiterpenes
+  name: Сесквитерпеновые кислоты
+- id: lignans
+  name: Лигнаны
