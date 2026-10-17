@@ -186,6 +186,14 @@
   url: "https://www.ema.europa.eu/en/documents/herbal-report/assessment-report-mentha-x-piperita-l-folium-and-aetheroleum-revision-1_en.pdf"
   note: "EMA/HMPC/522409/2013, Final – Revision 1, 15 January 2020. Отчёт общий для листа и масла; в карточке использованы только части о листе (раздел 1.1 — состав, раздел 6 — выводы по листу)."
 
+- id: ema-ar-hyperici-herba
+  type: monograph
+  title: "Assessment report on Hypericum perforatum L., herba"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2022
+  url: "https://www.ema.europa.eu/en/documents/herbal-report/final-assessment-report-hypericum-perforatum-l-herba-revision-1_en.pdf"
+  note: "EMA/HMPC/244315/2016, Final – Revision 1, 23 November 2022. Оценочный отчёт к монографии ema-hyperici-herba (216 стр.). Использованы: раздел 1.1 (переход веществ в травяной чай), 2.3 (выводы о традиционном применении), 5.5.2–5.5.4 (противопоказания, предостережения, взаимодействия; таблица 16 и списки препаратов), раздел 6 (итоговая оценка «польза–риск»)."
+
 # --- Справочники и статьи ---
 
 - id: bre-romashka
@@ -257,3 +265,66 @@
   year: 2022
   url: "https://www.bayceer.uni-bayreuth.de/zertifizierung_artenkenntnis/de/allgemein/5001/0/7654/Matricaria_chamomilla.pdf"
   note: "Видовой лист курса полевой ботаники, данные для Средней Европы (Германия). Даты на самом листе нет: 2022 — дата файла (HTTP Last-Modified и CreationDate 16.03.2022). Использованные фразы: «Die Blütezeit reicht von Mai bis August» (период цветения); «Der Blütenboden ist kegelförmig, hohl (!) und ohne Spreublätter»; «Die ähnlichen Arten Tripleurospermum perforatum und Anthemis arvensis besitzen beide zum Unterschied zu M. chamomilla einen markigen Blütenboden» (у двойников цветоложе плотное, мозговидное)."
+
+- id: ng-2017-sjw-depression
+  type: systematic_review
+  title: "Clinical use of Hypericum perforatum (St John's wort) in depression: A meta-analysis"
+  authors: ["Ng Q. X.", "Venkatanarayanan N.", "Ho C. Y. X."]
+  year: 2017
+  journal: "Journal of Affective Disorders"
+  doi: "10.1016/j.jad.2016.12.048"
+  pmid: "28064110"
+  note: "Метаанализ 27 клинических исследований (3808 пациентов): при лёгкой и умеренной депрессии зверобой сопоставим с СИОЗС по ответу на лечение и ремиссии, реже отменяется. Исследования длились 4–12 недель; для тяжёлой депрессии и высокого риска суицида польза неясна. Прочитано по аннотации в PubMed."
+
+- id: berry-bibee-2016-sjw-contraceptives
+  type: systematic_review
+  title: "Co-administration of St. John's wort and hormonal contraceptives: a systematic review"
+  authors: ["Berry-Bibee E. N.", "Kim M.-J.", "Tepper N. K.", "Riley H. E. M.", "Curtis K. M."]
+  year: 2016
+  journal: "Contraception"
+  doi: "10.1016/j.contraception.2016.07.010"
+  pmid: "27444983"
+  note: "Из 48 найденных работ критериям отвечали 4 (сравнение комбинированных контрацептивов с зверобоем и без): в трёх — больше прорывных кровотечений, в трёх — меньшее воздействие гормонов; вывод — ограниченные данные о риске овуляции и прорывных кровотечений, возможна сниженная эффективность контрацепции. Единственное исследование без различий применяло препарат с малым содержанием гиперицина. Прочитано по аннотации в PubMed."
+
+- id: givol-2019-calendula-wound-healing
+  type: systematic_review
+  title: "A systematic review of Calendula officinalis extract for wound healing"
+  authors: ["Givol O.", "Kornhaber R.", "Visentin D.", "Cleary M.", "Haik J.", "Harats M."]
+  year: 2019
+  journal: "Wound Repair and Regeneration"
+  doi: "10.1111/wrr.12737"
+  pmid: "31145533"
+  note: "14 исследований (7 на животных и 7 клинических) экстракта цветков календулы как монотерапии. Для острых ран есть некоторые свидетельства пользы (быстрее проходит фаза воспаления, больше грануляционной ткани), для хронических ран и ожогов результаты разные, часть клинических исследований пользы не показала; нужны более крупные РКИ. Прочитано по аннотации в PubMed."
+
+- id: bayreuth-artenkenntnis-hypericum-perforatum
+  type: reference_book
+  title: "Hypericum perforatum, Echtes Johanniskraut (Qualifizierung Feldbotanik – Bronze)"
+  authors: ["Ökologisch-Botanischer Garten der Universität Bayreuth (Zertifizierung Artenkenntnis, BayCEER)"]
+  year: 2022
+  url: "https://www.bayceer.uni-bayreuth.de/zertifizierung_artenkenntnis/de/allgemein/5001/0/7630/Hypericum_perforatum.pdf"
+  note: "Видовой лист курса полевой ботаники, данные для Средней Европы (Германия). Даты на самом листе нет: 2022 — дата файла (HTTP Last-Modified 16.03.2022, CreationDate 16.03.2022). Использованные фразы: «Die Blütezeit reicht von Juni bis August» (период цветения); «Der Stängel ist 2-kantig ohne Flügel»; «Die ähnliche Art H. maculatum besitzt einen 4-kantigen Stängel und einen flachen Blattrand»; листья с просвечивающими точками («durchscheinend punktiert»), край листа часто загнут вниз; высота до 100 см."
+
+- id: plantarium-hypericum-perforatum
+  type: reference_book
+  title: "Зверобой продырявленный — Hypericum perforatum L. — Описание таксона"
+  authors: ["Плантариум: растения и лишайники России и сопредельных стран"]
+  year: 2026
+  url: "https://www.plantarium.ru/page/view/item/20521.html"
+  note: "Определитель-галерея растений. Использованы разделы «Русскоязычные названия» (зверобой исколотый, дырявник, богородичная трава) и «Ключевые признаки → Местообитание» (залежь, обочина дороги, лес — опушка или поляна, луг и др.). Страница обновляется постоянно, открыта 17.10.2026."
+
+- id: plantarium-calendula-officinalis
+  type: reference_book
+  title: "Календула лекарственная — Calendula officinalis L. — Описание таксона"
+  authors: ["Плантариум: растения и лишайники России и сопредельных стран"]
+  year: 2026
+  url: "https://www.plantarium.ru/page/view/item/7531.html"
+  note: "Определитель-галерея растений. Использованы разделы «Русскоязычные названия» (ноготки лекарственные) и «Ключевые признаки → Местообитание» (парк или сад, газон или цветник, пашня или огород, пустырь или вырубка). Страница обновляется постоянно, открыта 17.10.2026."
+
+- id: bre-kalendula
+  type: reference_book
+  title: "Календула"
+  authors: ["Слепченко Н. А."]
+  publisher: "Большая российская энциклопедия"
+  year: 2022
+  url: "https://bigenc.ru/c/kalendula-c7217e"
+  note: "Статья БРЭ про род Calendula, опубликована 19.10.2022, обновлена 30.08.2023. Открыта через архивную копию страницы (web.archive.org, 14.12.2024): основной адрес сейчас перенаправляет на зеркало. Использованы фразы: «Цветёт календула с июня до заморозков»; в России возделывается во всех регионах, кроме Крайнего Севера; сырьё и препараты цветков обладают противовоспалительным действием (среди прочих)."

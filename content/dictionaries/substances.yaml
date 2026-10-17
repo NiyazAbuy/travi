@@ -39,3 +39,27 @@
   name: Розмариновая кислота
   class: phenolic-acids
   synonyms: []
+- id: hypericin
+  name: Гиперицин и псевдогиперицин
+  class: naphthodianthrones
+  synonyms: []
+- id: hyperforin
+  name: Гиперфорин
+  class: phloroglucinols
+  synonyms: []
+- id: flavonoids
+  name: Флавоноиды
+  class: flavonoids
+  synonyms: []
+- id: tannins
+  name: Дубильные вещества
+  class: tannins
+  synonyms: []
+- id: carotenoids
+  name: Каротиноиды
+  class: carotenoids
+  synonyms: []
+- id: triterpenoids
+  name: Тритерпеновые соединения
+  class: triterpenes
+  synonyms: []

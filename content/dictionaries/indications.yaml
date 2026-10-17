@@ -23,3 +23,19 @@
   name: Лёгкое воспаление кожи и поверхностные раны
   organ_system: skin
   synonyms: ["солнечный ожог", "небольшие фурункулы"]
+- id: depression-mild-moderate
+  name: Лёгкая и умеренная депрессия
+  organ_system: nervous
+  synonyms: ["депрессия", "депрессивный эпизод"]
+- id: mental-exhaustion
+  name: Временное умственное истощение
+  organ_system: nervous
+  synonyms: []
+- id: nervous-restlessness-sleep
+  name: Нервное беспокойство и трудности с засыпанием
+  organ_system: nervous
+  synonyms: ["нервозность", "беспокойство"]
+- id: gi-mild-discomfort
+  name: Лёгкий дискомфорт в желудке и кишечнике
+  organ_system: digestive
+  synonyms: []
