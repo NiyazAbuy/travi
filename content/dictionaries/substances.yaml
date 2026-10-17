@@ -63,3 +63,7 @@
   name: Тритерпеновые соединения
   class: triterpenes
   synonyms: []
+- id: aucubin
+  name: Аукубин
+  class: iridoids
+  synonyms: []

@@ -14,3 +14,12 @@
 - id: antidepressant
   name: Антидепрессивное (сухие экстракты)
   synonyms: []
+- id: hemostatic
+  name: Кровоостанавливающее
+  synonyms: []
+- id: expectorant
+  name: Отхаркивающее
+  synonyms: []
+- id: mucolytic
+  name: Муколитическое
+  synonyms: []

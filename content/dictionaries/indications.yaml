@@ -22,7 +22,7 @@
 - id: skin-minor-inflammation
   name: Лёгкое воспаление кожи и поверхностные раны
   organ_system: skin
-  synonyms: ["солнечный ожог", "небольшие фурункулы"]
+  synonyms: ["солнечный ожог", "небольшие фурункулы", "мелкие раны"]
 - id: depression-mild-moderate
   name: Лёгкая и умеренная депрессия
   organ_system: nervous
@@ -39,3 +39,15 @@
   name: Лёгкий дискомфорт в желудке и кишечнике
   organ_system: digestive
   synonyms: []
+- id: appetite-loss
+  name: Временная потеря аппетита
+  organ_system: digestive
+  synonyms: ["плохой аппетит", "снижение аппетита"]
+- id: menstrual-cramps
+  name: Лёгкие спазмы при менструации
+  organ_system: reproductive
+  synonyms: ["менструальные боли", "болезненные месячные", "дисменорея"]
+- id: bronchitis-tracheitis
+  name: Бронхит и трахеит (отхаркивающее)
+  organ_system: respiratory
+  synonyms: ["кашель при бронхите"]
