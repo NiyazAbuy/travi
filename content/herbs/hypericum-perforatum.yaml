@@ -232,5 +232,6 @@ lookalikes:
       caption: Побег зверобоя пятнистого со стеблем и листьями (для сравнения)
 sources:
   - {id: ema-hyperici-herba, page: "5.1"}
+  - {id: gf14-hyperici-herba, page: "внешние признаки; определение основных групп биологически активных веществ"}
   - {id: plantarium-hypericum-perforatum, page: "русскоязычные названия, местообитание"}
   - {id: bayreuth-artenkenntnis-hypericum-perforatum, page: "Ökologie, Merkmale"}
