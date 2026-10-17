@@ -69,7 +69,7 @@ indications:
       - {id: boskabadi-2025-plantago-respiratory}
       - {id: samuelsen-2000-plantago-major, page: "Table 1 (Respiratory organs)"}
       - {id: bre-podorozhnik}
-  - indication: skin-minor-inflammation
+  - indication: minor-wounds
     evidence:
       level: folk
       note: >-
@@ -108,7 +108,7 @@ usage:
     dosage: >-
       Современных доз и сроков в источниках нет. По тому же историческому описанию листья прикладывали утром и вечером.
       Эффективность при ранах не подтверждена: систематический обзор 2021 г. не нашёл доказательств эффективности in vivo.
-    for_indications: [skin-minor-inflammation]
+    for_indications: [minor-wounds]
     sources:
       - {id: samuelsen-2000-plantago-major, page: "History; Table 1 (Skin)"}
       - {id: cardoso-2021-plantago-wound-healing}

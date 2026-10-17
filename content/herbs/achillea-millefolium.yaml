@@ -86,7 +86,7 @@ indications:
     sources:
       - {id: ema-millefolii-herba, page: "4.1, 4.2"}
       - {id: jenabi-2015-yarrow-dysmenorrhea}
-  - indication: skin-minor-inflammation
+  - indication: minor-wounds
     evidence:
       level: traditional
       note: >-
@@ -129,7 +129,7 @@ usage:
     course: >-
       Если симптомы держатся дольше недели — обратиться к врачу или квалифицированному специалисту; при признаках
       инфекции кожи — обратиться за медицинской помощью.
-    for_indications: [skin-minor-inflammation]
+    for_indications: [minor-wounds]
     sources:
       - {id: ema-millefolii-herba, page: "4.2, 4.4"}
   - form: other

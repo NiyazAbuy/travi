@@ -22,7 +22,7 @@
 - id: skin-minor-inflammation
   name: Лёгкое воспаление кожи и поверхностные раны
   organ_system: skin
-  synonyms: ["солнечный ожог", "небольшие фурункулы", "мелкие раны"]
+  synonyms: ["солнечный ожог", "небольшие фурункулы"]
 - id: depression-mild-moderate
   name: Лёгкая и умеренная депрессия
   organ_system: nervous
@@ -51,3 +51,7 @@
   name: Бронхит и трахеит (отхаркивающее)
   organ_system: respiratory
   synonyms: ["кашель при бронхите"]
+- id: minor-wounds
+  name: Мелкие поверхностные раны
+  organ_system: skin
+  synonyms: ["мелкие раны", "небольшие раны"]
