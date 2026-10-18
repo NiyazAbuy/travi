@@ -5,6 +5,7 @@ export const BUNDLED_PHOTOS: Record<string, number> = {
   'photos/23297f69eba202063ec879fde21effaf03072acfa0c8930a5fb4a90bec06af78.webp': require('../../assets/content/photos/23297f69eba202063ec879fde21effaf03072acfa0c8930a5fb4a90bec06af78.webp'),
   'photos/2434e43fc5d4290eba40961e553ea12ecaee90ae5e7b944646ba58192e24c9c7.webp': require('../../assets/content/photos/2434e43fc5d4290eba40961e553ea12ecaee90ae5e7b944646ba58192e24c9c7.webp'),
   'photos/2b2a0ba30ab94f80dd2de2bbe0b38578e99444e126114e8ce5cadbe5474dce0e.webp': require('../../assets/content/photos/2b2a0ba30ab94f80dd2de2bbe0b38578e99444e126114e8ce5cadbe5474dce0e.webp'),
+  'photos/39d6157015c811ea2f8e5ce00847d403c361f705773300e174a23c36099534bc.webp': require('../../assets/content/photos/39d6157015c811ea2f8e5ce00847d403c361f705773300e174a23c36099534bc.webp'),
   'photos/3bdd5653ab8f776255c83108ec8c9880bbc6fc6c9710dbb24d4932aba804edc2.webp': require('../../assets/content/photos/3bdd5653ab8f776255c83108ec8c9880bbc6fc6c9710dbb24d4932aba804edc2.webp'),
   'photos/46df7dab1e1f3b1226e52c8e437559d5ee6cc098bafccb4e401f7e4e67386fad.webp': require('../../assets/content/photos/46df7dab1e1f3b1226e52c8e437559d5ee6cc098bafccb4e401f7e4e67386fad.webp'),
   'photos/4b36b9423c50399a2d8d43f315c9de510134d5362a468c2671847c813bb33072.webp': require('../../assets/content/photos/4b36b9423c50399a2d8d43f315c9de510134d5362a468c2671847c813bb33072.webp'),
