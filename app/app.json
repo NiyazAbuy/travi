@@ -8,9 +8,11 @@
     "scheme": "travy",
     "userInterfaceStyle": "dark",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/images/icon.png"
     },
     "android": {
+      "package": "io.github.niyazabuy.travy",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#0B120E",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

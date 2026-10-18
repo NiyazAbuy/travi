@@ -19,6 +19,7 @@
     "photo:fetch": "tsx tools/src/cli/fetch-photo.ts",
     "sources:verify": "tsx tools/src/cli/verify-sources.ts",
     "content:report": "tsx tools/src/cli/report.ts",
+    "app:icons": "tsx tools/src/cli/app-icons.ts",
     "app:web": "npm run web -w @travy/app"
   },
   "devDependencies": {
