@@ -29,7 +29,8 @@ function fakeServer(files: Files) {
   const requested: { url: string; timeoutMs: number }[] = [];
   const fetchBytes = async (url: string, timeoutMs: number): Promise<Uint8Array> => {
     requested.push({ url, timeoutMs });
-    const key = url.startsWith(BASE) ? url.slice(BASE.length) : url;
+    // Параметр запроса (например, ?v=) сервер статических файлов игнорирует.
+    const key = (url.startsWith(BASE) ? url.slice(BASE.length) : url).split('?')[0]!;
     const file = files[key];
     if (file === undefined || file === 'fail') throw new Error(`fetch failed: ${key}`);
     return file;
@@ -139,7 +140,7 @@ describe('checkContent', () => {
     const r = await checkContent(deps, current);
     expect(r).toEqual({ kind: 'app-update-needed', schemaVersion: SCHEMA_VERSION + 1 });
     expect(completesCheck(r)).toBe(true);
-    expect(server.requested.some((x) => x.url.endsWith('content.json'))).toBe(false);
+    expect(server.requested.some((x) => x.url.includes('content.json'))).toBe(false);
   });
 
   it('та же версия и текущая новее манифеста', async () => {
@@ -149,7 +150,7 @@ describe('checkContent', () => {
       const r = await checkContent(deps, current);
       expect(r).toEqual({ kind: 'up-to-date', manifest });
       expect(completesCheck(r)).toBe(true);
-      expect(server.requested.some((x) => x.url.endsWith('content.json'))).toBe(false);
+      expect(server.requested.some((x) => x.url.includes('content.json'))).toBe(false);
       expect(state.active).toBe('OLD');
     }
   });
@@ -166,7 +167,13 @@ describe('checkContent', () => {
     expect(r.summary).toEqual({ added: 0, removed: 1, changed: 0, otherChanged: false });
     expect(state.active).toBe(contentJson);
     expect(state.incoming).toBeNull();
-    expect(server.requested[1]).toEqual({ url: `${BASE}content.json`, timeoutMs: UPDATE_TIMEOUTS.content });
+    // Версия в адресе: кэш CDN или OkHttp не подсунет старый content.json к свежему манифесту.
+    expect(server.requested[1]).toEqual({
+      url: `${BASE}content.json?v=${V1}`,
+      timeoutMs: UPDATE_TIMEOUTS.content,
+    });
+    // У манифеста и фото параметра нет: фото адресуются по содержимому.
+    expect(server.requested[0]!.url).toBe(`${BASE}manifest.json`);
   });
 
   it('content.json не скачался', async () => {

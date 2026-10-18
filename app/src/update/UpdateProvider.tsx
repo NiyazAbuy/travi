@@ -8,6 +8,8 @@ import {
   isCheckDue,
   manualCheckMessage,
   parseUpdateState,
+  reconcileUpdateState,
+  SCHEMA_VERSION,
   serializeUpdateState,
   syncPhotos,
   UPDATE_STATE_KEY,
@@ -137,9 +139,15 @@ export function UpdateProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!store) return;
     let cancelled = false;
+    // Приложение обновили до поддержки опубликованной схемы: проверяем сразу, не дожидаясь суток.
+    let forceCheck = false;
     const checkIfDue = () => {
       const state = stateRef.current;
-      if (state && isCheckDue(state, Date.now())) void runCheck(false);
+      if (!state) return;
+      if (forceCheck || isCheckDue(state, Date.now())) {
+        forceCheck = false;
+        void runCheck(false);
+      }
     };
     AsyncStorage.getItem(UPDATE_STATE_KEY)
       .then(parseUpdateState, () => emptyUpdateState())
@@ -147,8 +155,11 @@ export function UpdateProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         // Ручная проверка могла завершиться раньше чтения — её результат новее.
         if (stateRef.current === null) {
-          stateRef.current = state;
-          setAppUpdateNeeded(state.appUpdateNeeded !== null);
+          const reconciled = reconcileUpdateState(state, SCHEMA_VERSION);
+          // Очищенный флаг пишется на диск вместе с итогом проверки: если приложение закроют раньше, всё повторится.
+          stateRef.current = reconciled.state;
+          forceCheck = reconciled.forceCheck;
+          setAppUpdateNeeded(reconciled.state.appUpdateNeeded !== null);
         }
         checkIfDue();
       });

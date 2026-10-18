@@ -9,6 +9,7 @@ import {
   photoPaths,
   pickActiveContent,
   pruneFilter,
+  reconcileUpdateState,
   serializeUpdateState,
   summarizeChanges,
   updateMessage,
@@ -35,6 +36,26 @@ describe('состояние проверки', () => {
     expect(isCheckDue({ lastCheckedAt: 0, appUpdateNeeded: null }, DAY)).toBe(true);
     expect(isCheckDue({ lastCheckedAt: 0, appUpdateNeeded: null }, DAY - 1)).toBe(false);
     expect(isCheckDue({ lastCheckedAt: 10 * DAY, appUpdateNeeded: null }, DAY)).toBe(true);
+  });
+  it('reconcileUpdateState: флаг новее установленного приложения остаётся', () => {
+    const s = { lastCheckedAt: 5, appUpdateNeeded: { schemaVersion: 2 } };
+    const r = reconcileUpdateState(s, 1);
+    expect(r.state).toBe(s);
+    expect(r.forceCheck).toBe(false);
+  });
+  it('reconcileUpdateState: приложение уже поддерживает схему — флаг сброшен, проверка немедленно', () => {
+    const s = { lastCheckedAt: 5, appUpdateNeeded: { schemaVersion: 1 } };
+    expect(reconcileUpdateState(s, 1)).toEqual({
+      state: { lastCheckedAt: 5, appUpdateNeeded: null },
+      forceCheck: true,
+    });
+    expect(reconcileUpdateState(s, 3).forceCheck).toBe(true);
+  });
+  it('reconcileUpdateState: без флага состояние не меняется', () => {
+    const s = { lastCheckedAt: 5, appUpdateNeeded: null };
+    const r = reconcileUpdateState(s, 1);
+    expect(r.state).toBe(s);
+    expect(r.forceCheck).toBe(false);
   });
 });
 

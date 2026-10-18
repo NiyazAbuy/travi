@@ -46,3 +46,18 @@ export function isCheckDue(s: UpdateState, now: number): boolean {
   if (s.lastCheckedAt === null) return true;
   return now < s.lastCheckedAt || now - s.lastCheckedAt >= CHECK_INTERVAL_MS;
 }
+
+/**
+ * Сверяет сохранённое состояние с версией схемы, которую понимает установленное приложение.
+ * Флаг «нужно обновить приложение» устаревает, когда приложение уже обновили: тогда он
+ * сбрасывается, а проверка выполняется сразу, не дожидаясь суток, — чтобы новая база скачалась.
+ */
+export function reconcileUpdateState(
+  s: UpdateState,
+  supportedSchema: number,
+): { state: UpdateState; forceCheck: boolean } {
+  if (s.appUpdateNeeded === null || s.appUpdateNeeded.schemaVersion > supportedSchema) {
+    return { state: s, forceCheck: false };
+  }
+  return { state: { ...s, appUpdateNeeded: null }, forceCheck: true };
+}

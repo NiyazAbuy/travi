@@ -67,7 +67,12 @@ export async function checkContent(deps: UpdateDeps, current: ContentBundle): Pr
 
   let bytes: Uint8Array;
   try {
-    bytes = await deps.fetchBytes(`${deps.baseUrl}${manifest.content.path}`, UPDATE_TIMEOUTS.content);
+    // Версия в адресе: кэш CDN или HTTP-клиента не должен подсунуть старый content.json к свежему манифесту.
+    // К manifest.json и фото параметр не добавляется: манифест всегда свежий, а фото адресуются по содержимому.
+    bytes = await deps.fetchBytes(
+      `${deps.baseUrl}${manifest.content.path}?v=${manifest.contentVersion}`,
+      UPDATE_TIMEOUTS.content,
+    );
   } catch {
     return { kind: 'unreachable' };
   }
