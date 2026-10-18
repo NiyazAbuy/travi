@@ -10,17 +10,22 @@ export interface ChipProps {
   onPress?: () => void;
   /** Маленькая иконка справа от подписи (как листок у «Все» на макете каталога). */
   icon?: IconName;
+  /** Залита шалфеем, как выбранная, но без состояния «выбрано» — акцентная плашка (системы органов в карточке травы). */
+  filled?: boolean;
+  /** Ключ рваного края; по умолчанию — подпись. */
+  seed?: string;
 }
 
 /**
  * Плашка-«клочок бумаги» с чуть неровным краем: обычная — светлая бумага с тонкой рамкой,
  * выбранная (или акцентная) — заливка шалфеем.
  */
-export function Chip({ label, selected = false, onPress, icon }: ChipProps) {
+export function Chip({ label, selected = false, onPress, icon, filled = false, seed }: ChipProps) {
   const { size, onLayout } = useLayoutSize();
+  const sage = selected || filled;
   const fill = (pressed: boolean) =>
-    selected ? (pressed ? colors.sagePressed : colors.sage) : pressed ? colors.paperDeep : colors.paperChip;
-  const ink = selected ? colors.onSage : colors.text;
+    sage ? (pressed ? colors.sagePressed : colors.sage) : pressed ? colors.paperDeep : colors.paperChip;
+  const ink = sage ? colors.onSage : colors.text;
   return (
     <Pressable
       onPress={onPress}
@@ -43,12 +48,12 @@ export function Chip({ label, selected = false, onPress, icon }: ChipProps) {
         <>
           {size ? (
             <PaperShape
-              seed={label}
+              seed={seed ?? label}
               width={size.width}
               height={size.height}
               fill={fill(pressed)}
-              edge={selected ? colors.cardEdge : colors.divider}
-              edgeWidth={selected ? 1 : 0.8}
+              edge={sage ? colors.cardEdge : colors.divider}
+              edgeWidth={sage ? 1 : 0.8}
               depth={paperEdge.chip.depth}
               radius={paperEdge.chip.radius}
               shadow={shadow.chip}

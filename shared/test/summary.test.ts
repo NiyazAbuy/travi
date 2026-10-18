@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { herbLine, herbOrganSystems, herbParts, shortLabel, usageSummary } from '../src/query/summary';
+import { herbLine, herbOrganSystems, herbParts, nameList, shortLabel, usageSummary } from '../src/query/summary';
 import { bundleSchemas, type Dictionaries, type Herb } from '../src/schema';
 import { queryDictionaries, queryHerbs4 } from './query-fixtures';
 
@@ -152,6 +152,26 @@ describe('shortLabel', () => {
   });
   it('название только из скобок не превращается в пустую строку', () => {
     expect(shortLabel('(надземная часть)')).toBe('(надземная часть)');
+  });
+  it('скобки в конце со вложенными скобками убираются целиком (латынь с синонимами)', () => {
+    expect(shortLabel('Matricaria chamomilla L. (син. Matricaria recutita L.; Chamomilla recutita (L.) Rauschert)')).toBe(
+      'Matricaria chamomilla L.',
+    );
+  });
+  it('авторская ссылка в скобках в середине остаётся', () => {
+    expect(shortLabel('Chamomilla recutita (L.) Rauschert')).toBe('Chamomilla recutita (L.) Rauschert');
+  });
+  it('несбалансированные скобки — как есть', () => {
+    expect(shortLabel('Трава надземная часть)')).toBe('Трава надземная часть)');
+  });
+});
+
+describe('nameList', () => {
+  it('первое название с заглавной, остальные со строчной, через запятую', () => {
+    expect(nameList(['Эфирное масло', 'Хамазулен', 'Флавоноиды'])).toBe('Эфирное масло, хамазулен, флавоноиды');
+  });
+  it('пустой список — пустая строка', () => {
+    expect(nameList([])).toBe('');
   });
 });
 

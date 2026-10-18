@@ -2,11 +2,11 @@ import { View, type ViewProps } from 'react-native';
 import { spacing } from '@/theme';
 import { PaperCard } from './PaperCard';
 
-/** Карточка-раздел: бумага с рваным краем (`PaperCard`), содержимое столбиком. */
-export function Card({ style, children, ...rest }: ViewProps) {
+/** Карточка-раздел: бумага с рваным краем (`PaperCard`), содержимое столбиком. `seed` — ключ края. */
+export function Card({ style, children, seed, ...rest }: ViewProps & { seed?: string }) {
   return (
     <View {...rest}>
-      <PaperCard style={[{ gap: spacing.sm }, style]}>{children}</PaperCard>
+      <PaperCard seed={seed} style={[{ gap: spacing.sm }, style]}>{children}</PaperCard>
     </View>
   );
 }

@@ -51,7 +51,9 @@ export default function RootLayout() {
             >
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen name="herbs" options={{ title: 'Травы' }} />
-              <Stack.Screen name="herb/[id]" options={{ title: '' }} />
+              {/* карточка травы рисует свою шапку — круглые кнопки «назад» и «в избранное» (макет 03) */}
+              <Stack.Screen name="herb/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="herb/[id]/details" options={{ title: 'Подробнее о траве' }} />
               <Stack.Screen name="recipe/[id]" options={{ title: '' }} />
               <Stack.Screen name="catalog/[key]" options={{ title: 'Каталог' }} />
               <Stack.Screen name="search" options={{ title: 'Поиск' }} />

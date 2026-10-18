@@ -1,3 +1,4 @@
+import type { IconWeight } from 'phosphor-react-native';
 import { useId } from 'react';
 import { Pressable } from 'react-native';
 import { colors, paperEdge, radius, shadow, spacing } from '@/theme';
@@ -13,13 +14,19 @@ export interface ButtonProps {
   disabled?: boolean;
   /** Иконка справа от подписи (например, «сердце» у «Добавить в избранное»). */
   icon?: IconName;
+  /** Начертание иконки: `fill` — залитое «сердце» у «В избранном». */
+  iconWeight?: IconWeight;
+  /** Крупная кнопка — главное действие экрана (как «Добавить в избранное» на макете карточки). */
+  large?: boolean;
+  /** Ключ рваного края; не задан — свой для места в дереве (меняется при новом открытии экрана). */
+  seed?: string;
 }
 
 /** Кнопка — полоска рваной бумаги: главная залита шалфеем, второстепенная — бумага с рамкой. */
-export function Button({ label, onPress, variant = 'primary', disabled = false, icon }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', disabled = false, icon, iconWeight, large = false, seed }: ButtonProps) {
   const primary = variant === 'primary';
   // край не зависит от подписи: у «Показать N трав» число меняется, а полоска остаётся той же
-  const seed = useId();
+  const autoSeed = useId();
   const { size, onLayout } = useLayoutSize();
   const fill = (pressed: boolean) =>
     primary ? (pressed ? colors.sagePressed : colors.sage) : pressed ? colors.paperDeep : colors.paperChip;
@@ -37,7 +44,7 @@ export function Button({ label, onPress, variant = 'primary', disabled = false, 
           alignItems: 'center',
           justifyContent: 'center',
           gap: spacing.sm,
-          paddingVertical: spacing.md,
+          paddingVertical: large ? spacing.lg : spacing.md,
           paddingHorizontal: spacing.lg,
           opacity: disabled ? 0.5 : 1,
         },
@@ -48,7 +55,7 @@ export function Button({ label, onPress, variant = 'primary', disabled = false, 
         <>
           {size ? (
             <PaperShape
-              seed={seed}
+              seed={seed ?? autoSeed}
               width={size.width}
               height={size.height}
               fill={fill(pressed)}
@@ -60,10 +67,10 @@ export function Button({ label, onPress, variant = 'primary', disabled = false, 
               grain
             />
           ) : null}
-          <AppText variant="heading" style={{ color: ink, textAlign: 'center', flexShrink: 1 }}>
+          <AppText variant={large ? 'section' : 'heading'} style={{ color: ink, textAlign: 'center', flexShrink: 1 }}>
             {label}
           </AppText>
-          {icon ? <Icon name={icon} size={22} color={ink} /> : null}
+          {icon ? <Icon name={icon} size={large ? 26 : 22} color={ink} weight={iconWeight} /> : null}
         </>
       )}
     </Pressable>

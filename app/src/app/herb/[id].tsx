@@ -1,315 +1,431 @@
 import { Image } from 'expo-image';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useMemo } from 'react';
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useState, type ReactNode } from 'react';
+import { Pressable, useWindowDimensions, View } from 'react-native';
 import {
+  compareEvidenceDesc,
   EVIDENCE_LABELS,
   filterForGroup,
-  herbSourceIds,
-  HERB_STATUS_LABELS,
-  LIFE_FORM_LABELS,
-  monthName,
-  PHOTO_KIND_LABELS,
-  SAFETY_STATUS_LABELS,
-  sourceHref,
-  SOURCING_LABELS,
-  TOXICITY_LABELS,
-  USAGE_FORM_LABELS,
+  herbOrganSystems,
+  herbParts,
+  nameList,
+  shortLabel,
+  usageSummary,
   type CatalogKey,
-  type Photo,
-  type SourceRef,
+  type Herb,
 } from '@travy/shared';
-import { AppText, Card, Chip, EvidenceDot, IconButton, NoteEditor, Screen, Section, Tag } from '@/components';
+import {
+  AppText,
+  Button,
+  Chip,
+  EvidenceDot,
+  Icon,
+  IconButton,
+  InkLine,
+  NoteEditor,
+  PaperCard,
+  Screen,
+  Sprig,
+  Stamp,
+} from '@/components';
+import type { PhotoSource } from '@/content/content';
 import { useContent } from '@/content/ContentProvider';
-import { openLink } from '@/lib/openLink';
 import { useListFilter } from '@/state/ListFilterProvider';
-import { colors, radius, spacing } from '@/theme';
+import { colors, herbLayout, spacing, typography } from '@/theme';
 import { useUserData } from '@/user/UserDataProvider';
 
-function photoCaption(p: Photo): string {
-  return `${PHOTO_KIND_LABELS[p.kind]}${p.caption ? `: ${p.caption}` : ''} · ${p.author} · ${p.license}`;
+/**
+ * Краткая карточка травы в стиле «полевого дневника» (дизайн §4.3, макет 03): название и рисунок,
+ * системы органов, описание, три карточки (части, вещества, применение), от чего помогает,
+ * печать и заметка, избранное и переход в «Подробнее о траве» — там всё остальное.
+ */
+
+/** Картинка справа от названия: ботанический рисунок, а если его нет — первое фото. */
+interface Art {
+  source: PhotoSource;
+  drawing: boolean;
 }
 
-function Line({ label, children }: { label: string; children: string }) {
+function herbArt(herb: Herb, photoSource: (path: string) => PhotoSource | null): Art | null {
+  const drawing = herb.illustration ? photoSource(herb.illustration.path) : null;
+  if (drawing) return { source: drawing, drawing: true };
+  const photo = herb.photos[0] ? photoSource(herb.photos[0].path) : null;
+  return photo ? { source: photo, drawing: false } : null;
+}
+
+/** Шапка: круглые бумажные кнопки «назад» и «в избранное», как на макете. */
+function TopBar({ onBack, favorite, onToggleFavorite }: { onBack: () => void; favorite?: boolean; onToggleFavorite?: () => void }) {
   return (
-    <AppText>
-      <AppText tone="muted">{label}: </AppText>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <IconButton round icon="back" label="Назад" onPress={onBack} />
+      {onToggleFavorite ? (
+        <IconButton
+          round
+          icon="heart"
+          filled={favorite}
+          color={favorite ? colors.accent : colors.text}
+          label={favorite ? 'Убрать из избранного' : 'В избранное'}
+          onPress={onToggleFavorite}
+        />
+      ) : null}
+    </View>
+  );
+}
+
+interface HeaderProps {
+  herb: Herb;
+  art: Art | null;
+  contentWidth: number;
+  systems: { id: string; name: string }[];
+  onSystem: (id: string) => void;
+  onMore: () => void;
+}
+
+/**
+ * Название, латынь, плашки систем органов и начало описания — слева; рисунок — справа, крупно, без рамки.
+ * Рисунок начинается под последней строкой названия (цветки верхушки не сталкиваются с буквами),
+ * его высота — по пропорциям картинки; описание обрезается по низу рисунка, целиком — в «Подробнее».
+ */
+function HerbHeader({ herb, art, contentWidth, systems, onSystem, onMore }: HeaderProps) {
+  const [titleHeight, setTitleHeight] = useState(0);
+  const [topHeight, setTopHeight] = useState(0);
+  // высота / ширина рисунка — узнаём при загрузке; до неё — наибольшая высота
+  const [ratio, setRatio] = useState<number | null>(null);
+  const titleLine = typography.display.lineHeight;
+  const artWidth = art ? Math.round(contentWidth * herbLayout.illustrationShare) : 0;
+  const artHeight = !art
+    ? 0
+    : art.drawing
+      ? Math.min(herbLayout.illustrationHeight, ratio ? Math.round(artWidth * ratio) : herbLayout.illustrationHeight)
+      : herbLayout.photoFallbackHeight;
+  const artTop = art ? Math.max(titleHeight, titleLine) - titleLine + herbLayout.illustrationTop : 0;
+  // колонка текста кончается у левого края рисунка; название может заходить на его пустой верх
+  const columnRight = art ? artWidth - herbLayout.illustrationBleed + spacing.sm : 0;
+  const titleRight = art ? Math.round(artWidth * (1 - herbLayout.titleOverlap)) : 0;
+  const room = artTop + artHeight - topHeight - spacing.md;
+  const lines = Math.min(
+    herbLayout.descriptionMaxLines,
+    Math.max(herbLayout.descriptionMinLines, Math.floor(room / typography.body.lineHeight)),
+  );
+
+  return (
+    <View style={{ minHeight: artTop + artHeight }}>
+      {art ? (
+        <View
+          style={{ position: 'absolute', top: artTop, right: -herbLayout.illustrationBleed, width: artWidth, height: artHeight }}
+          accessible
+          accessibilityRole="image"
+          accessibilityLabel={art.drawing ? `Рисунок: ${herb.name}` : `Фото: ${herb.name}`}
+        >
+          {art.drawing ? (
+            <Image
+              source={art.source}
+              style={{ width: artWidth, height: artHeight }}
+              contentFit="contain"
+              contentPosition="top"
+              onLoad={(e) => {
+                const { width, height } = e.source;
+                if (width > 0 && height > 0) setRatio(height / width);
+              }}
+            />
+          ) : (
+            <PaperCard seed={`${herb.id}:photo`} padding={spacing.xs}>
+              <Image
+                source={art.source}
+                style={{ width: artWidth - spacing.xs * 2, height: artHeight - spacing.xs * 2 }}
+                contentFit="cover"
+              />
+            </PaperCard>
+          )}
+        </View>
+      ) : null}
+
+      <View onLayout={(e) => setTopHeight(Math.round(e.nativeEvent.layout.height))} style={{ gap: spacing.md }}>
+        <View style={{ gap: spacing.xxs }}>
+          <AppText
+            variant="display"
+            accessibilityRole="header"
+            onLayout={(e) => setTitleHeight(Math.round(e.nativeEvent.layout.height))}
+            style={{ marginRight: titleRight }}
+          >
+            {herb.name}
+          </AppText>
+          <AppText variant="latin" tone="muted" style={{ marginRight: columnRight }}>
+            {shortLabel(herb.latin)}
+          </AppText>
+        </View>
+        {systems.length > 0 ? (
+          <View style={{ marginRight: columnRight, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+            {systems.map((s) => (
+              <Chip key={s.id} filled seed={`${herb.id}:system:${s.id}`} label={s.name} onPress={() => onSystem(s.id)} />
+            ))}
+          </View>
+        ) : null}
+      </View>
+
+      <Pressable
+        onPress={onMore}
+        accessibilityRole="button"
+        accessibilityHint="Открывает «Подробнее о траве» с полным описанием"
+        style={({ pressed }) => ({ marginRight: columnRight, marginTop: spacing.md, gap: spacing.xs, opacity: pressed ? 0.7 : 1 })}
+      >
+        <AppText numberOfLines={lines}>{herb.description}</AppText>
+        <InkLine width={Math.round((contentWidth - columnRight) * herbLayout.descriptionRule)} seed={`${herb.id}:description`} />
+      </Pressable>
+    </View>
+  );
+}
+
+/** Одна из трёх карточек в ряд: иконка, заголовок, текст и веточка-украшение внизу. */
+function FactCard({
+  seed,
+  icon,
+  title,
+  weight,
+  flip,
+  children,
+}: {
+  seed: string;
+  icon: ReactNode;
+  title: string;
+  /** Доля ширины ряда (`herbLayout.factWeights`). */
+  weight: number;
+  flip?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <PaperCard seed={seed} padding={spacing.sm} style={{ flex: weight, gap: spacing.xs }}>
+      <View style={{ alignItems: 'center', gap: spacing.xs, paddingTop: spacing.xs, marginBottom: spacing.xs }}>
+        {icon}
+        <AppText variant="subheading" style={{ textAlign: 'center' }}>
+          {title}
+        </AppText>
+      </View>
+      {children}
+      <Sprig width={herbLayout.factSprig} flip={flip} style={{ marginTop: 'auto', alignSelf: flip ? 'flex-start' : 'flex-end' }} />
+    </PaperCard>
+  );
+}
+
+function FactText({ children, muted }: { children: ReactNode; muted?: boolean }) {
+  return (
+    <AppText variant="caption" tone={muted ? 'faint' : 'default'}>
       {children}
     </AppText>
+  );
+}
+
+/** «Внутрь: чай, настой» — подпись приглушённая, способы обычным текстом. */
+function UsageLine({ label, items }: { label: string; items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <AppText variant="caption">
+      <AppText variant="caption" tone="muted">
+        {label}:{' '}
+      </AppText>
+      {items.join(', ')}
+    </AppText>
+  );
+}
+
+/** Печать статуса и «Моя заметка» рукописным шрифтом: нажатие — правка, сохранение — само, как раньше. */
+function StampAndNote({ herb }: { herb: Herb }) {
+  const { data, loaded, readOnly, setNote } = useUserData();
+  const [editing, setEditing] = useState(false);
+  const saveNote = useCallback((text: string) => setNote(herb.id, text), [herb.id, setNote]);
+  const note = data.notes[herb.id]?.text ?? '';
+
+  let body: ReactNode;
+  if (!loaded) {
+    body = <AppText tone="muted">Загрузка…</AppText>;
+  } else if (editing) {
+    body = (
+      <View style={{ alignSelf: 'stretch' }}>
+        <NoteEditor
+          key={herb.id}
+          value={note}
+          onSave={saveNote}
+          autoFocus
+          onBlur={() => setEditing(false)}
+          style={[typography.hand, { backgroundColor: colors.paperDeep }]}
+        />
+      </View>
+    );
+  } else {
+    body = (
+      <Pressable
+        onPress={() => setEditing(true)}
+        accessibilityRole="button"
+        accessibilityLabel={note ? `Моя заметка: ${note}. Изменить` : 'Добавить заметку'}
+        hitSlop={spacing.sm}
+        style={({ pressed }) => ({ alignSelf: 'stretch', alignItems: 'center', opacity: pressed ? 0.6 : 1 })}
+      >
+        {note ? (
+          <AppText variant="hand" style={{ textAlign: 'center', color: colors.ink }}>
+            {note.trim()}
+          </AppText>
+        ) : (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
+            <Icon name="note" size={herbLayout.inlineIcon} color={colors.textFaint} />
+            <AppText variant="hand" tone="faint">
+              Добавить заметку
+            </AppText>
+          </View>
+        )}
+      </Pressable>
+    );
+  }
+
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+      <Stamp label={herb.status === 'checked' ? 'проверено' : 'черновик'} size={herbLayout.stamp} />
+      <View style={{ flex: 1, alignItems: 'center', gap: spacing.xs }}>
+        <View style={{ alignItems: 'center' }}>
+          <AppText variant="handTitle" tone="muted">
+            Моя заметка
+          </AppText>
+          <InkLine width={herbLayout.noteRule} seed={`${herb.id}:note`} />
+        </View>
+        {readOnly ? (
+          <AppText variant="caption" tone="danger" style={{ textAlign: 'center' }}>
+            Не удалось прочитать сохранённые данные — изменения сейчас не сохраняются.
+          </AppText>
+        ) : null}
+        {body}
+      </View>
+    </View>
   );
 }
 
 export default function HerbScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { herbById, sourceById, nameOf, photoSource } = useContent();
+  const { bundle, herbById, nameOf, photoSource } = useContent();
   const { setFilter } = useListFilter();
-  const { data, loaded, readOnly, isFavorite, toggleFavorite, setNote } = useUserData();
+  const { isFavorite, toggleFavorite } = useUserData();
   const { width } = useWindowDimensions();
   const herb = id ? herbById.get(id) : undefined;
 
-  const sourceIds = useMemo(() => (herb ? herbSourceIds(herb) : []), [herb]);
-  const saveNote = useCallback((text: string) => herb && setNote(herb.id, text), [herb, setNote]);
+  // открыли по ссылке (веб, обновление страницы) — истории нет, «назад» ведёт на главную
+  const goBack = () => (router.canGoBack() ? router.back() : router.replace('/'));
 
   if (!herb) {
     return (
-      <Screen safeTop={false}>
+      <Screen>
+        <TopBar onBack={goBack} />
         <AppText tone="muted">Трава не найдена — возможно, её убрали из базы.</AppText>
       </Screen>
     );
   }
 
-  // «[1: 11, 12; 2: 4.2]» — номер источника, двоеточие, страницы; без страницы — только номер.
-  const refs = (list: SourceRef[]) =>
-    list.length ? ` [${list.map((r) => `${sourceIds.indexOf(r.id) + 1}${r.page ? `: ${r.page}` : ''}`).join('; ')}]` : '';
   const openGroup = (key: CatalogKey, value: string) => {
     setFilter(filterForGroup(key, value));
     router.push('/herbs');
   };
+  const openDetails = () => router.push({ pathname: '/herb/[id]/details', params: { id: herb.id } });
   const favorite = isFavorite(herb.id);
-  const photoWidth = Math.min(width, 640) - spacing.lg * 2;
-  const children = herb.safety.children;
-  const childrenText =
-    children.status === 'ok' && children.from_age !== undefined
-      ? `можно с ${children.from_age} ${children.from_age === 1 ? 'года' : 'лет'}`
-      : SAFETY_STATUS_LABELS[children.status];
+  const contentWidth = Math.min(width, herbLayout.maxContentWidth) - spacing.lg * 2;
+
+  const systems = herbOrganSystems(herb, bundle.dictionaries);
+  const parts = herbParts(herb, bundle.dictionaries).map((p) => p.name);
+  const substances = herb.substances.map((s) => nameOf('substances', s));
+  const usage = usageSummary(herb);
+  const hasUsageSummary = usage.internal.length + usage.external.length > 0;
+  // все показания, лучший уровень доказанности — выше (сортировка устойчивая: равные — как в базе)
+  const indications = [...herb.indications].sort((a, b) => compareEvidenceDesc(a.evidence.level, b.evidence.level));
 
   return (
-    <Screen safeTop={false}>
-      <Stack.Screen
-        options={{
-          title: '',
-          headerRight: () => (
-            <IconButton
-              icon="heart"
-              filled={favorite}
-              label={favorite ? 'Убрать из избранного' : 'В избранное'}
-              color={favorite ? colors.accent : colors.text}
-              onPress={() => toggleFavorite(herb.id)}
-            />
-          ),
-        }}
+    <Screen>
+      <TopBar onBack={goBack} favorite={favorite} onToggleFavorite={() => toggleFavorite(herb.id)} />
+
+      <HerbHeader
+        herb={herb}
+        art={herbArt(herb, photoSource)}
+        contentWidth={contentWidth}
+        systems={systems}
+        onSystem={(systemId) => openGroup('organSystems', systemId)}
+        onMore={openDetails}
       />
 
-      <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -spacing.lg }}>
-        {herb.photos.map((p) => {
-          const source = photoSource(p.path);
-          return (
-            <View key={p.path} style={{ width: photoWidth + spacing.lg * 2, paddingHorizontal: spacing.lg, gap: spacing.xs }}>
-              {source ? (
-                <Image source={source} style={{ width: photoWidth, height: 260, borderRadius: radius.lg }} contentFit="cover" />
-              ) : (
-                <View style={{ width: photoWidth, height: 260, borderRadius: radius.lg, backgroundColor: colors.surfaceRaised }} />
-              )}
-              <AppText variant="tiny" tone="faint">
-                {photoCaption(p)}
-              </AppText>
-            </View>
-          );
-        })}
-      </ScrollView>
+      <View style={{ flexDirection: 'row', gap: spacing.sm, marginHorizontal: -herbLayout.factsBleed }}>
+        <FactCard
+          seed={`${herb.id}:parts`}
+          title="Части растения"
+          weight={herbLayout.factWeights[0]}
+          icon={<Sprig width={herbLayout.factIcon * 1.4} color={colors.ink} style={{ transform: [{ rotate: '-28deg' }] }} />}
+        >
+          <FactText muted={parts.length === 0}>{parts.length ? nameList(parts) : 'нет данных'}</FactText>
+        </FactCard>
+        <FactCard
+          seed={`${herb.id}:substances`}
+          title="Действующие вещества"
+          weight={herbLayout.factWeights[1]}
+          flip
+          icon={<Icon name="flask" size={herbLayout.factIcon} color={colors.ink} />}
+        >
+          <FactText muted={substances.length === 0}>{substances.length ? nameList(substances) : 'нет данных'}</FactText>
+        </FactCard>
+        <FactCard
+          seed={`${herb.id}:usage`}
+          title="Применение"
+          weight={herbLayout.factWeights[2]}
+          icon={<Icon name="cup" size={herbLayout.factIcon} color={colors.ink} />}
+        >
+          {hasUsageSummary ? (
+            <>
+              <UsageLine label="Внутрь" items={usage.internal} />
+              <UsageLine label="Наружно" items={usage.external} />
+            </>
+          ) : (
+            <FactText muted>{herb.usage.length ? 'Способы — в «Подробнее о траве»' : 'нет данных'}</FactText>
+          )}
+        </FactCard>
+      </View>
 
-      <View style={{ gap: spacing.xs }}>
-        <AppText variant="title">{herb.name}</AppText>
-        <AppText tone="muted" style={{ fontStyle: 'italic' }}>
-          {herb.latin}
-        </AppText>
-        {herb.other_names.length > 0 && (
-          <AppText variant="caption" tone="muted">
-            Другие названия: {herb.other_names.join(', ')}
+      <PaperCard seed={`${herb.id}:indications`} style={{ gap: spacing.md }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+          <AppText variant="heading" accessibilityRole="header">
+            От чего помогает
           </AppText>
-        )}
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm, marginTop: spacing.xs }}>
-          {herb.status === 'draft' && <Tag label={HERB_STATUS_LABELS.draft} />}
-          <Chip label={nameOf('families', herb.family)} onPress={() => openGroup('families', herb.family)} />
-          <Chip label={LIFE_FORM_LABELS[herb.life_form]} onPress={() => openGroup('lifeForms', herb.life_form)} />
-          {herb.sourcing.map((s) => (
-            <Chip key={s} label={SOURCING_LABELS[s]} onPress={() => openGroup('sourcing', s)} />
-          ))}
+          <Sprig width={herbLayout.headingSprig} />
         </View>
-      </View>
-
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-        {herb.indications.map((x) => (
-          <Chip key={x.indication} label={nameOf('indications', x.indication)} onPress={() => openGroup('indications', x.indication)} />
-        ))}
-      </View>
-
-      <Section title="Кратко">
-        <AppText>{herb.description}</AppText>
-      </Section>
-
-      <Section title="От чего помогает">
-        {herb.indications.map((x) => (
-          <Pressable key={x.indication} onPress={() => openGroup('indications', x.indication)} style={{ gap: 2 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+        {indications.map((x) => (
+          <Pressable
+            key={x.indication}
+            onPress={() => openGroup('indications', x.indication)}
+            accessibilityRole="link"
+            style={({ pressed }) => ({ flexDirection: 'row', gap: spacing.sm, opacity: pressed ? 0.6 : 1 })}
+          >
+            <View style={{ height: typography.body.lineHeight, justifyContent: 'center' }}>
               <EvidenceDot level={x.evidence.level} />
-              <AppText variant="heading" style={{ flex: 1 }}>
-                {nameOf('indications', x.indication)}
+            </View>
+            <View style={{ flex: 1 }}>
+              <AppText>{nameOf('indications', x.indication)}</AppText>
+              <AppText variant="caption" tone="muted">
+                {EVIDENCE_LABELS[x.evidence.level]}
               </AppText>
             </View>
-            <AppText variant="caption" tone="muted">
-              {EVIDENCE_LABELS[x.evidence.level]}. {x.evidence.note}
-              {refs(x.sources)}
-            </AppText>
+            <View style={{ height: typography.body.lineHeight, justifyContent: 'center' }}>
+              <Icon name="chevronRight" size={herbLayout.chevron} color={colors.textFaint} />
+            </View>
           </Pressable>
         ))}
-      </Section>
+      </PaperCard>
 
-      {herb.substances.length > 0 && (
-        <Section title="Действующие вещества">
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-            {herb.substances.map((s) => (
-              <Chip key={s} label={nameOf('substances', s)} onPress={() => openGroup('substances', s)} />
-            ))}
-          </View>
-        </Section>
-      )}
+      <StampAndNote herb={herb} />
 
-      {herb.actions.length > 0 && (
-        <Section title="Действие">
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-            {herb.actions.map((a) => (
-              <Chip key={a} label={nameOf('actions', a)} onPress={() => openGroup('actions', a)} />
-            ))}
-          </View>
-        </Section>
-      )}
-
-      {herb.habitats.length > 0 && (
-        <Section title="Где растёт">
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-            {herb.habitats.map((h) => (
-              <Chip key={h} label={nameOf('habitats', h)} onPress={() => openGroup('habitats', h)} />
-            ))}
-          </View>
-        </Section>
-      )}
-
-      <Section title="Сбор">
-        {herb.harvest.map((x, i) => (
-          <View key={i} style={{ gap: spacing.xs }}>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm }}>
-              <Chip label={nameOf('plantParts', x.part)} onPress={() => openGroup('parts', x.part)} />
-              {x.months.map((m) => (
-                <Chip key={m} label={monthName(m)} onPress={() => openGroup('months', String(m))} />
-              ))}
-            </View>
-            <AppText>
-              {x.how}
-              {refs(x.sources)}
-            </AppText>
-            <Line label="Сушка">{x.drying}</Line>
-            <Line label="Хранение">{x.storage}</Line>
-          </View>
-        ))}
-      </Section>
-
-      <Section title="Применение">
-        {herb.usage.map((u, i) => (
-          <View key={i} style={{ gap: 2 }}>
-            <AppText variant="heading">
-              {USAGE_FORM_LABELS[u.form]}
-              {u.for_indications.length ? ` · ${u.for_indications.map((x) => nameOf('indications', x)).join(', ')}` : ''}
-            </AppText>
-            <AppText>{u.recipe}</AppText>
-            <Line label="Дозировка">{u.dosage}</Line>
-            {u.course ? <Line label="Курс">{u.course}</Line> : null}
-            <AppText variant="tiny" tone="faint">
-              {refs(u.sources).trim()}
-            </AppText>
-          </View>
-        ))}
-      </Section>
-
-      <Section title="Безопасность">
-        <Line label="Беременность">{SAFETY_STATUS_LABELS[herb.safety.pregnancy]}</Line>
-        <Line label="Кормление грудью">{SAFETY_STATUS_LABELS[herb.safety.lactation]}</Line>
-        <Line label="Дети">{childrenText}</Line>
-        <Line label="Токсичность">{TOXICITY_LABELS[herb.safety.toxicity]}</Line>
-        {herb.safety.contraindications.map((x) => (
-          <AppText key={x} tone="danger">
-            Противопоказание: {x}
-          </AppText>
-        ))}
-        {herb.safety.warnings.map((x) => (
-          <AppText key={x}>⚠ {x}</AppText>
-        ))}
-        {herb.safety.interactions.map((x) => (
-          <AppText key={x}>Взаимодействие: {x}</AppText>
-        ))}
-        {herb.safety.side_effects.map((x) => (
-          <AppText key={x} tone="muted">
-            Побочное действие: {x}
-          </AppText>
-        ))}
-        <AppText variant="tiny" tone="faint">
-          {refs(herb.safety.sources).trim()}
-        </AppText>
-      </Section>
-
-      {herb.lookalikes.length > 0 && (
-        <Section title="С чем можно спутать">
-          {herb.lookalikes.map((l, i) => {
-            const title = l.herb ? (herbById.get(l.herb)?.name ?? l.herb) : `${l.name ?? ''} (${l.latin ?? ''})`;
-            const source = l.photo ? photoSource(l.photo.path) : null;
-            const lookalikeId = l.herb && herbById.has(l.herb) ? l.herb : undefined;
-            const heading = (
-              <AppText variant="heading" tone={l.poisonous ? 'danger' : lookalikeId ? 'accent' : 'default'}>
-                {title}
-                {l.poisonous ? ' — ядовит' : ''}
-              </AppText>
-            );
-            return (
-              <Card key={i} style={l.poisonous ? { borderColor: colors.danger, borderWidth: 2 } : undefined}>
-                {lookalikeId ? (
-                  <Pressable
-                    onPress={() => router.push({ pathname: '/herb/[id]', params: { id: lookalikeId } })}
-                    accessibilityRole="link"
-                  >
-                    {heading}
-                  </Pressable>
-                ) : (
-                  heading
-                )}
-                <AppText>{l.differences}</AppText>
-                {source && <Image source={source} style={{ width: '100%', height: 180, borderRadius: radius.md }} contentFit="cover" />}
-                {l.photo && (
-                  <AppText variant="tiny" tone="faint">
-                    {photoCaption(l.photo)}
-                  </AppText>
-                )}
-              </Card>
-            );
-          })}
-        </Section>
-      )}
-
-      <Section title="Мои заметки">
-        {readOnly && (
-          <AppText tone="danger">Не удалось прочитать сохранённые данные — изменения сейчас не сохраняются.</AppText>
-        )}
-        {loaded ? (
-          <NoteEditor key={herb.id} value={data.notes[herb.id]?.text ?? ''} onSave={saveNote} />
-        ) : (
-          <AppText tone="muted">Загрузка…</AppText>
-        )}
-      </Section>
-
-      <Section title="Источники">
-        {sourceIds.map((sid, i) => {
-          const s = sourceById.get(sid);
-          if (!s) return null;
-          const href = sourceHref(s);
-          return (
-            <Pressable key={sid} disabled={!href} onPress={() => href && openLink(href)} accessibilityRole={href ? 'link' : undefined}>
-              <AppText variant="caption" tone={href ? 'accent' : 'muted'}>
-                [{i + 1}] {s.authors.join(', ')}. {s.title}. {s.year}.{s.isbn ? ` ISBN ${s.isbn}.` : ''}
-              </AppText>
-            </Pressable>
-          );
-        })}
-      </Section>
+      <View style={{ gap: spacing.md }}>
+        <Button
+          large
+          seed={`${herb.id}:favorite`}
+          variant={favorite ? 'secondary' : 'primary'}
+          label={favorite ? 'В избранном' : 'Добавить в избранное'}
+          icon="heart"
+          iconWeight={favorite ? 'fill' : 'light'}
+          onPress={() => toggleFavorite(herb.id)}
+        />
+        <Button seed={`${herb.id}:details`} variant="secondary" label="Подробнее о траве" icon="chevronRight" onPress={openDetails} />
+      </View>
     </Screen>
   );
 }

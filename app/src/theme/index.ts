@@ -102,10 +102,16 @@ export const fonts = {
 /** Начертание задаётся семейством шрифта, без `fontWeight`: на Android жирность у своих шрифтов дорисовывается грубо. */
 export const typography = {
   hero: { fontFamily: fonts.display, fontSize: 44, lineHeight: 50 },
+  /** Название травы в карточке — крупно, как на макете 03. */
+  display: { fontFamily: fonts.display, fontSize: 32, lineHeight: 36 },
   title: { fontFamily: fonts.display, fontSize: 30, lineHeight: 36 },
   /** Заголовок раздела экрана («Собирать сейчас»). */
   section: { fontFamily: fonts.display, fontSize: 25, lineHeight: 30 },
   heading: { fontFamily: fonts.display, fontSize: 21, lineHeight: 26 },
+  /** Заголовок маленькой карточки (три карточки в ряд на карточке травы). */
+  subheading: { fontFamily: fonts.display, fontSize: 18, lineHeight: 21 },
+  /** Латинское название под названием травы. */
+  latin: { fontFamily: fonts.body, fontSize: 16, lineHeight: 21 },
   body: { fontFamily: fonts.body, fontSize: 15, lineHeight: 22 },
   caption: { fontFamily: fonts.body, fontSize: 13, lineHeight: 18 },
   tiny: { fontFamily: fonts.body, fontSize: 11, lineHeight: 15 },
@@ -114,7 +120,46 @@ export const typography = {
   /** Подписи нижних вкладок. */
   tab: { fontFamily: fonts.bodyMedium, fontSize: 12, lineHeight: 15 },
   hand: { fontFamily: fonts.hand, fontSize: 21, lineHeight: 25 },
+  /** Рукописный заголовок заметки («Моя заметка»). */
+  handTitle: { fontFamily: fonts.hand, fontSize: 25, lineHeight: 29 },
 } satisfies Record<string, TextStyle>;
+
+/** Размеры элементов карточки травы и экрана «Подробнее» (макет 03). */
+export const herbLayout = {
+  /** Рисунок справа от названия: доля ширины содержимого, высота и насколько он выходит к краю экрана, px. */
+  illustrationShare: 0.44,
+  illustrationHeight: 290,
+  illustrationBleed: 8,
+  /** Рисунок начинается чуть ниже верха названия: цветки на его верхушке не сталкиваются с буквами, px. */
+  illustrationTop: 28,
+  /** Фото вместо рисунка (рисунка нет): высота, px. */
+  photoFallbackHeight: 190,
+  /** Название может заходить на рисунок на эту долю его ширины: первая строка — над верхушкой рисунка. */
+  titleOverlap: 0.5,
+  /** Строк описания рядом с рисунком: не меньше / не больше (сколько влезает до низа рисунка). */
+  descriptionMinLines: 3,
+  descriptionMaxLines: 8,
+  /** Три карточки в ряд: иконка, веточка-украшение, отступ ряда от краёв экрана меньше обычного на, px. */
+  factIcon: 30,
+  factSprig: 34,
+  factsBleed: 8,
+  /** Доли ширины трёх карточек: веществ обычно больше всего, их карточка шире (как на макете). */
+  factWeights: [1, 1.35, 1.05],
+  /** Веточка у заголовка «От чего помогает», черта под «Моя заметка», доля ширины колонки под чертой описания. */
+  headingSprig: 30,
+  noteRule: 120,
+  descriptionRule: 0.8,
+  /** Иконки в строку с текстом: стрелка строки списка, карандаш заметки, предупреждение, px. */
+  chevron: 16,
+  inlineIcon: 18,
+  /** Печать «проверено» / «черновик», px. */
+  stamp: 96,
+  /** Галерея фото и фото двойника в «Подробнее», высота, px. */
+  galleryHeight: 260,
+  lookalikePhotoHeight: 180,
+  /** Ширина экрана, больше которой содержимое не растягивается, px. */
+  maxContentWidth: 640,
+} as const;
 
 /** Параметры тени под рваным краем: рисуется в том же SVG двумя слоями (без фильтров размытия — дёшево). */
 export interface PaperShadow {

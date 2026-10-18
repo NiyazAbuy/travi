@@ -62,13 +62,31 @@ export function herbParts(herb: Herb, dictionaries: Dictionaries): Named[] {
   return parts;
 }
 
-/** Название части без уточнения в скобках в конце: «Трава (надземная часть)» → «Трава». */
+/**
+ * Название без уточнения в скобках в конце: «Трава (надземная часть)» → «Трава».
+ * Скобки внутри уточнения учитываются: «Matricaria chamomilla L. (син. … (L.) Rauschert)» → «Matricaria chamomilla L.».
+ * Скобки в середине, несбалансированные скобки и название только из скобок — без изменений.
+ */
 export function shortLabel(name: string): string {
-  const short = name.replace(/\s*\([^()]*\)\s*$/, '');
-  return short === '' ? name : short;
+  const trimmed = name.trimEnd();
+  if (!trimmed.endsWith(')')) return name;
+  // от последней закрывающей скобки назад — до парной ей открывающей
+  let depth = 0;
+  for (let i = trimmed.length - 1; i >= 0; i--) {
+    const ch = trimmed[i];
+    if (ch === ')') depth++;
+    else if (ch === '(' && --depth === 0) {
+      const short = trimmed.slice(0, i).trimEnd();
+      return short === '' ? name : short;
+    }
+  }
+  return name;
 }
 
-const joinNames = (names: string[]) => names.map((n, i) => (i === 0 ? upperFirst(n) : lowerFirst(n))).join(', ');
+/** Названия через запятую одной фразой: первое с заглавной, остальные со строчной. */
+export function nameList(names: readonly string[]): string {
+  return names.map((n, i) => (i === 0 ? upperFirst(n) : lowerFirst(n))).join(', ');
+}
 
 /**
  * Строка под названием травы: названия действий через запятую (первое с заглавной, остальные со строчной).
@@ -76,9 +94,9 @@ const joinNames = (names: string[]) => names.map((n, i) => (i === 0 ? upperFirst
  */
 export function herbLine(herb: Herb, dictionaries: Dictionaries): string {
   const actions = herb.actions.flatMap((id) => dictionaries.actions.find((a) => a.id === id)?.name ?? []);
-  if (actions.length > 0) return joinNames(actions);
+  if (actions.length > 0) return nameList(actions);
   const indications = herb.indications.flatMap(
     (x) => dictionaries.indications.find((i) => i.id === x.indication)?.name ?? [],
   );
-  return joinNames(indications.slice(0, 2));
+  return nameList(indications.slice(0, 2));
 }

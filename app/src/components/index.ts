@@ -9,6 +9,7 @@ export * from './HerbCard';
 export * from './HerbRow';
 export * from './Icon';
 export * from './IconButton';
+export * from './InkLine';
 export * from './ListRow';
 export * from './NoteEditor';
 export * from './PaperCard';

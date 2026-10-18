@@ -1,16 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, type StyleProp, type TextStyle } from 'react-native';
 import { colors, radius, spacing, typography } from '@/theme';
 
 export interface NoteEditorProps {
   value: string;
   onSave: (text: string) => void;
+  /** Фокус сразу при появлении — поле открыто нажатием на заметку. */
+  autoFocus?: boolean;
+  /** Поле потеряло фокус (черновик уже сохранён). */
+  onBlur?: () => void;
+  /** Стиль поля поверх обычного (например, рукописный шрифт заметки). */
+  style?: StyleProp<TextStyle>;
 }
 
 const SAVE_DELAY_MS = 600;
 
 /** Заметка: локальный черновик, сохранение через паузу после ввода и при уходе с поля. */
-export function NoteEditor({ value, onSave }: NoteEditorProps) {
+export function NoteEditor({ value, onSave, autoFocus = false, onBlur, style }: NoteEditorProps) {
   const [draft, setDraft] = useState(value);
   const saved = useRef(value);
   const draftRef = useRef(draft);
@@ -43,6 +49,7 @@ export function NoteEditor({ value, onSave }: NoteEditorProps) {
       saved.current = draft;
       onSave(draft);
     }
+    onBlur?.();
   };
 
   return (
@@ -50,6 +57,7 @@ export function NoteEditor({ value, onSave }: NoteEditorProps) {
       value={draft}
       onChangeText={setDraft}
       onBlur={flush}
+      autoFocus={autoFocus}
       multiline
       placeholder="Например: растёт за дачей у ручья"
       placeholderTextColor={colors.textFaint}
@@ -64,6 +72,7 @@ export function NoteEditor({ value, onSave }: NoteEditorProps) {
           padding: spacing.md,
           textAlignVertical: 'top',
         },
+        style,
       ]}
     />
   );
