@@ -3,7 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { afterEach, describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
-import { fetchPhoto } from '../src/fetch-photo';
+import { fetchPhoto, parseCrop } from '../src/fetch-photo';
 import { compressToWebp, MAX_SIDE, TARGET_BYTES } from '../src/image';
 import { imageInfoUrl, normalizeFileTitle, normalizeLicense, parseImageInfo, stripHtml } from '../src/wikimedia';
 import { cleanupTempDirs, makeTempDir } from './helpers';
@@ -141,6 +141,94 @@ describe('fetchPhoto', () => {
       license: 'CC BY-SA 4.0',
       source_url: 'https://commons.wikimedia.org/wiki/File:Plantago_major.jpg',
     });
+  });
+
+  it('рисунок: вырезает фрагмент и делает бумагу прозрачной', async () => {
+    const contentDir = await makeTempDir();
+    const square = await sharp({ create: { width: 100, height: 100, channels: 3, background: { r: 46, g: 90, b: 46 } } })
+      .png()
+      .toBuffer();
+    // «таблица»: бумага, растение (квадрат) и номер таблицы в углу, который отрезается
+    const plate = await sharp({ create: { width: 800, height: 600, channels: 3, background: { r: 232, g: 220, b: 192 } } })
+      .composite([
+        { input: square, left: 250, top: 200 },
+        { input: square, left: 700, top: 0 },
+      ])
+      .jpeg({ quality: 95 })
+      .toBuffer();
+    const fetchFn = fakeFetch({
+      'https://commons.wikimedia.org/w/api.php': () => Response.json(apiJson('Public domain')),
+      'https://upload.wikimedia.org/thumb.jpg': () => new Response(new Uint8Array(plate)),
+    });
+
+    const r = await fetchPhoto(
+      {
+        contentDir,
+        herbId: 'plantago-major',
+        fileTitle: 'Plantago major.jpg',
+        outName: 'illustration.webp',
+        crop: { left: 150, top: 100, width: 400, height: 300 },
+        illustration: true,
+      },
+      fetchFn,
+    );
+
+    expect(r.license).toBe('PD');
+    const { data, info } = await sharp(await readFile(r.file)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    // номер таблицы отрезан, прозрачные поля убраны: остался квадрат 100×100 с небольшим запасом
+    expect(info.width).toBeGreaterThanOrEqual(100);
+    expect(info.width).toBeLessThan(130);
+    expect(Math.abs(info.height - info.width)).toBeLessThanOrEqual(4);
+    const alphaAt = (x: number, y: number) => data[(y * info.width + x) * 4 + 3];
+    expect(alphaAt(0, 0)).toBe(0);
+    expect(alphaAt(info.width - 1, 0)).toBe(0);
+    expect(alphaAt(info.width >> 1, info.height >> 1)).toBe(255);
+    const meta = parse(await readFile(path.join(contentDir, 'photos', 'plantago-major', 'photos.yaml'), 'utf8'));
+    expect(meta['illustration.webp']).toMatchObject({ license: 'PD' });
+  });
+
+  it('рисунок: --erase стирает прилипшую к растению подпись, --keep-main убирает отдельные фигуры', async () => {
+    const contentDir = await makeTempDir();
+    const block = (w: number, h: number) =>
+      sharp({ create: { width: w, height: h, channels: 3, background: { r: 46, g: 90, b: 46 } } })
+        .png()
+        .toBuffer();
+    const plate = await sharp({ create: { width: 600, height: 400, channels: 3, background: { r: 232, g: 220, b: 192 } } })
+      .composite([
+        { input: await block(100, 200), left: 200, top: 100 }, // растение
+        { input: await block(30, 30), left: 300, top: 270 }, // буква «a», касается растения
+        { input: await block(60, 60), left: 450, top: 50 }, // отдельная фигура
+      ])
+      .png()
+      .toBuffer();
+    const fetchFn = fakeFetch({
+      'https://commons.wikimedia.org/w/api.php': () => Response.json(apiJson('Public domain')),
+      'https://upload.wikimedia.org/thumb.jpg': () => new Response(new Uint8Array(plate)),
+    });
+    const r = await fetchPhoto(
+      {
+        contentDir,
+        herbId: 'plantago-major',
+        fileTitle: 'Plantago major.jpg',
+        outName: 'illustration.webp',
+        crop: { left: 100, top: 20, width: 500, height: 360 },
+        erase: [{ left: 300, top: 265, width: 40, height: 40 }],
+        illustration: true,
+        keepMain: true,
+      },
+      fetchFn,
+    );
+    const meta = await sharp(await readFile(r.file)).metadata();
+    // осталось только растение 100×200 и небольшой запас
+    expect(meta.width).toBeLessThan(115);
+    expect(meta.height).toBeLessThan(220);
+  });
+
+  it('parseCrop разбирает x,y,w,h и отклоняет мусор', () => {
+    expect(parseCrop('10,20,300,400')).toEqual({ left: 10, top: 20, width: 300, height: 400 });
+    expect(() => parseCrop('10,20,300')).toThrow(/--crop/);
+    expect(() => parseCrop('10,20,0,400')).toThrow(/--crop/);
+    expect(() => parseCrop('a,b,c,d')).toThrow(/--crop/);
   });
 
   it('проверяет имя файла до обращения к сети', async () => {

@@ -15,6 +15,7 @@ photos:
   - file: raw.webp
     kind: raw
     caption: Сухие листья мяты перечной
+illustration: { file: illustration.webp, kind: plant }
 description: >-
   Многолетнее сильно ароматное травянистое растение до 90 см высотой. Это естественный гибрид водной мяты
   (Mentha aquatica) и колосистой мяты (Mentha spicata); из-за такого происхождения он самостерилен, поэтому мяту разводят
