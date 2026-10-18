@@ -156,7 +156,7 @@ export function UpdateProvider({ children }: { children: ReactNode }) {
         // Ручная проверка могла завершиться раньше чтения — её результат новее.
         if (stateRef.current === null) {
           const reconciled = reconcileUpdateState(state, SCHEMA_VERSION);
-          // Очищенный флаг пишется на диск вместе с итогом проверки: если приложение закроют раньше, всё повторится.
+          // Очищенный флаг записывается вместе с результатом завершённой проверки; при отсутствии сети повторится при следующем запуске.
           stateRef.current = reconciled.state;
           forceCheck = reconciled.forceCheck;
           setAppUpdateNeeded(reconciled.state.appUpdateNeeded !== null);

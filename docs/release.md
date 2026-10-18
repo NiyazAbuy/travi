@@ -36,9 +36,9 @@
    git push origin main
    ```
 
-5. Дождитесь зелёного CI и новой базы на Pages: на `https://niyazabuy.github.io/travi/manifest.json` должен появиться новый `contentVersion`.
+5. Дождитесь зелёного CI (https://github.com/NiyazAbuy/travi/actions) и новой базы на Pages: на `https://niyazabuy.github.io/travi/manifest.json` должен появиться новый `contentVersion`.
 
-> Все команды в этой инструкции выполняйте по одной строке: в Windows PowerShell 5.1 цепочки через `&&` не работают.
+> Все команды в этой инструкции выполняйте по одной строке из корня репозитория (блоки с `cd app` заканчиваются `cd ..`): в Windows PowerShell 5.1 цепочки через `&&` не работают.
 
 ### Как выпускается новая база
 
@@ -59,6 +59,7 @@
    ```
    cd app
    npx eas-cli init
+   cd ..
    ```
 
 4. EAS допишет `projectId` в `app/app.json`. Закоммитьте этот файл и отправьте в `main`:
@@ -74,6 +75,7 @@
 ```
 cd app
 npx eas-cli build -p android --profile preview
+cd ..
 ```
 
 При первой сборке EAS предложит создать ключ подписи — соглашайтесь. Сборка идёт в облаке Expo; в конце в выводе будет ссылка на `.apk`.
@@ -120,6 +122,7 @@ npx eas-cli build -p android --profile preview
    ```
    cd app
    npx eas-cli credentials -p android
+   cd ..
    ```
 2. Выберите окружение сборки (`preview`), затем управление ключом (Keystore) и пункт «Download credentials».
 3. Сохраните скачанный файл и пароли в надёжном месте (не в репозитории).

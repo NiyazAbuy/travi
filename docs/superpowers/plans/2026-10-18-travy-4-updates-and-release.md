@@ -369,7 +369,7 @@ export function removeUnreferencedPhotos(store: UpdateStore, active: ContentBund
 
 ### Task 6: Первая сборка и релиз (с пользователем)
 
-- [ ] **Step 1:** `npm run content:app`, тесты, коммит (если что-то изменилось), `git push`; дождаться зелёного CI и новой базы на Pages (`curl https://niyazabuy.github.io/travi/manifest.json` — `contentVersion` = встроенной).
+- [ ] **Step 1:** закоммитить правки `content/` (если есть), затем `npm run content:app`, тесты, коммит встроенной базы (если что-то изменилось), `git push origin main`; дождаться зелёного CI (https://github.com/NiyazAbuy/travi/actions) и новой базы на Pages (`curl https://niyazabuy.github.io/travi/manifest.json` — `contentVersion` = встроенной).
 - [ ] **Step 2 (пользователь):** аккаунт на expo.dev, `cd app && npx eas-cli login`.
 - [ ] **Step 3:** `cd app && npx eas-cli init` (пропишет `extra.eas.projectId` в `app.json`) → `npx eas-cli build -p android --profile preview` (на вопрос о ключе — создать новый). Ошибки сборки монорепо — чинить и коммитить.
 - [ ] **Step 4 (пользователь):** поставить APK по ссылке/QR из EAS, проверить: запуск без сети, «Проверить обновления», карточка, фото, избранное, заметка.
