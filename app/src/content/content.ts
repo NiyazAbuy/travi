@@ -7,6 +7,7 @@ import {
   type Herb,
   type Recipe,
 } from '@travy/shared';
+import type { ImageSource } from 'expo-image';
 import raw from '../../assets/content/content.json';
 import { BUNDLED_PHOTOS } from './bundled-photos';
 
@@ -37,6 +38,10 @@ export function loadBundledContent(): AppContent {
 }
 
 /** Фото из встроенной базы по пути вида photos/<sha256>.webp. */
-export function photoSource(path: string): number | undefined {
-  return BUNDLED_PHOTOS[path];
+/** expo-image: ImageSource не включает number (результат require), поэтому добавляем его явно. */
+export type PhotoSource = ImageSource | number;
+
+export function photoSource(path: string): PhotoSource | null {
+  // План 4: сначала искать скачанное фото ({ uri }), затем встроенное.
+  return BUNDLED_PHOTOS[path] ?? null;
 }

@@ -20,7 +20,7 @@ export default function HomeScreen() {
             key={h.id}
             title={h.name}
             subtitle={h.latin}
-            image={photo ? photoSource(photo.path) : undefined}
+            image={photo ? photoSource(photo.path) : null}
             tags={isFavorite(h.id) ? ['в избранном'] : []}
             onPress={() => toggleFavorite(h.id)}
           />
