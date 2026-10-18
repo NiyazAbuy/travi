@@ -7,12 +7,14 @@ export interface ScreenProps {
   children: ReactNode;
   scroll?: boolean;
   padded?: boolean;
+  /** false — экран под заголовком стека: верхний отступ уже есть. */
+  safeTop?: boolean;
 }
 
-export function Screen({ children, scroll = true, padded = true }: ScreenProps) {
+export function Screen({ children, scroll = true, padded = true, safeTop = true }: ScreenProps) {
   const padding = padded ? spacing.lg : 0;
   return (
-    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView edges={safeTop ? ['top'] : []} style={{ flex: 1, backgroundColor: colors.background }}>
       {scroll ? (
         <ScrollView contentContainerStyle={{ padding, paddingBottom: spacing.xxl, gap: spacing.lg }}>{children}</ScrollView>
       ) : (

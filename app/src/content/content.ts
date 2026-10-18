@@ -6,6 +6,7 @@ import {
   type FilterIndex,
   type Herb,
   type Recipe,
+  type Source,
 } from '@travy/shared';
 import type { ImageSource } from 'expo-image';
 import raw from '../../assets/content/content.json';
@@ -16,6 +17,7 @@ export interface AppContent {
   index: FilterIndex;
   herbById: Map<string, Herb>;
   recipeById: Map<string, Recipe>;
+  sourceById: Map<string, Source>;
   /** Русское название записи словаря по id (или сам id, если записи нет). */
   nameOf: (key: DictionaryKey, id: string) => string;
 }
@@ -33,6 +35,7 @@ export function loadBundledContent(): AppContent {
     index: buildFilterIndex(bundle.dictionaries),
     herbById: new Map(bundle.herbs.map((h) => [h.id, h])),
     recipeById: new Map(bundle.recipes.map((r) => [r.id, r])),
+    sourceById: new Map(bundle.sources.map((s) => [s.id, s])),
     nameOf: (key, id) => names.get(key)?.get(id) ?? id,
   };
 }

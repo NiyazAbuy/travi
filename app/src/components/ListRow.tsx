@@ -14,13 +14,15 @@ export interface ListRowProps {
   tags?: string[];
   right?: ReactNode;
   onPress?: () => void;
+  onLongPress?: () => void;
 }
 
-export function ListRow({ title, subtitle, image, tags = [], right, onPress }: ListRowProps) {
+export function ListRow({ title, subtitle, image, tags = [], right, onPress, onLongPress }: ListRowProps) {
   return (
     <Pressable
       onPress={onPress}
-      accessibilityRole="button"
+      onLongPress={onLongPress}
+      accessibilityRole={onPress ? 'button' : undefined}
       style={({ pressed }) => ({
         flexDirection: 'row',
         alignItems: 'center',
