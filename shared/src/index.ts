@@ -3,3 +3,4 @@ export * from './evidence';
 export * from './labels';
 export * from './manifest';
 export * from './schema';
+export * from './query';
