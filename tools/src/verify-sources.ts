@@ -1,5 +1,7 @@
-import type { Source } from '@travy/shared';
+import { normalizeDoi, normalizePmid, type Source } from '@travy/shared';
 import { USER_AGENT } from './wikimedia';
+
+export { normalizeDoi, normalizePmid };
 
 export type VerifyStatus = 'ok' | 'mismatch' | 'not_found' | 'error';
 
@@ -13,18 +15,6 @@ export interface VerifyResult {
   detail?: string;
 }
 
-export function normalizeDoi(raw: string): string {
-  return raw
-    .trim()
-    .replace(/^https?:\/\/(dx\.)?doi\.org\//i, '')
-    .replace(/^doi:\s*/i, '')
-    .toLowerCase();
-}
-
-export function normalizePmid(raw: string): string | null {
-  const s = raw.trim().replace(/^pmid:?\s*/i, '');
-  return /^\d+$/.test(s) ? s : null;
-}
 
 function normalizeTitle(title: string): string {
   return title

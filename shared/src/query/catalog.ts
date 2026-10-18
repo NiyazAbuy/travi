@@ -27,7 +27,8 @@ export interface CatalogGroup {
   count: number;
 }
 
-function candidates(content: ContentBundle, key: CatalogKey): { value: string; label: string }[] {
+/** Все возможные значения раздела каталога с русскими подписями (в том числе без трав). */
+export function catalogOptions(content: ContentBundle, key: CatalogKey): { value: string; label: string }[] {
   const d = content.dictionaries;
   const fromDict = (items: { id: string; name: string }[]) => items.map((x) => ({ value: x.id, label: x.name }));
   switch (key) {
@@ -58,6 +59,11 @@ function candidates(content: ContentBundle, key: CatalogKey): { value: string; l
   }
 }
 
+/** Русская подпись значения раздела (или само значение, если такого нет). */
+export function optionLabel(content: ContentBundle, key: CatalogKey, value: string): string {
+  return catalogOptions(content, key).find((o) => o.value === value)?.label ?? value;
+}
+
 /** Фильтр с одним выбранным значением — переход из каталога в список трав. */
 export function filterForGroup(key: CatalogKey, value: string): HerbFilter {
   const f = emptyFilter();
@@ -69,7 +75,7 @@ export function filterForGroup(key: CatalogKey, value: string): HerbFilter {
 /** Группы раздела каталога с числом трав; пустые группы не показываются. */
 export function catalogGroups(content: ContentBundle, key: CatalogKey): CatalogGroup[] {
   const index = buildFilterIndex(content.dictionaries);
-  const groups = candidates(content, key)
+  const groups = catalogOptions(content, key)
     .map((c) => ({
       key,
       value: c.value,

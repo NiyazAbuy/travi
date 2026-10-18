@@ -5,3 +5,5 @@ export * from './manifest';
 export * from './schema';
 export * from './query';
 export * from './user';
+export * from './sources';
+export * from './text';

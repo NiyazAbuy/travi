@@ -16,9 +16,12 @@ import {
   type SafetyStatus,
   type Source,
   type SourceRef,
+  sourceHref,
 } from '@travy/shared';
+
+export { sourceHref };
 import type { LoadedContent } from './load';
-import { normalizeDoi, normalizePmid } from './verify-sources';
+
 
 export interface ReportOptions {
   /** Адрес фото относительно страницы отчёта */
@@ -35,13 +38,6 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
-/** Куда ведёт источник: DOI → doi.org, PMID → PubMed, иначе url. У книги с одним ISBN ссылки нет. */
-export function sourceHref(source: Source): string | undefined {
-  if (source.doi) return `https://doi.org/${normalizeDoi(source.doi)}`;
-  const pmid = source.pmid ? normalizePmid(source.pmid) : null;
-  if (pmid) return `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`;
-  return source.url;
-}
 
 const e = escapeHtml;
 const byId = <T extends { id: string }>(a: T, b: T) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
