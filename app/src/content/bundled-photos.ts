@@ -1,0 +1,23 @@
+// Сгенерировано командой `npm run content:app` — не редактировать вручную.
+export const BUNDLED_PHOTOS: Record<string, number> = {
+  'photos/183af2dccfba456165f6b75400de5742b0622115d3b7fb5c100a40604a36afe8.webp': require('../../assets/content/photos/183af2dccfba456165f6b75400de5742b0622115d3b7fb5c100a40604a36afe8.webp'),
+  'photos/23297f69eba202063ec879fde21effaf03072acfa0c8930a5fb4a90bec06af78.webp': require('../../assets/content/photos/23297f69eba202063ec879fde21effaf03072acfa0c8930a5fb4a90bec06af78.webp'),
+  'photos/2434e43fc5d4290eba40961e553ea12ecaee90ae5e7b944646ba58192e24c9c7.webp': require('../../assets/content/photos/2434e43fc5d4290eba40961e553ea12ecaee90ae5e7b944646ba58192e24c9c7.webp'),
+  'photos/3bdd5653ab8f776255c83108ec8c9880bbc6fc6c9710dbb24d4932aba804edc2.webp': require('../../assets/content/photos/3bdd5653ab8f776255c83108ec8c9880bbc6fc6c9710dbb24d4932aba804edc2.webp'),
+  'photos/4b36b9423c50399a2d8d43f315c9de510134d5362a468c2671847c813bb33072.webp': require('../../assets/content/photos/4b36b9423c50399a2d8d43f315c9de510134d5362a468c2671847c813bb33072.webp'),
+  'photos/50a8fb2720bb7e9beeb3b613befb3d47aeae38bca31cf1a171e85f154f355aac.webp': require('../../assets/content/photos/50a8fb2720bb7e9beeb3b613befb3d47aeae38bca31cf1a171e85f154f355aac.webp'),
+  'photos/5c98bf1b159e4f4d7ddf18cd1ca600c9ef9c3c02d57db5da1753d0ced7ed7535.webp': require('../../assets/content/photos/5c98bf1b159e4f4d7ddf18cd1ca600c9ef9c3c02d57db5da1753d0ced7ed7535.webp'),
+  'photos/5ff24ee6dc81270c81a972d773165c591b020efb6c430ad1a821d05a9d8accf6.webp': require('../../assets/content/photos/5ff24ee6dc81270c81a972d773165c591b020efb6c430ad1a821d05a9d8accf6.webp'),
+  'photos/62f178614153086624a64f905c9263aa1c5666734e9e0eb88266e680031fa948.webp': require('../../assets/content/photos/62f178614153086624a64f905c9263aa1c5666734e9e0eb88266e680031fa948.webp'),
+  'photos/73ccaaf596279caac24b02f68576235feafb2a19c4d6729d2ded2d7103eeb348.webp': require('../../assets/content/photos/73ccaaf596279caac24b02f68576235feafb2a19c4d6729d2ded2d7103eeb348.webp'),
+  'photos/94e617a679542c66c42aff902cb7665f7d5ebae00375c48dbc821a852716f625.webp': require('../../assets/content/photos/94e617a679542c66c42aff902cb7665f7d5ebae00375c48dbc821a852716f625.webp'),
+  'photos/9678b4f674a63c8ee0b09497d8785e1478699350f0cc9cab3098e3e79f4cb8ae.webp': require('../../assets/content/photos/9678b4f674a63c8ee0b09497d8785e1478699350f0cc9cab3098e3e79f4cb8ae.webp'),
+  'photos/9dc0c24d029842add0b2abbb0c0358bf977e2ecc1bec485807f8ac4e0c583677.webp': require('../../assets/content/photos/9dc0c24d029842add0b2abbb0c0358bf977e2ecc1bec485807f8ac4e0c583677.webp'),
+  'photos/a8d239506294f9c900133f36670fee5ed465fa266dfed7bd1e5c8ef27951c37c.webp': require('../../assets/content/photos/a8d239506294f9c900133f36670fee5ed465fa266dfed7bd1e5c8ef27951c37c.webp'),
+  'photos/abedbb5d34655a756be6c06e5b7aab34643d8d4b6cdd2a9e785319b75b8b037d.webp': require('../../assets/content/photos/abedbb5d34655a756be6c06e5b7aab34643d8d4b6cdd2a9e785319b75b8b037d.webp'),
+  'photos/b8076907e382517700573da275956aaad6ec110cfa8be264ff6c9cd69aacd7cf.webp': require('../../assets/content/photos/b8076907e382517700573da275956aaad6ec110cfa8be264ff6c9cd69aacd7cf.webp'),
+  'photos/d1b6f429533daadf4cbccf4da65586ce98f4a0bf81029d3100123a803fca8a9d.webp': require('../../assets/content/photos/d1b6f429533daadf4cbccf4da65586ce98f4a0bf81029d3100123a803fca8a9d.webp'),
+  'photos/dfd1d7f3fd3b567691a9bc1a230d12dbed9fa4dd73664292bb249fce8c90ae7f.webp': require('../../assets/content/photos/dfd1d7f3fd3b567691a9bc1a230d12dbed9fa4dd73664292bb249fce8c90ae7f.webp'),
+  'photos/f0267b7a756bbf9367d5cd2101c99cc695d299594a40b6ce0b786c636e662138.webp': require('../../assets/content/photos/f0267b7a756bbf9367d5cd2101c99cc695d299594a40b6ce0b786c636e662138.webp'),
+  'photos/fbb6b029965ec92eccc58c9e209831b4dfdfc2e741c3fa72e72fba6a6664551e.webp': require('../../assets/content/photos/fbb6b029965ec92eccc58c9e209831b4dfdfc2e741c3fa72e72fba6a6664551e.webp'),
+};

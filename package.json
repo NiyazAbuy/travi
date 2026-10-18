@@ -15,6 +15,7 @@
     "typecheck": "tsc -p shared && tsc -p tools && npm run typecheck -w @travy/app",
     "content:check": "tsx tools/src/cli/check.ts",
     "content:build": "tsx tools/src/cli/build.ts",
+    "content:app": "npm run content:build && tsx tools/src/cli/app-content.ts",
     "photo:fetch": "tsx tools/src/cli/fetch-photo.ts",
     "sources:verify": "tsx tools/src/cli/verify-sources.ts",
     "content:report": "tsx tools/src/cli/report.ts",
