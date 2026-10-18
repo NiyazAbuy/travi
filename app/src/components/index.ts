@@ -15,3 +15,4 @@ export * from './SearchField';
 export * from './Section';
 export * from './SectionHeader';
 export * from './Tag';
+export * from './Toast';

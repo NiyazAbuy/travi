@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { countRu, describeFilter, queryHerbs, removeFilterChip, type HerbFilter } from '@travy/shared';
+import { countRu, describeFilter, pruneFilter, queryHerbs, removeFilterChip, type HerbFilter } from '@travy/shared';
 import { AppText, Chip, FiltersSheet, HerbRow, Screen } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
@@ -14,8 +14,10 @@ export default function HerbListScreen() {
   const { filter: initialFilter } = useListFilter();
   const [filter, setFilter] = useState<HerbFilter>(initialFilter);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const herbs = useMemo(() => queryHerbs(bundle.herbs, filter, index), [bundle, filter, index]);
-  const chips = useMemo(() => describeFilter(filter, bundle), [filter, bundle]);
+  // После обновления базы условия с исчезнувшими id тихо выбрасываются.
+  const active = useMemo(() => pruneFilter(filter, bundle), [filter, bundle]);
+  const herbs = useMemo(() => queryHerbs(bundle.herbs, active, index), [bundle, active, index]);
+  const chips = useMemo(() => describeFilter(active, bundle), [active, bundle]);
 
   return (
     <Screen safeTop={false}>
@@ -25,23 +27,23 @@ export default function HerbListScreen() {
             key={`${c.key}:${c.value}`}
             label={`${c.label} ×`}
             selected
-            onPress={() => setFilter(removeFilterChip(filter, c))}
+            onPress={() => setFilter(removeFilterChip(active, c))}
           />
         ))}
         <Chip label="+ фильтр" onPress={() => setSheetOpen(true)} />
       </View>
       <AppText variant="caption" tone="muted">
         Найдено {countRu(herbs.length, FOUND_FORMS)}
-        {filter.indications.length > 0 ? ' · по доказанности' : ' · по алфавиту'}
+        {active.indications.length > 0 ? ' · по доказанности' : ' · по алфавиту'}
       </AppText>
       {herbs.length === 0 ? (
         <AppText tone="muted">Ничего не нашлось — уберите часть условий.</AppText>
       ) : (
-        herbs.map((h) => <HerbRow key={h.id} herb={h} indications={filter.indications} />)
+        herbs.map((h) => <HerbRow key={h.id} herb={h} indications={active.indications} />)
       )}
       <FiltersSheet
         visible={sheetOpen}
-        filter={filter}
+        filter={active}
         onApply={(next) => {
           setFilter(next);
           setSheetOpen(false);

@@ -1,12 +1,13 @@
 import { Pressable, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { Herb } from '@travy/shared';
-import { photoSource } from '@/content/content';
+import { useContent } from '@/content/ContentProvider';
 import { colors, radius, spacing } from '@/theme';
 import { AppText } from './AppText';
 
 /** Карточка травы для горизонтальных лент: фото и название. */
 export function HerbCard({ herb, onPress }: { herb: Herb; onPress: () => void }) {
+  const { photoSource } = useContent();
   const photo = herb.photos[0];
   const source = photo ? photoSource(photo.path) : null;
   return (

@@ -20,7 +20,6 @@ import {
   type SourceRef,
 } from '@travy/shared';
 import { AppText, Card, Chip, EvidenceDot, IconButton, NoteEditor, Screen, Section, Tag } from '@/components';
-import { photoSource } from '@/content/content';
 import { useContent } from '@/content/ContentProvider';
 import { openLink } from '@/lib/openLink';
 import { useListFilter } from '@/state/ListFilterProvider';
@@ -43,7 +42,7 @@ function Line({ label, children }: { label: string; children: string }) {
 export default function HerbScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { herbById, sourceById, nameOf } = useContent();
+  const { herbById, sourceById, nameOf, photoSource } = useContent();
   const { setFilter } = useListFilter();
   const { data, loaded, readOnly, isFavorite, toggleFavorite, setNote } = useUserData();
   const { width } = useWindowDimensions();

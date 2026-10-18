@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
 import { evidenceRank, type Herb } from '@travy/shared';
-import { photoSource } from '@/content/content';
 import { useContent } from '@/content/ContentProvider';
 import { useUserData } from '@/user/UserDataProvider';
 import { EvidenceDot } from './EvidenceDot';
@@ -15,7 +14,7 @@ export interface HerbRowProps {
 /** Строка травы в списках: фото, название, латынь, до двух показаний; долгое нажатие — в избранное. */
 export function HerbRow({ herb, indications = [] }: HerbRowProps) {
   const router = useRouter();
-  const { nameOf } = useContent();
+  const { nameOf, photoSource } = useContent();
   const { isFavorite, toggleFavorite } = useUserData();
   const photo = herb.photos[0];
 

@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { collectNow, emptyFilter, filterForGroup, monthName } from '@travy/shared';
 import { AppText, HerbCard, Screen, SectionHeader, type IconName } from '@/components';
-import { photoSource } from '@/content/content';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { colors, radius, spacing, typography } from '@/theme';
@@ -40,7 +39,7 @@ function Tile({ icon, label, onPress }: { icon: IconName; label: string; onPress
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { bundle } = useContent();
+  const { bundle, photoSource } = useContent();
   const { setFilter } = useListFilter();
   const month = new Date().getMonth() + 1;
   const now = useMemo(() => collectNow(bundle, month), [bundle, month]);
