@@ -4,6 +4,7 @@ export * from './Card';
 export * from './Chip';
 export * from './DisclaimerGate';
 export * from './EvidenceDot';
+export * from './FiltersSheet';
 export * from './HerbCard';
 export * from './HerbRow';
 export * from './IconButton';

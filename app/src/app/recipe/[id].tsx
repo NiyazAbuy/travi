@@ -1,8 +1,9 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Linking, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { EVIDENCE_LABELS, recipeSourceIds, sourceHref } from '@travy/shared';
 import { AppText, EvidenceDot, ListRow, Screen, Section } from '@/components';
 import { useContent } from '@/content/ContentProvider';
+import { openLink } from '@/lib/openLink';
 import { spacing } from '@/theme';
 
 export default function RecipeScreen() {
@@ -56,7 +57,7 @@ export default function RecipeScreen() {
           if (!s) return null;
           const href = sourceHref(s);
           return (
-            <Pressable key={sid} disabled={!href} onPress={() => href && Linking.openURL(href)}>
+            <Pressable key={sid} disabled={!href} onPress={() => href && openLink(href)}>
               <AppText variant="caption" tone={href ? 'accent' : 'muted'}>
                 [{i + 1}] {s.authors.join(', ')}. {s.title}. {s.year}.
               </AppText>

@@ -1,11 +1,15 @@
-import { Linking, Pressable } from 'react-native';
+import { Pressable } from 'react-native';
 import { contentVersionDate, countRu } from '@travy/shared';
 import { AppText, DISCLAIMER_TEXT, Screen, Section } from '@/components';
 import { useContent } from '@/content/ContentProvider';
+import { openLink } from '@/lib/openLink';
 
 export default function SettingsScreen() {
   const { bundle } = useContent();
-  const photos = bundle.herbs.flatMap((h) => h.photos.map((p) => ({ herb: h.name, ...p })));
+  const photos = bundle.herbs.flatMap((h) => [
+    ...h.photos.map((p) => ({ label: h.name, ...p })),
+    ...h.lookalikes.flatMap((l) => (l.photo ? [{ label: `${h.name} — двойник`, ...l.photo }] : [])),
+  ]);
 
   return (
     <Screen safeTop={false}>
@@ -24,9 +28,9 @@ export default function SettingsScreen() {
       </Section>
       <Section title="Авторы фотографий">
         {photos.map((p) => (
-          <Pressable key={p.path + p.herb} onPress={() => Linking.openURL(p.source_url)} accessibilityRole="link">
+          <Pressable key={`${p.label}:${p.path}`} onPress={() => openLink(p.source_url)} accessibilityRole="link">
             <AppText variant="caption" tone="accent">
-              {p.herb}: {p.author} · {p.license}
+              {p.label}: {p.author} · {p.license}
             </AppText>
           </Pressable>
         ))}

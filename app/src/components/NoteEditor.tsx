@@ -13,6 +13,21 @@ const SAVE_DELAY_MS = 600;
 export function NoteEditor({ value, onSave }: NoteEditorProps) {
   const [draft, setDraft] = useState(value);
   const saved = useRef(value);
+  const draftRef = useRef(draft);
+  const onSaveRef = useRef(onSave);
+  draftRef.current = draft;
+  onSaveRef.current = onSave;
+
+  // При уходе с экрана досохраняем последние символы: таймер ниже при размонтировании сбрасывается.
+  useEffect(
+    () => () => {
+      if (draftRef.current !== saved.current) {
+        saved.current = draftRef.current;
+        onSaveRef.current(draftRef.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (draft === saved.current) return;

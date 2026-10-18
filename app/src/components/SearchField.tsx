@@ -6,9 +6,10 @@ export interface SearchFieldProps {
   onChangeText: (text: string) => void;
   placeholder?: string;
   onSubmit?: () => void;
+  autoFocus?: boolean;
 }
 
-export function SearchField({ value, onChangeText, placeholder = 'Поиск трав, свойств, проблем…', onSubmit }: SearchFieldProps) {
+export function SearchField({ value, onChangeText, placeholder = 'Поиск трав, свойств, проблем…', onSubmit, autoFocus = false }: SearchFieldProps) {
   return (
     <TextInput
       value={value}
@@ -16,6 +17,7 @@ export function SearchField({ value, onChangeText, placeholder = 'Поиск т�
       placeholder={placeholder}
       placeholderTextColor={colors.textFaint}
       onSubmitEditing={onSubmit}
+      autoFocus={autoFocus}
       returnKeyType="search"
       accessibilityLabel="Поиск"
       style={[

@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
-import { Linking, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import {
   EVIDENCE_LABELS,
   filterForGroup,
@@ -16,14 +16,20 @@ import {
   TOXICITY_LABELS,
   USAGE_FORM_LABELS,
   type CatalogKey,
+  type Photo,
   type SourceRef,
 } from '@travy/shared';
 import { AppText, Card, Chip, EvidenceDot, IconButton, NoteEditor, Screen, Section, Tag } from '@/components';
 import { photoSource } from '@/content/content';
 import { useContent } from '@/content/ContentProvider';
+import { openLink } from '@/lib/openLink';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { colors, radius, spacing } from '@/theme';
 import { useUserData } from '@/user/UserDataProvider';
+
+function photoCaption(p: Photo): string {
+  return `${PHOTO_KIND_LABELS[p.kind]}${p.caption ? `: ${p.caption}` : ''} · ${p.author} · ${p.license}`;
+}
 
 function Line({ label, children }: { label: string; children: string }) {
   return (
@@ -39,7 +45,7 @@ export default function HerbScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { herbById, sourceById, nameOf } = useContent();
   const { setFilter } = useListFilter();
-  const { data, isFavorite, toggleFavorite, setNote } = useUserData();
+  const { data, loaded, readOnly, isFavorite, toggleFavorite, setNote } = useUserData();
   const { width } = useWindowDimensions();
   const herb = id ? herbById.get(id) : undefined;
 
@@ -54,8 +60,9 @@ export default function HerbScreen() {
     );
   }
 
+  // «[1: 11, 12; 2: 4.2]» — номер источника, двоеточие, страницы; без страницы — только номер.
   const refs = (list: SourceRef[]) =>
-    list.length ? ` [${list.map((r) => `${sourceIds.indexOf(r.id) + 1}${r.page ? `, ${r.page}` : ''}`).join('; ')}]` : '';
+    list.length ? ` [${list.map((r) => `${sourceIds.indexOf(r.id) + 1}${r.page ? `: ${r.page}` : ''}`).join('; ')}]` : '';
   const openGroup = (key: CatalogKey, value: string) => {
     setFilter(filterForGroup(key, value));
     router.push('/herbs');
@@ -95,8 +102,7 @@ export default function HerbScreen() {
                 <View style={{ width: photoWidth, height: 260, borderRadius: radius.lg, backgroundColor: colors.surfaceRaised }} />
               )}
               <AppText variant="tiny" tone="faint">
-                {PHOTO_KIND_LABELS[p.kind]}
-                {p.caption ? `: ${p.caption}` : ''} · {p.author} · {p.license}
+                {photoCaption(p)}
               </AppText>
             </View>
           );
@@ -106,13 +112,19 @@ export default function HerbScreen() {
       <View style={{ gap: spacing.xs }}>
         <AppText variant="title">{herb.name}</AppText>
         <AppText tone="muted" style={{ fontStyle: 'italic' }}>
-          {herb.latin} · {nameOf('families', herb.family)}
+          {herb.latin}
         </AppText>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs }}>
+        {herb.other_names.length > 0 && (
+          <AppText variant="caption" tone="muted">
+            Другие названия: {herb.other_names.join(', ')}
+          </AppText>
+        )}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm, marginTop: spacing.xs }}>
           {herb.status === 'draft' && <Tag label={HERB_STATUS_LABELS.draft} />}
-          <Tag label={LIFE_FORM_LABELS[herb.life_form]} />
+          <Chip label={nameOf('families', herb.family)} onPress={() => openGroup('families', herb.family)} />
+          <Chip label={LIFE_FORM_LABELS[herb.life_form]} onPress={() => openGroup('lifeForms', herb.life_form)} />
           {herb.sourcing.map((s) => (
-            <Tag key={s} label={SOURCING_LABELS[s]} />
+            <Chip key={s} label={SOURCING_LABELS[s]} onPress={() => openGroup('sourcing', s)} />
           ))}
         </View>
       </View>
@@ -164,12 +176,25 @@ export default function HerbScreen() {
         </Section>
       )}
 
+      {herb.habitats.length > 0 && (
+        <Section title="Где растёт">
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+            {herb.habitats.map((h) => (
+              <Chip key={h} label={nameOf('habitats', h)} onPress={() => openGroup('habitats', h)} />
+            ))}
+          </View>
+        </Section>
+      )}
+
       <Section title="Сбор">
         {herb.harvest.map((x, i) => (
-          <View key={i} style={{ gap: 2 }}>
-            <AppText variant="heading">
-              {nameOf('plantParts', x.part)} · {x.months.map(monthName).join(', ')}
-            </AppText>
+          <View key={i} style={{ gap: spacing.xs }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm }}>
+              <Chip label={nameOf('plantParts', x.part)} onPress={() => openGroup('parts', x.part)} />
+              {x.months.map((m) => (
+                <Chip key={m} label={monthName(m)} onPress={() => openGroup('months', String(m))} />
+              ))}
+            </View>
             <AppText>
               {x.how}
               {refs(x.sources)}
@@ -228,14 +253,32 @@ export default function HerbScreen() {
           {herb.lookalikes.map((l, i) => {
             const title = l.herb ? (herbById.get(l.herb)?.name ?? l.herb) : `${l.name ?? ''} (${l.latin ?? ''})`;
             const source = l.photo ? photoSource(l.photo.path) : null;
+            const lookalikeId = l.herb && herbById.has(l.herb) ? l.herb : undefined;
+            const heading = (
+              <AppText variant="heading" tone={l.poisonous ? 'danger' : lookalikeId ? 'accent' : 'default'}>
+                {title}
+                {l.poisonous ? ' — ядовит' : ''}
+              </AppText>
+            );
             return (
               <Card key={i} style={l.poisonous ? { borderColor: colors.danger, borderWidth: 2 } : undefined}>
-                <AppText variant="heading" tone={l.poisonous ? 'danger' : 'default'}>
-                  {title}
-                  {l.poisonous ? ' — ядовит' : ''}
-                </AppText>
+                {lookalikeId ? (
+                  <Pressable
+                    onPress={() => router.push({ pathname: '/herb/[id]', params: { id: lookalikeId } })}
+                    accessibilityRole="link"
+                  >
+                    {heading}
+                  </Pressable>
+                ) : (
+                  heading
+                )}
                 <AppText>{l.differences}</AppText>
                 {source && <Image source={source} style={{ width: '100%', height: 180, borderRadius: radius.md }} contentFit="cover" />}
+                {l.photo && (
+                  <AppText variant="tiny" tone="faint">
+                    {photoCaption(l.photo)}
+                  </AppText>
+                )}
               </Card>
             );
           })}
@@ -243,7 +286,14 @@ export default function HerbScreen() {
       )}
 
       <Section title="Мои заметки">
-        <NoteEditor value={data.notes[herb.id]?.text ?? ''} onSave={saveNote} />
+        {readOnly && (
+          <AppText tone="danger">Не удалось прочитать сохранённые данные — изменения сейчас не сохраняются.</AppText>
+        )}
+        {loaded ? (
+          <NoteEditor key={herb.id} value={data.notes[herb.id]?.text ?? ''} onSave={saveNote} />
+        ) : (
+          <AppText tone="muted">Загрузка…</AppText>
+        )}
       </Section>
 
       <Section title="Источники">
@@ -252,7 +302,7 @@ export default function HerbScreen() {
           if (!s) return null;
           const href = sourceHref(s);
           return (
-            <Pressable key={sid} disabled={!href} onPress={() => href && Linking.openURL(href)} accessibilityRole={href ? 'link' : undefined}>
+            <Pressable key={sid} disabled={!href} onPress={() => href && openLink(href)} accessibilityRole={href ? 'link' : undefined}>
               <AppText variant="caption" tone={href ? 'accent' : 'muted'}>
                 [{i + 1}] {s.authors.join(', ')}. {s.title}. {s.year}.{s.isbn ? ` ISBN ${s.isbn}.` : ''}
               </AppText>

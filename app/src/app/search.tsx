@@ -16,7 +16,7 @@ export default function SearchScreen() {
 
   return (
     <Screen safeTop={false}>
-      <SearchField value={query} onChangeText={setQuery} />
+      <SearchField value={query} onChangeText={setQuery} autoFocus />
       {result.groups.length > 0 && (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
           {result.groups.map((g) => (

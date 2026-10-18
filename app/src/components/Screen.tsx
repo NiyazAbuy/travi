@@ -14,9 +14,14 @@ export interface ScreenProps {
 export function Screen({ children, scroll = true, padded = true, safeTop = true }: ScreenProps) {
   const padding = padded ? spacing.lg : 0;
   return (
-    <SafeAreaView edges={safeTop ? ['top'] : []} style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView edges={safeTop ? ['top'] : ['bottom']} style={{ flex: 1, backgroundColor: colors.background }}>
       {scroll ? (
-        <ScrollView contentContainerStyle={{ padding, paddingBottom: spacing.xxl, gap: spacing.lg }}>{children}</ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ padding, paddingBottom: spacing.xxl, gap: spacing.lg }}
+        >
+          {children}
+        </ScrollView>
       ) : (
         <View style={{ flex: 1, padding, gap: spacing.lg }}>{children}</View>
       )}

@@ -1,8 +1,7 @@
-import { useRouter } from 'expo-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { countRu, describeFilter, queryHerbs, removeFilterChip } from '@travy/shared';
-import { AppText, Chip, HerbRow, Screen } from '@/components';
+import { countRu, describeFilter, queryHerbs, removeFilterChip, type HerbFilter } from '@travy/shared';
+import { AppText, Chip, FiltersSheet, HerbRow, Screen } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { spacing } from '@/theme';
@@ -10,9 +9,11 @@ import { spacing } from '@/theme';
 const FOUND_FORMS = ['трава', 'травы', 'трав'] as const;
 
 export default function HerbListScreen() {
-  const router = useRouter();
   const { bundle, index } = useContent();
-  const { filter, setFilter } = useListFilter();
+  // Каждый экран списка хранит свой фильтр: общий задаёт лишь начальное значение при открытии.
+  const { filter: initialFilter } = useListFilter();
+  const [filter, setFilter] = useState<HerbFilter>(initialFilter);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const herbs = useMemo(() => queryHerbs(bundle.herbs, filter, index), [bundle, filter, index]);
   const chips = useMemo(() => describeFilter(filter, bundle), [filter, bundle]);
 
@@ -27,7 +28,7 @@ export default function HerbListScreen() {
             onPress={() => setFilter(removeFilterChip(filter, c))}
           />
         ))}
-        <Chip label="+ фильтр" onPress={() => router.push('/filters')} />
+        <Chip label="+ фильтр" onPress={() => setSheetOpen(true)} />
       </View>
       <AppText variant="caption" tone="muted">
         Найдено {countRu(herbs.length, FOUND_FORMS)}
@@ -38,6 +39,15 @@ export default function HerbListScreen() {
       ) : (
         herbs.map((h) => <HerbRow key={h.id} herb={h} indications={filter.indications} />)
       )}
+      <FiltersSheet
+        visible={sheetOpen}
+        filter={filter}
+        onApply={(next) => {
+          setFilter(next);
+          setSheetOpen(false);
+        }}
+        onClose={() => setSheetOpen(false)}
+      />
     </Screen>
   );
 }

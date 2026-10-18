@@ -22,7 +22,6 @@ export default function RootLayout() {
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="herbs" options={{ title: 'Травы' }} />
-            <Stack.Screen name="filters" options={{ title: 'Фильтры', presentation: 'modal' }} />
             <Stack.Screen name="herb/[id]" options={{ title: '' }} />
             <Stack.Screen name="recipe/[id]" options={{ title: '' }} />
             <Stack.Screen name="catalog/[key]" options={{ title: 'Каталог' }} />
