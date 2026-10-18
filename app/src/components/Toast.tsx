@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '@/theme';
+import { colors, spacing } from '@/theme';
 import { AppText } from './AppText';
+import { PaperCard } from './PaperCard';
 
 const TOAST_MS = 4000;
 
@@ -21,7 +22,6 @@ export function Toast({ message }: { message: string | null }) {
   if (!message || expired === message) return null;
   return (
     <View
-      pointerEvents="none"
       accessibilityLiveRegion="polite"
       style={{
         position: 'absolute',
@@ -29,15 +29,12 @@ export function Toast({ message }: { message: string | null }) {
         right: spacing.lg,
         // Выше панели вкладок (её высота меньше spacing.xxl * 2).
         bottom: insets.bottom + spacing.xxl * 2,
-        paddingVertical: spacing.md,
-        paddingHorizontal: spacing.lg,
-        borderRadius: radius.md,
-        borderWidth: 1,
-        borderColor: colors.border,
-        backgroundColor: colors.surfaceRaised,
+        pointerEvents: 'none',
       }}
     >
-      <AppText>{message}</AppText>
+      <PaperCard seed="toast" padding={spacing.md} color={colors.paperChip}>
+        <AppText>{message}</AppText>
+      </PaperCard>
     </View>
   );
 }

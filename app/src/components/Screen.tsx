@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing } from '@/theme';
+import { PaperTexture } from './PaperTexture';
 
 export interface ScreenProps {
   children: ReactNode;
@@ -11,10 +12,12 @@ export interface ScreenProps {
   safeTop?: boolean;
 }
 
+/** Экран на бумаге: кремовый фон с зерном (неподвижным при прокрутке) и отступы по краям. */
 export function Screen({ children, scroll = true, padded = true, safeTop = true }: ScreenProps) {
   const padding = padded ? spacing.lg : 0;
   return (
     <SafeAreaView edges={safeTop ? ['top'] : ['bottom']} style={{ flex: 1, backgroundColor: colors.background }}>
+      <PaperTexture />
       {scroll ? (
         <ScrollView
           keyboardShouldPersistTaps="handled"

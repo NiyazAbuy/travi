@@ -1,9 +1,6 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import type { ComponentProps } from 'react';
 import { Pressable } from 'react-native';
-import { colors, spacing } from '@/theme';
-
-export type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
+import { colors, radius, shadow, spacing } from '@/theme';
+import { Icon, type IconName } from './Icon';
 
 export interface IconButtonProps {
   icon: IconName;
@@ -11,18 +8,33 @@ export interface IconButtonProps {
   onPress: () => void;
   color?: string;
   size?: number;
+  /** Залитое начертание (например, «сердце» травы в избранном). */
+  filled?: boolean;
+  /** Круглая бумажная подложка с тенью — как кнопки «назад» и «ещё» на макете карточки. */
+  round?: boolean;
 }
 
-export function IconButton({ icon, label, onPress, color = colors.text, size = 24 }: IconButtonProps) {
+export function IconButton({ icon, label, onPress, color = colors.text, size = 24, filled = false, round = false }: IconButtonProps) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
       hitSlop={spacing.sm}
-      style={({ pressed }) => ({ padding: spacing.xs, opacity: pressed ? 0.6 : 1 })}
+      style={({ pressed }) => [
+        { padding: spacing.xs, opacity: pressed ? 0.6 : 1, alignItems: 'center', justifyContent: 'center' },
+        round && [
+          {
+            width: size + spacing.lg,
+            height: size + spacing.lg,
+            borderRadius: radius.pill,
+            backgroundColor: colors.field,
+          },
+          shadow.soft,
+        ],
+      ]}
     >
-      <MaterialCommunityIcons name={icon} size={size} color={color} />
+      <Icon name={icon} size={size} color={color} weight={filled ? 'fill' : 'light'} />
     </Pressable>
   );
 }

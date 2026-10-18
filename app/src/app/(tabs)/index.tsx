@@ -1,10 +1,9 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
 import { useRouter, type Href } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { collectNow, emptyFilter, filterForGroup, monthName } from '@travy/shared';
-import { AppText, HerbCard, Screen, SectionHeader, type IconName } from '@/components';
+import { AppText, HerbCard, Icon, Screen, SectionHeader, type IconName } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { colors, radius, spacing, typography } from '@/theme';
@@ -28,7 +27,7 @@ function Tile({ icon, label, onPress }: { icon: IconName; label: string; onPress
           justifyContent: 'center',
         }}
       >
-        <MaterialCommunityIcons name={icon} size={26} color={colors.accent} />
+        <Icon name={icon} size={28} color={colors.accent} />
       </View>
       <AppText variant="tiny" tone="muted" style={{ textAlign: 'center' }}>
         {label}
@@ -74,15 +73,15 @@ export default function HomeScreen() {
           paddingVertical: spacing.md,
         }}
       >
-        <MaterialCommunityIcons name="magnify" size={20} color={colors.textFaint} />
+        <Icon name="search" size={22} color={colors.textMuted} />
         <AppText style={[typography.body, { color: colors.textFaint }]}>Поиск трав, свойств, проблем…</AppText>
       </Pressable>
 
       <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-        <Tile icon="view-grid-outline" label="Каталог" onPress={() => go('/catalog')} />
-        <Tile icon="sprout-outline" label="Все травы" onPress={() => openList()} />
-        <Tile icon="heart-outline" label="Избранное" onPress={() => go('/favorites')} />
-        <Tile icon="information-outline" label="О приложении" onPress={() => go('/settings')} />
+        <Tile icon="book" label="Каталог" onPress={() => go('/catalog')} />
+        <Tile icon="plant" label="Все травы" onPress={() => openList()} />
+        <Tile icon="heart" label="Избранное" onPress={() => go('/favorites')} />
+        <Tile icon="info" label="О приложении" onPress={() => go('/settings')} />
       </View>
 
       <Pressable

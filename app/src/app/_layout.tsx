@@ -1,23 +1,50 @@
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { DisclaimerGate } from '@/components';
+import { useEffect } from 'react';
+import { View } from 'react-native';
+import { DisclaimerGate, PaperTexture } from '@/components';
 import { ContentProvider } from '@/content/ContentProvider';
 import { ListFilterProvider } from '@/state/ListFilterProvider';
-import { colors } from '@/theme';
+import { colors, fonts } from '@/theme';
+import { useThemeFonts } from '@/theme/fonts';
 import { UpdateProvider } from '@/update/UpdateProvider';
 import { UserDataProvider } from '@/user/UserDataProvider';
 
+// Сплэш держится, пока не готовы шрифты: без мигания системного шрифта при запуске.
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
+/** Шапка экранов стека — та же бумага, что под ней. */
+function HeaderPaper() {
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <PaperTexture />
+    </View>
+  );
+}
+
 export default function RootLayout() {
+  // Шрифты загрузились, не загрузились или не успели — в любом случае дальше (тогда текст системным шрифтом).
+  const fontsReady = useThemeFonts();
+
+  useEffect(() => {
+    if (fontsReady) SplashScreen.hide();
+  }, [fontsReady]);
+
+  if (!fontsReady) return null;
+
   return (
     <ContentProvider>
       <UpdateProvider>
         <UserDataProvider>
           <ListFilterProvider>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <Stack
               screenOptions={{
                 headerStyle: { backgroundColor: colors.background },
+                headerBackground: HeaderPaper,
                 headerTintColor: colors.text,
+                headerTitleStyle: { fontFamily: fonts.display, fontSize: 24, color: colors.text },
                 headerShadowVisible: false,
                 contentStyle: { backgroundColor: colors.background },
               }}

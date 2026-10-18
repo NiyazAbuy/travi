@@ -18,6 +18,7 @@ import { colors, spacing } from '@/theme';
 import { AppText } from './AppText';
 import { Button } from './Button';
 import { Chip } from './Chip';
+import { PaperTexture } from './PaperTexture';
 
 const THRESHOLDS: { level: EvidenceLevel | null; label: string }[] = [
   { level: null, label: 'любая' },
@@ -55,6 +56,7 @@ export function FiltersSheet({ visible, filter, onApply, onClose }: FiltersSheet
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+        <PaperTexture />
         <View
           style={{
             flexDirection: 'row',
@@ -62,7 +64,7 @@ export function FiltersSheet({ visible, filter, onApply, onClose }: FiltersSheet
             justifyContent: 'space-between',
             padding: spacing.lg,
             borderBottomWidth: 1,
-            borderBottomColor: colors.border,
+            borderBottomColor: colors.divider,
           }}
         >
           <AppText variant="title">Фильтры</AppText>
@@ -105,7 +107,7 @@ export function FiltersSheet({ visible, filter, onApply, onClose }: FiltersSheet
             </View>
           ))}
         </ScrollView>
-        <View style={{ padding: spacing.lg, borderTopWidth: 1, borderTopColor: colors.border }}>
+        <View style={{ padding: spacing.lg, borderTopWidth: 1, borderTopColor: colors.divider }}>
           <Button label={`Показать ${countRu(count, HERB_FORMS)}`} onPress={() => onApply(draft)} />
         </View>
       </SafeAreaView>

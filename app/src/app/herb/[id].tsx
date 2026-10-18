@@ -81,7 +81,8 @@ export default function HerbScreen() {
           title: '',
           headerRight: () => (
             <IconButton
-              icon={favorite ? 'heart' : 'heart-outline'}
+              icon="heart"
+              filled={favorite}
               label={favorite ? 'Убрать из избранного' : 'В избранное'}
               color={favorite ? colors.accent : colors.text}
               onPress={() => toggleFavorite(herb.id)}

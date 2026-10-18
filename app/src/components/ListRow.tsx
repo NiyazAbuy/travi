@@ -2,59 +2,64 @@ import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { PhotoSource } from '@/content/content';
-import { colors, radius, spacing } from '@/theme';
+import { colors, fonts, radius, spacing } from '@/theme';
 import { AppText } from './AppText';
+import { Icon } from './Icon';
+import { PaperCard } from './PaperCard';
 import { Tag } from './Tag';
+
+/** Сторона картинки в строке, px. */
+const IMAGE = 72;
 
 export interface ListRowProps {
   title: string;
   subtitle?: string;
   /** Не передан — слота под фото нет; null — слот-заглушка того же размера. */
   image?: PhotoSource | null;
+  /** Как вписать картинку: фото — `cover` (по умолчанию), рисунок на прозрачном фоне — `contain`. */
+  imageFit?: 'cover' | 'contain';
   tags?: string[];
   right?: ReactNode;
   onPress?: () => void;
   onLongPress?: () => void;
+  /** Ключ рваного края карточки; по умолчанию — заголовок. */
+  seed?: string;
 }
 
-export function ListRow({ title, subtitle, image, tags = [], right, onPress, onLongPress }: ListRowProps) {
+/** Строка списка — бумажная карточка: картинка слева, название, подпись курсивом, метки. */
+export function ListRow({ title, subtitle, image, imageFit = 'cover', tags = [], right, onPress, onLongPress, seed }: ListRowProps) {
+  const imageRadius = imageFit === 'cover' ? radius.sm : 0;
   return (
     <Pressable
       onPress={onPress}
       onLongPress={onLongPress}
       accessibilityRole={onPress ? 'button' : undefined}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.md,
-        paddingVertical: spacing.sm,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.border,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
     >
-      {image === null && (
-        <View style={{ width: 56, height: 56, borderRadius: radius.md, backgroundColor: colors.surfaceRaised }} />
-      )}
-      {image != null && (
-        <Image source={image} style={{ width: 56, height: 56, borderRadius: radius.md }} contentFit="cover" />
-      )}
-      <View style={{ flex: 1, gap: 2 }}>
-        <AppText variant="heading">{title}</AppText>
-        {subtitle ? (
-          <AppText variant="caption" tone="muted" style={{ fontStyle: 'italic' }}>
-            {subtitle}
-          </AppText>
-        ) : null}
-        {tags.length > 0 && (
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs }}>
-            {tags.map((t) => (
-              <Tag key={t} label={t} />
-            ))}
-          </View>
+      <PaperCard seed={seed ?? title} padding={spacing.md} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+        {image === null && (
+          <View style={{ width: IMAGE, height: IMAGE, borderRadius: radius.sm, backgroundColor: colors.paperDeep }} />
         )}
-      </View>
-      {right ?? (onPress ? <AppText tone="faint">›</AppText> : null)}
+        {image != null && (
+          <Image source={image} style={{ width: IMAGE, height: IMAGE, borderRadius: imageRadius }} contentFit={imageFit} />
+        )}
+        <View style={{ flex: 1, gap: spacing.xxs }}>
+          <AppText variant="heading">{title}</AppText>
+          {subtitle ? (
+            <AppText variant="caption" tone="muted" style={{ fontFamily: fonts.bodyItalic }}>
+              {subtitle}
+            </AppText>
+          ) : null}
+          {tags.length > 0 && (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs }}>
+              {tags.map((t) => (
+                <Tag key={t} label={t} />
+              ))}
+            </View>
+          )}
+        </View>
+        {right ?? (onPress ? <Icon name="chevronRight" size={18} color={colors.textFaint} /> : null)}
+      </PaperCard>
     </Pressable>
   );
 }
