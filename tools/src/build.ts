@@ -81,14 +81,17 @@ export async function buildContent({
   }
 
   const herbs: Herb[] = [];
-  for (const h of [...content.herbs].sort(byId)) {
+  for (const { illustration, ...h } of [...content.herbs].sort(byId)) {
     const photos: Photo[] = [];
     for (const p of h.photos) photos.push(await resolvePhoto(h.id, p));
     const lookalikes: Herb['lookalikes'] = [];
     for (const l of h.lookalikes) {
       lookalikes.push({ ...l, photo: l.photo ? await resolvePhoto(h.id, l.photo) : undefined });
     }
-    herbs.push({ ...h, photos, lookalikes });
+    const herb: Herb = { ...h, photos, lookalikes };
+    // Ключа illustration нет, если рисунка нет: content.json у трав без рисунка остаётся прежним.
+    if (illustration) herb.illustration = await resolvePhoto(h.id, illustration);
+    herbs.push(herb);
   }
 
   const bundle: ContentBundle = bundleSchemas.contentBundle.parse({

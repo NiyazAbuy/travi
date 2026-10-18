@@ -103,11 +103,12 @@ export function pickActiveContent(
   return { bundle: bundled, source: 'bundled', discardDownloaded: true };
 }
 
-/** Пути всех фото базы: трав и двойников. */
+/** Пути всех фото базы: трав, их ботанических рисунков и двойников. */
 export function photoPaths(b: ContentBundle): Set<string> {
   const paths = new Set<string>();
   for (const h of b.herbs) {
     for (const p of h.photos) paths.add(p.path);
+    if (h.illustration) paths.add(h.illustration.path);
     for (const l of h.lookalikes) if (l.photo) paths.add(l.photo.path);
   }
   return paths;

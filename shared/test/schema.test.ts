@@ -212,3 +212,43 @@ describe('предостережения', () => {
     );
   });
 });
+
+describe('ботанический рисунок (illustration)', () => {
+  const illustrationRef = { file: 'illustration.webp', kind: 'plant' };
+  const bundleOf = (herb: Record<string, unknown>) => ({
+    schemaVersion: SCHEMA_VERSION,
+    contentVersion: 202610151830,
+    herbs: [herb],
+    recipes: [],
+    dictionaries: sampleDictionaries(),
+    sources: sampleSources(),
+  });
+
+  it('входная трава с illustration принимается', () => {
+    const parsed = inputSchemas.herbInput.parse({ ...sampleHerb('x', 'X'), illustration: illustrationRef });
+    expect(parsed.illustration).toEqual(illustrationRef);
+  });
+  it('входная трава без illustration принимается — поле необязательно', () => {
+    expect(inputSchemas.herbInput.parse(sampleHerb('x', 'X')).illustration).toBeUndefined();
+  });
+  it('имя файла рисунка проверяется как у фото', () => {
+    const herb = { ...sampleHerb('x', 'X'), illustration: { file: 'Illustration.JPG', kind: 'plant' } };
+    expect(messages(inputSchemas.herbInput, herb).join('\n')).toMatch(/^illustration\.file:/m);
+  });
+  it('собранная трава с illustration и без неё проходит нестрогую схему', () => {
+    const base = { ...sampleHerb('x', 'X'), photos: [bundlePhoto] };
+    expect(messages(bundleSchemas.herb, base)).toEqual([]);
+    expect(messages(bundleSchemas.herb, { ...base, illustration: bundlePhoto })).toEqual([]);
+  });
+  it('путь рисунка в сборке — photos/<sha256>.webp', () => {
+    const herb = { ...sampleHerb('x', 'X'), photos: [bundlePhoto], illustration: { ...bundlePhoto, path: 'photos/a.webp' } };
+    expect(messages(bundleSchemas.herb, herb)).not.toEqual([]);
+  });
+  it('база с illustration и без неё проходит схему версии 1, рисунок сохраняется', () => {
+    const base = { ...sampleHerb('x', 'X'), photos: [bundlePhoto] };
+    const without = bundleSchemas.contentBundle.parse(bundleOf(base));
+    expect(without.herbs[0]!.illustration).toBeUndefined();
+    const withIllustration = bundleSchemas.contentBundle.parse(bundleOf({ ...base, illustration: bundlePhoto }));
+    expect(withIllustration.herbs[0]!.illustration).toEqual(bundlePhoto);
+  });
+});

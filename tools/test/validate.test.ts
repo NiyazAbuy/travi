@@ -116,6 +116,45 @@ describe('validateContent', () => {
     ]);
   });
 
+  describe('illustration', () => {
+    const withIllustration = () => {
+      const tree = sampleTree();
+      Object.assign(tree.herbs[0]!, { illustration: { file: 'illustration.webp', kind: 'plant' } });
+      tree.photos['plantago-major']!.meta = {
+        ...tree.photos['plantago-major']!.meta,
+        'illustration.webp': { author: 'Köhler', license: 'PD', source_url: 'https://commons.wikimedia.org/wiki/File:K.jpg' },
+      };
+      return tree;
+    };
+
+    it('рисунок с записью в photos.yaml — без ошибок', () => {
+      expect(validate(withIllustration())).toEqual([]);
+    });
+
+    it('нет автора и лицензии для рисунка', () => {
+      const tree = withIllustration();
+      delete (tree.photos['plantago-major']!.meta as Record<string, unknown>)['illustration.webp'];
+      expect(validate(tree)).toEqual([
+        {
+          file: 'herbs/plantago-major.yaml',
+          path: 'illustration',
+          message: 'нет записи об авторе и лицензии для illustration.webp в photos/plantago-major/photos.yaml',
+        },
+      ]);
+    });
+
+    it('файла рисунка нет на диске', () => {
+      const errors = validate(withIllustration(), (_herbId, file) => file !== 'illustration.webp');
+      expect(errors).toEqual([
+        {
+          file: 'herbs/plantago-major.yaml',
+          path: 'illustration',
+          message: 'файл photos/plantago-major/illustration.webp не найден',
+        },
+      ]);
+    });
+  });
+
   it('трава не может быть двойником самой себя', () => {
     const tree = sampleTree();
     tree.herbs[0]!.lookalikes = [{ herb: 'plantago-major', poisonous: false, differences: 'Отличия' }];

@@ -116,6 +116,15 @@ describe('разбор и выбор базы', () => {
     };
     expect(photoPaths(withLookalike)).toEqual(new Set([h.photos[0]!.path, `photos/${'b'.repeat(64)}.webp`]));
   });
+  it('photoPaths включает ботанический рисунок травы', () => {
+    const h = bundled.herbs[0]!;
+    const illustrationPath = `photos/${'c'.repeat(64)}.webp`;
+    const withIllustration = {
+      ...bundled,
+      herbs: [{ ...h, illustration: { ...h.photos[0]!, path: illustrationPath } }],
+    };
+    expect(photoPaths(withIllustration)).toEqual(new Set([h.photos[0]!.path, illustrationPath]));
+  });
 });
 
 describe('сводка изменений', () => {

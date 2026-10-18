@@ -108,6 +108,8 @@ export function validateContent(content: LoadedContent, photoExists: PhotoExists
     sourceRefs(f, 'safety.sources', h.safety.sources);
     sourceRefs(f, 'sources', h.sources);
     h.photos.forEach((p, i) => checkPhoto(f, `photos.${i}`, h.id, p.file));
+    // Рисунок лежит рядом с фото и требует той же записи об авторе и лицензии в photos.yaml.
+    if (h.illustration) checkPhoto(f, 'illustration', h.id, h.illustration.file);
     h.lookalikes.forEach((l, i) => {
       if (l.herb !== undefined) {
         if (l.herb === h.id) {

@@ -66,6 +66,39 @@ describe('buildContent', () => {
     expect(bundle.herbs[0].photos[0].path).toBe(bundle.herbs[1].photos[0].path);
   });
 
+  describe('illustration', () => {
+    const META = { author: 'Köhler', license: 'PD', source_url: 'https://commons.wikimedia.org/wiki/File:K.jpg' };
+    function treeWithIllustration(bytes = 'fake-webp:illustration'): ContentTree {
+      const tree = sampleTree();
+      Object.assign(tree.herbs[0]!, { illustration: { file: 'illustration.webp', kind: 'plant' } });
+      const photos = tree.photos['plantago-major']!;
+      photos.meta = { ...photos.meta, 'illustration.webp': META };
+      photos.files['illustration.webp'] = bytes;
+      return tree;
+    }
+
+    it('кладёт рисунок в content.json с путём photos/<sha256>.webp и авторством', async () => {
+      const { distDir, bundle, manifest, result } = await build(treeWithIllustration());
+      const hash = sha256('fake-webp:illustration');
+      expect(bundleSchemas.contentBundle.safeParse(bundle).success).toBe(true);
+      expect(bundle.herbs[1].illustration).toEqual({ path: `photos/${hash}.webp`, kind: 'plant', ...META });
+      expect(await readFile(path.join(distDir, 'photos', `${hash}.webp`), 'utf8')).toBe('fake-webp:illustration');
+      expect(manifest.photos.map((p: { path: string }) => p.path)).toContain(`photos/${hash}.webp`);
+      expect(result.photoCount).toBe(3);
+    });
+
+    it('у травы без рисунка поля illustration в content.json нет', async () => {
+      const { bundle } = await build(treeWithIllustration());
+      expect(bundle.herbs[0]).not.toHaveProperty('illustration');
+    });
+
+    it('рисунок с теми же байтами, что и фото, не дублируется в dist', async () => {
+      const { distDir, bundle } = await build(treeWithIllustration('fake-webp:plantago-major'));
+      expect(bundle.herbs[1].illustration.path).toBe(bundle.herbs[1].photos[0].path);
+      expect(await readdir(path.join(distDir, 'photos'))).toHaveLength(2);
+    });
+  });
+
   it('пустая база собирается', async () => {
     const { result, manifest } = await build(emptyTree());
     expect(result.herbCount).toBe(0);

@@ -186,11 +186,14 @@ function makeSchemas(o: ObjectMaker) {
   const herbInput = o({
     ...herbShape,
     photos: z.array(photoRef).min(1, 'нужно хотя бы одно фото'),
+    // Ботанический рисунок: необязательное поле (совместимо со схемой 1); автор и лицензия — в photos.yaml, как у фото.
+    illustration: photoRef.optional(),
     lookalikes: z.array(lookalikeInput).default([]),
   });
   const herb = o({
     ...herbShape,
     photos: z.array(photo).min(1, 'нужно хотя бы одно фото'),
+    illustration: photo.optional(),
     lookalikes: z.array(lookalike).default([]),
   });
 
