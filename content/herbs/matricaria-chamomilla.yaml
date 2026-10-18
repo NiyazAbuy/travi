@@ -13,6 +13,9 @@ photos:
   - file: closeup.webp
     kind: closeup
     caption: Корзинка с опущенными язычками и вытянутым коническим цветоложем
+  - file: raw.webp
+    kind: raw
+    caption: Высушенные корзинки (лекарственное сырьё)
 illustration: { file: illustration.webp, kind: plant }
 description: >-
   Невысокий ветвистый однолетник с дважды-трижды перисторассечёнными листьями, доли которых узкие, почти нитевидные.
