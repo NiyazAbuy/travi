@@ -9,6 +9,7 @@ import type {
   ToxicityLevel,
   UsageForm,
 } from './enums';
+import type { SafetyFlag } from './query/filter';
 
 /** Русские подписи значений перечислений — для страницы проверки и приложения. */
 export const EVIDENCE_LABELS: Record<EvidenceLevel, string> = {
@@ -96,3 +97,10 @@ export const MONTH_NAMES = [
 export function monthName(month: number): string {
   return MONTH_NAMES[month - 1] ?? String(month);
 }
+
+export const SAFETY_FLAG_LABELS: Record<SafetyFlag, string> = {
+  'pregnancy-ok': 'Можно при беременности',
+  'lactation-ok': 'Можно при кормлении',
+  'children-ok': 'Можно детям',
+  'non-toxic': 'Нетоксично',
+};
