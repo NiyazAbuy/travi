@@ -91,6 +91,16 @@ describe('buildContent', () => {
     expect(second.contentJson).toBe(first.contentJson);
   });
 
+  it('явно заданная contentVersion попадает в манифест и content.json', async () => {
+    const contentDir = await writeContentTree(sampleTree());
+    const distDir = path.join(await makeTempDir(), 'dist');
+    await buildContent({ contentDir, distDir, now: NOW, contentVersion: 202601010000 });
+    const manifest = JSON.parse(await readFile(path.join(distDir, 'manifest.json'), 'utf8'));
+    const bundle = JSON.parse(await readFile(path.join(distDir, 'content.json'), 'utf8'));
+    expect(manifest.contentVersion).toBe(202601010000);
+    expect(bundle.contentVersion).toBe(202601010000);
+  });
+
   it('удаляет устаревшие файлы прежней сборки', async () => {
     const contentDir = await writeContentTree(sampleTree());
     const distDir = path.join(await makeTempDir(), 'dist');

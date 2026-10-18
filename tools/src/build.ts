@@ -20,6 +20,8 @@ export interface BuildOptions {
   contentDir: string;
   distDir: string;
   now?: Date;
+  /** Версия базы; если не задана — по времени сборки (`formatContentVersion(now)`). */
+  contentVersion?: number;
 }
 
 export interface BuildResult {
@@ -46,7 +48,12 @@ function sortDictionaries(d: Dictionaries): Dictionaries {
   return Object.fromEntries(Object.entries(d).map(([key, list]) => [key, [...list].sort(byId)])) as Dictionaries;
 }
 
-export async function buildContent({ contentDir, distDir, now = new Date() }: BuildOptions): Promise<BuildResult> {
+export async function buildContent({
+  contentDir,
+  distDir,
+  now = new Date(),
+  contentVersion = formatContentVersion(now),
+}: BuildOptions): Promise<BuildResult> {
   const { content, errors } = await checkContent(contentDir);
   if (errors.length > 0) throw new ContentValidationError(errors);
 
@@ -84,7 +91,6 @@ export async function buildContent({ contentDir, distDir, now = new Date() }: Bu
     herbs.push({ ...h, photos, lookalikes });
   }
 
-  const contentVersion = formatContentVersion(now);
   const bundle: ContentBundle = bundleSchemas.contentBundle.parse({
     schemaVersion: SCHEMA_VERSION,
     contentVersion,
