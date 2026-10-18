@@ -173,6 +173,8 @@ function makeSchemas(o: ObjectMaker) {
     status: z.enum(HERB_STATUSES),
     life_form: z.enum(LIFE_FORMS),
     sourcing: z.array(z.enum(SOURCING_OPTIONS)).min(1, 'укажите, где взять: wild, garden или pharmacy'),
+    /** Коротко о растении (1–2 предложения) для краткой карточки; нет — показывается начало описания. */
+    summary: text.optional(),
     description: text,
     habitats: z.array(idSchema),
     harvest: z.array(harvest).min(1, 'нужна хотя бы одна запись о сборе'),

@@ -252,3 +252,13 @@ describe('ботанический рисунок (illustration)', () => {
     expect(withIllustration.herbs[0]!.illustration).toEqual(bundlePhoto);
   });
 });
+
+describe('коротко о растении (summary)', () => {
+  it('входная трава принимается и с summary, и без него', () => {
+    expect(inputSchemas.herbInput.parse({ ...sampleHerb('x', 'X'), summary: 'Коротко.' }).summary).toBe('Коротко.');
+    expect(inputSchemas.herbInput.parse(sampleHerb('x', 'X')).summary).toBeUndefined();
+  });
+  it('пустой summary — ошибка', () => {
+    expect(inputSchemas.herbInput.safeParse({ ...sampleHerb('x', 'X'), summary: '' }).success).toBe(false);
+  });
+});
