@@ -29,3 +29,4 @@ export * from './Tag';
 export * from './Toast';
 export * from './BotanicalCorners';
 export * from './Ornament';
+export * from './FactIcon';

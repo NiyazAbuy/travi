@@ -425,71 +425,59 @@ function SourceList({ sourceIds, seed }: { sourceIds: string[]; seed: string }) 
 }
 
 /**
- * Галерея фото, листается вбок по одному. Под ней — точки и «2 из 3»: иначе неочевидно,
- * что фото несколько (так и вышло на проверке — новое фото сырья ромашки не нашли).
+ * Галерея фото, листается вбок по одному. Сразу под фото — точки (активная — текущее фото):
+ * без них неочевидно, что фото несколько. Точки рисуются в каждом слайде со своей активной —
+ * так им не нужно следить за прокруткой.
  */
 function Gallery({ photos, photoWidth, seed }: { photos: Photo[]; photoWidth: number; seed: (part: string) => string }) {
   const { photoSource } = useContent();
-  const [page, setPage] = useState(0);
   const pageWidth = photoWidth + spacing.lg * 2;
   const imageWidth = photoWidth - spacing.xs * 2;
   return (
-    <View style={{ gap: spacing.sm }}>
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        style={{ marginHorizontal: -spacing.lg }}
-        scrollEventThrottle={32}
-        onScroll={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / pageWidth))}
-      >
-        {photos.map((p) => {
-          const source = photoSource(p.path);
-          return (
-            <View key={p.path} style={{ width: pageWidth, paddingHorizontal: spacing.lg, paddingTop: spacing.xs, gap: spacing.sm }}>
-              <PaperCard seed={seed(`photo:${p.path}`)} padding={spacing.xs}>
-                {source ? (
-                  <Image
-                    source={source}
-                    style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm }}
-                    contentFit="cover"
-                  />
-                ) : (
+    <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -spacing.lg }}>
+      {photos.map((p, index) => {
+        const source = photoSource(p.path);
+        return (
+          <View key={p.path} style={{ width: pageWidth, paddingHorizontal: spacing.lg, paddingTop: spacing.xs, gap: spacing.sm }}>
+            <PaperCard seed={seed('photo:' + p.path)} padding={spacing.xs}>
+              {source ? (
+                <Image
+                  source={source}
+                  style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm }}
+                  contentFit="cover"
+                />
+              ) : (
+                <View
+                  style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm, backgroundColor: colors.paperDeep }}
+                />
+              )}
+            </PaperCard>
+            {photos.length > 1 ? (
+              <View
+                accessible
+                accessibilityLabel={'Фото ' + (index + 1) + ' из ' + photos.length + ', листайте вбок'}
+                style={{ flexDirection: 'row', justifyContent: 'center', gap: spacing.xs }}
+              >
+                {photos.map((q, i) => (
                   <View
-                    style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm, backgroundColor: colors.paperDeep }}
+                    key={q.path}
+                    style={{
+                      width: herbLayout.galleryDot,
+                      height: herbLayout.galleryDot,
+                      borderRadius: herbLayout.galleryDot / 2,
+                      backgroundColor: i === index ? colors.moss : colors.divider,
+                    }}
                   />
-                )}
-              </PaperCard>
-              <AppText variant="tiny" tone="faint">
-                {photoCaption(p)}
-              </AppText>
-            </View>
-          );
-        })}
-      </ScrollView>
-      {photos.length > 1 ? (
-        <View
-          accessible
-          accessibilityLabel={`Фото ${page + 1} из ${photos.length}, листайте вбок`}
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.xs }}
-        >
-          {photos.map((p, i) => (
-            <View
-              key={p.path}
-              style={{
-                width: herbLayout.galleryDot,
-                height: herbLayout.galleryDot,
-                borderRadius: herbLayout.galleryDot / 2,
-                backgroundColor: i === page ? colors.moss : colors.divider,
-              }}
-            />
-          ))}
-          <AppText variant="hand" tone="muted" style={{ marginLeft: spacing.sm }}>
-            {page + 1} из {photos.length} — листайте
-          </AppText>
-        </View>
-      ) : null}
-    </View>
+                ))}
+              </View>
+            ) : null}
+            <AppText variant="tiny" tone="faint">
+              {photoCaption(p)}
+            </AppText>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 }
 

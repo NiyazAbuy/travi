@@ -19,6 +19,7 @@ import {
   Button,
   Chip,
   EvidenceDot,
+  FactIcon,
   Icon,
   IconButton,
   InkLine,
@@ -26,9 +27,9 @@ import {
   PaperCard,
   Screen,
   Sprig,
-  Stamp,
 } from '@/components';
 import { useContent } from '@/content/ContentProvider';
+import type { PhotoSource } from '@/content/content';
 import { herbArt, type HerbArt } from '@/content/herbArt';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { colors, herbLayout, spacing, typography } from '@/theme';
@@ -157,7 +158,8 @@ function HerbHeader({ herb, art, contentWidth, systems, onSystem, onMore }: Head
         accessibilityHint="Открывает «Подробнее о траве» с полным описанием"
         style={({ pressed }) => ({ marginRight: columnRight, marginTop: spacing.md, gap: spacing.xs, opacity: pressed ? 0.7 : 1 })}
       >
-        <AppText numberOfLines={lines}>{herb.description}</AppText>
+        {/* коротко о растении; нет короткого текста — начало полного описания, целиком — в «Подробнее» */}
+        <AppText numberOfLines={herb.summary ? undefined : lines}>{herb.summary ?? herb.description}</AppText>
         <InkLine width={Math.round((contentWidth - columnRight) * herbLayout.descriptionRule)} seed={`${herb.id}:description`} />
       </Pressable>
     </View>
@@ -171,6 +173,7 @@ function FactCard({
   title,
   weight,
   flip,
+  art,
   children,
 }: {
   seed: string;
@@ -179,6 +182,8 @@ function FactCard({
   /** Доля ширины ряда (`herbLayout.factWeights`). */
   weight: number;
   flip?: boolean;
+  /** Маленький рисунок травы внизу карточки — занимает пустое место вместо веточки. */
+  art?: PhotoSource;
   children: ReactNode;
 }) {
   return (
@@ -190,7 +195,15 @@ function FactCard({
         </AppText>
       </View>
       {children}
-      <Sprig width={herbLayout.factSprig} flip={flip} style={{ marginTop: 'auto', alignSelf: flip ? 'flex-start' : 'flex-end' }} />
+      {art ? (
+        <Image
+          source={art}
+          contentFit="contain"
+          style={{ marginTop: 'auto', alignSelf: 'center', width: '80%', height: herbLayout.factArtHeight, opacity: 0.85 }}
+        />
+      ) : (
+        <Sprig width={herbLayout.factSprig} flip={flip} style={{ marginTop: 'auto', alignSelf: flip ? 'flex-start' : 'flex-end' }} />
+      )}
     </PaperCard>
   );
 }
@@ -216,8 +229,8 @@ function UsageLine({ label, items }: { label: string; items: string[] }) {
   );
 }
 
-/** Печать статуса и «Моя заметка» рукописным шрифтом: нажатие — правка, сохранение — само, как раньше. */
-function StampAndNote({ herb }: { herb: Herb }) {
+/** «Моя заметка» рукописным шрифтом во всю ширину: нажатие — правка, сохранение — само, как раньше. */
+function NoteBlock({ herb }: { herb: Herb }) {
   const { data, loaded, readOnly, setNote } = useUserData();
   const [editing, setEditing] = useState(false);
   const saveNote = useCallback((text: string) => setNote(herb.id, text), [herb.id, setNote]);
@@ -265,26 +278,19 @@ function StampAndNote({ herb }: { herb: Herb }) {
   }
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-      <Stamp
-        label={herb.status === 'checked' ? 'проверено' : 'черновик'}
-        size={herbLayout.stamp}
-        color={herb.status === 'checked' ? colors.stampChecked : colors.stampDraft}
-      />
-      <View style={{ flex: 1, alignItems: 'center', gap: spacing.xs }}>
-        <View style={{ alignItems: 'center' }}>
-          <AppText variant="handTitle" tone="muted">
-            Моя заметка
-          </AppText>
-          <InkLine width={herbLayout.noteRule} seed={`${herb.id}:note`} />
-        </View>
-        {readOnly ? (
-          <AppText variant="caption" tone="danger" style={{ textAlign: 'center' }}>
-            Не удалось прочитать сохранённые данные — изменения сейчас не сохраняются.
-          </AppText>
-        ) : null}
-        {body}
+    <View style={{ alignItems: 'center', gap: spacing.xs }}>
+      <View style={{ alignItems: 'center' }}>
+        <AppText variant="handTitle" tone="muted">
+          Моя заметка
+        </AppText>
+        <InkLine width={herbLayout.noteRule} seed={`${herb.id}:note`} />
       </View>
+      {readOnly ? (
+        <AppText variant="caption" tone="danger" style={{ textAlign: 'center' }}>
+          Не удалось прочитать сохранённые данные — изменения сейчас не сохраняются.
+        </AppText>
+      ) : null}
+      {body}
     </View>
   );
 }
@@ -317,6 +323,7 @@ export default function HerbScreen() {
   };
   const openDetails = () => router.push({ pathname: '/herb/[id]/details', params: { id: herb.id } });
   const favorite = isFavorite(herb.id);
+  const art = herbArt(herb, photoSource);
   const contentWidth = Math.min(width, herbLayout.maxContentWidth) - spacing.lg * 2;
 
   const systems = herbOrganSystems(herb, bundle.dictionaries);
@@ -333,7 +340,7 @@ export default function HerbScreen() {
 
       <HerbHeader
         herb={herb}
-        art={herbArt(herb, photoSource)}
+        art={art}
         contentWidth={contentWidth}
         systems={systems}
         onSystem={(systemId) => openGroup('organSystems', systemId)}
@@ -345,7 +352,8 @@ export default function HerbScreen() {
           seed={`${herb.id}:parts`}
           title="Части растения"
           weight={herbLayout.factWeights[0]}
-          icon={<Sprig width={herbLayout.factIcon * 1.4} color={colors.ink} style={{ transform: [{ rotate: '-28deg' }] }} />}
+          icon={<FactIcon kind="sprig" />}
+          art={art?.drawing ? art.source : undefined}
         >
           <FactText muted={parts.length === 0}>{parts.length ? nameList(parts) : 'нет данных'}</FactText>
         </FactCard>
@@ -354,15 +362,21 @@ export default function HerbScreen() {
           title="Действующие вещества"
           weight={herbLayout.factWeights[1]}
           flip
-          icon={<Icon name="flask" size={herbLayout.factIcon} color={colors.ink} />}
+          icon={<FactIcon kind="flask" />}
         >
-          <FactText muted={substances.length === 0}>{substances.length ? nameList(substances) : 'нет данных'}</FactText>
+          <FactText muted={substances.length === 0}>
+            {substances.length === 0
+              ? 'нет данных'
+              : substances.length > herbLayout.substancesShown
+                ? `${nameList(substances.slice(0, herbLayout.substancesShown))} и др.`
+                : nameList(substances)}
+          </FactText>
         </FactCard>
         <FactCard
           seed={`${herb.id}:usage`}
           title="Применение"
           weight={herbLayout.factWeights[2]}
-          icon={<Icon name="cup" size={herbLayout.factIcon} color={colors.ink} />}
+          icon={<FactIcon kind="cup" />}
         >
           {hasUsageSummary ? (
             <>
@@ -418,20 +432,12 @@ export default function HerbScreen() {
       </PaperCard>
 
       <View style={{ marginTop: herbLayout.blockGap }}>
-        <StampAndNote herb={herb} />
+        <NoteBlock herb={herb} />
       </View>
 
-      <View style={{ gap: spacing.md, marginTop: herbLayout.blockGap }}>
-        <Button
-          large
-          seed={`${herb.id}:favorite`}
-          variant={favorite ? 'secondary' : 'primary'}
-          label={favorite ? 'В избранном' : 'Добавить в избранное'}
-          icon="heart"
-          iconWeight={favorite ? 'fill' : 'light'}
-          onPress={() => toggleFavorite(herb.id)}
-        />
-        <Button seed={`${herb.id}:details`} variant="secondary" label="Подробнее о траве" icon="chevronRight" onPress={openDetails} />
+      {/* избранное — «сердце» в шапке; главная кнопка ведёт ко всему остальному о траве */}
+      <View style={{ marginTop: herbLayout.blockGap }}>
+        <Button large seed={`${herb.id}:details`} label="Подробнее о траве" icon="chevronRight" onPress={openDetails} />
       </View>
     </Screen>
   );
