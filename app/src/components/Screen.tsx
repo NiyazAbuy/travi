@@ -12,14 +12,17 @@ export interface ScreenProps {
   safeTop?: boolean;
   /** Промежуток между блоками экрана; по умолчанию spacing.lg. */
   gap?: number;
+  /** Украшение фона под содержимым, неподвижное при прокрутке (например, рисунки по углам). */
+  background?: ReactNode;
 }
 
 /** Экран на бумаге: кремовый фон с зерном (неподвижным при прокрутке) и отступы по краям. */
-export function Screen({ children, scroll = true, padded = true, safeTop = true, gap = spacing.lg }: ScreenProps) {
+export function Screen({ children, scroll = true, padded = true, safeTop = true, gap = spacing.lg, background }: ScreenProps) {
   const padding = padded ? spacing.lg : 0;
   return (
     <SafeAreaView edges={safeTop ? ['top'] : ['bottom']} style={{ flex: 1, backgroundColor: colors.background }}>
       <PaperTexture />
+      {background}
       {scroll ? (
         <ScrollView
           keyboardShouldPersistTaps="handled"

@@ -3,10 +3,10 @@ import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { compareNames, nameList, purposeLabels, type Herb, type Recipe } from '@travy/shared';
-import { AppText, EmptyState, PaperCard, Screen, ScreenTitle, Tag } from '@/components';
+import { AppText, BotanicalCorners, Ornament, PaperCard, Screen, ScreenTitle, Tag } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { herbArt } from '@/content/herbArt';
-import { listLayout, radius, spacing } from '@/theme';
+import { colors, fonts, listLayout, paperEdge, radius, spacing } from '@/theme';
 
 /** Рисунки первых двух компонентов: второй чуть ниже и заходит на первый — как букет на макете 05. */
 function RecipeArt({ herbs }: { herbs: Herb[] }) {
@@ -64,22 +64,74 @@ function RecipeCard({ recipe, onPress }: { recipe: Recipe; onPress: () => void }
   );
 }
 
-/** Сборы (макет 05): крупный заголовок, карточки сборов; пока сборов нет — пустое состояние в том же стиле. */
+/** Травы для «букета» на пустом листе и рисунков по углам фона. */
+const BOUQUET = ['matricaria-chamomilla', 'mentha-piperita'];
+const CORNERS = ['achillea-millefolium', 'hypericum-perforatum'];
+
+/**
+ * Пустые сборы (макет сборов): узкий светлый лист с глубоко рваным краем по центру,
+ * «букет» из ботанических рисунков, тёплый текст и орнамент с сердцем.
+ */
+function EmptySheet() {
+  const { herbById, photoSource } = useContent();
+  const arts = BOUQUET.flatMap((id) => {
+    const h = herbById.get(id);
+    return h ? (herbArt(h, photoSource) ?? []) : [];
+  });
+  return (
+    <PaperCard
+      seed="recipes:empty"
+      color={colors.paperChip}
+      depth={paperEdge.sheet.depth}
+      padding={spacing.xl}
+      style={{ alignSelf: 'center', width: '100%', maxWidth: listLayout.sheetWidth, alignItems: 'center', gap: spacing.md, marginTop: spacing.xl }}
+    >
+      {arts.length > 0 ? (
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end' }} importantForAccessibility="no-hide-descendants">
+          {arts.map((art, i) => (
+            <Image
+              key={i}
+              source={art.source}
+              contentFit="contain"
+              style={{
+                width: listLayout.sheetArtHeight * 0.6,
+                height: listLayout.sheetArtHeight,
+                marginLeft: i > 0 ? -spacing.xl : 0,
+                transform: [{ rotate: i > 0 ? '14deg' : '-10deg' }],
+              }}
+            />
+          ))}
+        </View>
+      ) : null}
+      <AppText variant="heading" style={{ textAlign: 'center' }}>
+        Здесь появятся готовые сборы.
+      </AppText>
+      <AppText tone="muted" style={{ textAlign: 'center' }}>
+        Пока можно сохранять травы{' '}
+        <AppText tone="default" style={{ fontFamily: fonts.bodyBold }}>
+          в избранное
+        </AppText>{' '}
+        и писать свои заметки.
+      </AppText>
+      <Ornament seed="recipes:empty:ornament" icon="heart" />
+    </PaperCard>
+  );
+}
+
+/** Сборы (макет 05): крупный заголовок, карточки сборов; пока сборов нет — светлый лист по центру. */
 export default function RecipesScreen() {
   const router = useRouter();
-  const { bundle } = useContent();
+  const { bundle, herbById, photoSource } = useContent();
   const recipes = useMemo(() => [...bundle.recipes].sort((a, b) => compareNames(a.name, b.name)), [bundle]);
+  const corner = (id: string | undefined) => {
+    const h = id ? herbById.get(id) : undefined;
+    return h ? (herbArt(h, photoSource)?.source ?? null) : null;
+  };
   return (
-    <Screen>
-      <ScreenTitle title="Сборы" />
+    <Screen background={recipes.length === 0 ? <BotanicalCorners top={corner(CORNERS[0])} bottom={corner(CORNERS[1])} /> : null}>
+      {recipes.length === 0 ? <ScreenTitle title="Сборы" kicker="Травница" /> : <ScreenTitle title="Сборы" />}
       {recipes.length === 0 ? (
-        <EmptyState
-          seed="recipes:empty"
-          icon="cup"
-          withSprig
-          title="Здесь появятся готовые сборы"
-          text="А пока можно сохранять травы в избранное и писать к ним свои заметки."
-        />
+        <EmptySheet />
       ) : (
         <View style={{ gap: spacing.md }}>
           {recipes.map((r) => (

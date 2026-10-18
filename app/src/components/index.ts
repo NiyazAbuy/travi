@@ -27,3 +27,5 @@ export * from './Sprig';
 export * from './Stamp';
 export * from './Tag';
 export * from './Toast';
+export * from './BotanicalCorners';
+export * from './Ornament';

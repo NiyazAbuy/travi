@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { colors, listLayout, spacing, typography } from '@/theme';
 import { AppText } from './AppText';
 import { Icon } from './Icon';
+import { Ornament } from './Ornament';
 import { Sprig } from './Sprig';
 
 export interface ScreenTitleProps {
@@ -10,13 +11,29 @@ export interface ScreenTitleProps {
   decoration?: 'sprig' | 'heart';
   /** `brand` — название приложения на главной, крупнее заголовков вкладок. */
   variant?: 'hero' | 'brand';
+  /** Мелкая надпись с веточкой над заголовком (например, «Травница») и орнамент под ним — как на макете сборов. */
+  kicker?: string;
 }
 
 /**
  * Крупный заголовок экрана-вкладки по центру с украшением справа сверху — как «Каталог» и «Избранное»
  * на макетах 04 и 06 и «Травница» на главной (02).
  */
-export function ScreenTitle({ title, decoration = 'sprig', variant = 'hero' }: ScreenTitleProps) {
+export function ScreenTitle({ title, decoration = 'sprig', variant = 'hero', kicker }: ScreenTitleProps) {
+  if (kicker) {
+    return (
+      <View accessibilityRole="header" style={{ alignItems: 'center', gap: spacing.xs, paddingTop: spacing.sm }}>
+        <View importantForAccessibility="no-hide-descendants">
+          <Sprig width={listLayout.titleSprig} color={colors.ink} style={{ transform: [{ rotate: '-8deg' }] }} />
+        </View>
+        <AppText variant="heading" tone="muted">
+          {kicker}
+        </AppText>
+        <AppText variant={variant}>{title}</AppText>
+        <Ornament seed={'title:' + title} />
+      </View>
+    );
+  }
   const brand = variant === 'brand';
   const sprig = brand ? listLayout.brandSprig : listLayout.titleSprig;
   // украшение — у верха прописных букв: веточка «растёт» из последней буквы, как на макетах

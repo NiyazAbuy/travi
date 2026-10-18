@@ -17,6 +17,8 @@ export interface PaperCardProps {
   color?: string;
   /** Цвет кромки; по умолчанию светлая кромка бумаги. Например, `colors.danger` — для предупреждения. */
   edgeColor?: string;
+  /** Глубина рваного края, px; по умолчанию как у обычной карточки. Глубже — «оторванный лист». */
+  depth?: number;
 }
 
 /**
@@ -24,7 +26,7 @@ export interface PaperCardProps {
  * и размеру) и мягкая тень. Край и тень рисуются под содержимым и не обрезают его.
  * До первой раскладки (размер ещё неизвестен) — обычный прямоугольник того же цвета.
  */
-export function PaperCard({ children, seed, style, padding = spacing.lg, color = colors.card, edgeColor }: PaperCardProps) {
+export function PaperCard({ children, seed, style, padding = spacing.lg, color = colors.card, edgeColor, depth = paperEdge.card.depth }: PaperCardProps) {
   const autoSeed = useId();
   const { size, onLayout } = useLayoutSize();
   return (
@@ -37,7 +39,7 @@ export function PaperCard({ children, seed, style, padding = spacing.lg, color =
           fill={color}
           edge={edgeColor ?? colors.cardEdge}
           edgeWidth={edgeColor ? 2 : 1.2}
-          depth={paperEdge.card.depth}
+          depth={depth}
           radius={paperEdge.card.radius}
           shadow={shadow.paper}
           grain

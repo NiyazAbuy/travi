@@ -238,6 +238,14 @@ export const listLayout = {
   /** Рисунки компонентов в карточке сбора: ширина и высота каждого, px. */
   recipeArtWidth: 58,
   recipeArtHeight: 108,
+  /** Пустой экран-«лист» (сборы): ширина листа, высота рисунка, длина черт орнамента, px. */
+  sheetWidth: 300,
+  sheetArtHeight: 130,
+  ornamentRule: 56,
+  /** Бледные ботанические рисунки по углам фона: размер и непрозрачность. */
+  cornerArtWidth: 170,
+  cornerArtHeight: 260,
+  cornerArtOpacity: 0.13,
   /** Иконка пустого состояния, px. */
   emptyIcon: 40,
 } as const;
@@ -275,4 +283,6 @@ export const paperEdge = {
   tag: { depth: 0.8, radius: 6 },
   /** Картина-баннер на главной: край глубже — как оборванный лист. */
   banner: { depth: 8, radius: 4 },
+  /** Отдельный лист на пустом экране (как на макете сборов): край глубже, чем у карточки. */
+  sheet: { depth: 7, radius: 3 },
 } as const;
