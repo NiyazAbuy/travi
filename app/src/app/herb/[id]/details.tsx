@@ -20,7 +20,7 @@ import {
   type Photo,
   type SourceRef,
 } from '@travy/shared';
-import { AppText, Chip, EvidenceDot, Icon, IconButton, PaperCard, Screen, Section, Tag } from '@/components';
+import { AppText, Chip, EvidenceDot, Icon, IconButton, PaperCard, Screen, Section, Sprig, Tag } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { openLink } from '@/lib/openLink';
 import { useListFilter } from '@/state/ListFilterProvider';
@@ -141,7 +141,7 @@ export default function HerbDetailsScreen() {
       : SAFETY_STATUS_LABELS[children.status];
 
   return (
-    <Screen safeTop={false}>
+    <Screen safeTop={false} gap={spacing.xl}>
       {router.canGoBack() ? null : (
         // открыли по ссылке (веб, обновление страницы) — истории нет: стрелка ведёт в карточку травы
         <Stack.Screen
@@ -156,37 +156,7 @@ export default function HerbDetailsScreen() {
           }}
         />
       )}
-      {herb.photos.length > 0 ? (
-        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -spacing.lg }}>
-          {herb.photos.map((p) => {
-            const source = photoSource(p.path);
-            const imageWidth = photoWidth - spacing.xs * 2;
-            return (
-              <View
-                key={p.path}
-                style={{ width: photoWidth + spacing.lg * 2, paddingHorizontal: spacing.lg, paddingTop: spacing.xs, gap: spacing.sm }}
-              >
-                <PaperCard seed={seed(`photo:${p.path}`)} padding={spacing.xs}>
-                  {source ? (
-                    <Image
-                      source={source}
-                      style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm }}
-                      contentFit="cover"
-                    />
-                  ) : (
-                    <View
-                      style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm, backgroundColor: colors.paperDeep }}
-                    />
-                  )}
-                </PaperCard>
-                <AppText variant="tiny" tone="faint">
-                  {photoCaption(p)}
-                </AppText>
-              </View>
-            );
-          })}
-        </ScrollView>
-      ) : null}
+      {herb.photos.length > 0 ? <Gallery photos={herb.photos} photoWidth={photoWidth} seed={seed} /> : null}
 
       <View style={{ gap: spacing.xs }}>
         <AppText variant="title" accessibilityRole="header">
@@ -278,41 +248,43 @@ export default function HerbDetailsScreen() {
       ) : null}
 
       {herb.harvest.length > 0 ? (
-        <Section seed={seed('harvest')} title="Сбор">
+        <View style={{ gap: spacing.md }}>
+          <GroupTitle title="Сбор и заготовка" />
           {herb.harvest.map((x, i) => (
-            <View key={i} style={{ gap: spacing.xs }}>
-              {i > 0 ? <Divider /> : null}
+            <PaperCard key={i} seed={seed(`harvest:${i}`)} style={{ gap: spacing.md }}>
               <ChipRow>
                 <Chip seed={seed(`harvest:${i}:part`)} label={nameOf('plantParts', x.part)} onPress={() => openGroup('parts', x.part)} />
                 {x.months.map((m) => (
                   <Chip key={m} seed={seed(`harvest:${i}:month:${m}`)} label={monthName(m)} onPress={() => openGroup('months', String(m))} />
                 ))}
               </ChipRow>
-              <AppText>{x.how}</AppText>
-              <Line label="Сушка">{x.drying}</Line>
-              <Line label="Хранение">{x.storage}</Line>
+              <Block title="Как собирать">{x.how}</Block>
+              <Block title="Сушка">{x.drying}</Block>
+              <Block title="Хранение">{x.storage}</Block>
               <Refs list={x.sources} sourceIds={sourceIds} />
-            </View>
+            </PaperCard>
           ))}
-        </Section>
+        </View>
       ) : null}
 
       {herb.usage.length > 0 ? (
-        <Section seed={seed('usage')} title="Применение">
+        <View style={{ gap: spacing.md }}>
+          <GroupTitle title="Применение" />
           {herb.usage.map((u, i) => (
-            <View key={i} style={{ gap: spacing.xs }}>
-              {i > 0 ? <Divider /> : null}
-              <AppText variant="subheading">
-                {USAGE_FORM_LABELS[u.form]}
-                {u.for_indications.length ? ` · ${u.for_indications.map((x) => nameOf('indications', x)).join(', ')}` : ''}
-              </AppText>
+            <PaperCard key={i} seed={seed(`usage:${i}`)} style={{ gap: spacing.sm }}>
+              <AppText variant="heading">{USAGE_FORM_LABELS[u.form]}</AppText>
+              {u.for_indications.length ? (
+                <AppText variant="caption" tone="muted" style={{ fontFamily: fonts.bodyItalic }}>
+                  {u.for_indications.map((x) => nameOf('indications', x)).join(', ')}
+                </AppText>
+              ) : null}
               <AppText>{u.recipe}</AppText>
-              <Line label="Дозировка">{u.dosage}</Line>
-              {u.course ? <Line label="Курс">{u.course}</Line> : null}
+              <Block title="Дозировка">{u.dosage}</Block>
+              {u.course ? <Block title="Курс">{u.course}</Block> : null}
               <Refs list={u.sources} sourceIds={sourceIds} />
-            </View>
+            </PaperCard>
           ))}
-        </Section>
+        </View>
       ) : null}
 
       <Section seed={seed('safety')} title="Безопасность">
@@ -320,6 +292,12 @@ export default function HerbDetailsScreen() {
         <Line label="Кормление грудью">{SAFETY_STATUS_LABELS[herb.safety.lactation]}</Line>
         <Line label="Дети">{childrenText}</Line>
         <Line label="Токсичность">{TOXICITY_LABELS[herb.safety.toxicity]}</Line>
+        {herb.safety.contraindications.length + herb.safety.warnings.length > 0 ? (
+          // рукописная пометка на полях — как карандашом в дневнике
+          <AppText variant="hand" tone="danger" style={{ marginTop: spacing.sm, transform: [{ rotate: '-3deg' }] }}>
+            осторожно!
+          </AppText>
+        ) : null}
         {herb.safety.contraindications.map((x) => (
           <AppText key={x} tone="danger">
             Противопоказание: {x}
@@ -403,20 +381,138 @@ export default function HerbDetailsScreen() {
         </View>
       ) : null}
 
-      <Section seed={seed('sources')} title="Источники">
-        {sourceIds.map((sid, i) => {
-          const s = sourceById.get(sid);
-          if (!s) return null;
-          const href = sourceHref(s);
+      <SourceList sourceIds={sourceIds} seed={seed('sources')} />
+    </Screen>
+  );
+}
+
+/** Общий список источников внизу — свёрнут: заголовок с числом, по нажатию — весь список. */
+function SourceList({ sourceIds, seed }: { sourceIds: string[]; seed: string }) {
+  const { sourceById } = useContent();
+  const [open, setOpen] = useState(false);
+  if (sourceIds.length === 0) return null;
+  return (
+    <PaperCard seed={seed} style={{ gap: spacing.sm }}>
+      <Pressable
+        onPress={() => setOpen(!open)}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, opacity: pressed ? 0.6 : 1 })}
+      >
+        <AppText variant="heading" style={{ flex: 1 }}>
+          Источники ({sourceIds.length})
+        </AppText>
+        <View style={{ transform: [{ rotate: open ? '-90deg' : '90deg' }] }}>
+          <Icon name="chevronRight" size={herbLayout.chevron} color={colors.textMuted} />
+        </View>
+      </Pressable>
+      {open
+        ? sourceIds.map((sid, i) => {
+            const s = sourceById.get(sid);
+            if (!s) return null;
+            const href = sourceHref(s);
+            return (
+              <Pressable key={sid} disabled={!href} onPress={() => href && openLink(href)} accessibilityRole={href ? 'link' : undefined}>
+                <AppText variant="caption" tone={href ? 'accent' : 'muted'}>
+                  [{i + 1}] {s.authors.join(', ')}. {s.title}. {s.year}.{s.isbn ? ` ISBN ${s.isbn}.` : ''}
+                </AppText>
+              </Pressable>
+            );
+          })
+        : null}
+    </PaperCard>
+  );
+}
+
+/**
+ * Галерея фото, листается вбок по одному. Под ней — точки и «2 из 3»: иначе неочевидно,
+ * что фото несколько (так и вышло на проверке — новое фото сырья ромашки не нашли).
+ */
+function Gallery({ photos, photoWidth, seed }: { photos: Photo[]; photoWidth: number; seed: (part: string) => string }) {
+  const { photoSource } = useContent();
+  const [page, setPage] = useState(0);
+  const pageWidth = photoWidth + spacing.lg * 2;
+  const imageWidth = photoWidth - spacing.xs * 2;
+  return (
+    <View style={{ gap: spacing.sm }}>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        style={{ marginHorizontal: -spacing.lg }}
+        scrollEventThrottle={32}
+        onScroll={(e) => setPage(Math.round(e.nativeEvent.contentOffset.x / pageWidth))}
+      >
+        {photos.map((p) => {
+          const source = photoSource(p.path);
           return (
-            <Pressable key={sid} disabled={!href} onPress={() => href && openLink(href)} accessibilityRole={href ? 'link' : undefined}>
-              <AppText variant="caption" tone={href ? 'accent' : 'muted'}>
-                [{i + 1}] {s.authors.join(', ')}. {s.title}. {s.year}.{s.isbn ? ` ISBN ${s.isbn}.` : ''}
+            <View key={p.path} style={{ width: pageWidth, paddingHorizontal: spacing.lg, paddingTop: spacing.xs, gap: spacing.sm }}>
+              <PaperCard seed={seed(`photo:${p.path}`)} padding={spacing.xs}>
+                {source ? (
+                  <Image
+                    source={source}
+                    style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm }}
+                    contentFit="cover"
+                  />
+                ) : (
+                  <View
+                    style={{ width: imageWidth, height: herbLayout.galleryHeight, borderRadius: radius.sm, backgroundColor: colors.paperDeep }}
+                  />
+                )}
+              </PaperCard>
+              <AppText variant="tiny" tone="faint">
+                {photoCaption(p)}
               </AppText>
-            </Pressable>
+            </View>
           );
         })}
-      </Section>
-    </Screen>
+      </ScrollView>
+      {photos.length > 1 ? (
+        <View
+          accessible
+          accessibilityLabel={`Фото ${page + 1} из ${photos.length}, листайте вбок`}
+          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.xs }}
+        >
+          {photos.map((p, i) => (
+            <View
+              key={p.path}
+              style={{
+                width: herbLayout.galleryDot,
+                height: herbLayout.galleryDot,
+                borderRadius: herbLayout.galleryDot / 2,
+                backgroundColor: i === page ? colors.moss : colors.divider,
+              }}
+            />
+          ))}
+          <AppText variant="hand" tone="muted" style={{ marginLeft: spacing.sm }}>
+            {page + 1} из {photos.length} — листайте
+          </AppText>
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+/** Заголовок группы карточек («Сбор и заготовка», «Применение») — как заголовок раздела, с веточкой. */
+function GroupTitle({ title }: { title: string }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+      <AppText variant="section" accessibilityRole="header">
+        {title}
+      </AppText>
+      <Sprig width={herbLayout.headingSprig} />
+    </View>
+  );
+}
+
+/** Короткий блок с подзаголовком: «Сушка», «Хранение», «Дозировка». */
+function Block({ title, children }: { title: string; children: string }) {
+  return (
+    <View style={{ gap: spacing.xxs }}>
+      <AppText variant="label" tone="muted">
+        {title}
+      </AppText>
+      <AppText>{children}</AppText>
+    </View>
   );
 }

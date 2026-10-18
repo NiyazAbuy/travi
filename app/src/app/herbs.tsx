@@ -4,7 +4,7 @@ import { countRu, describeFilter, pruneFilter, queryHerbs, removeFilterChip, typ
 import { AppText, Chip, EmptyState, FiltersSheet, HerbRow, Screen } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
-import { spacing } from '@/theme';
+import { listLayout, spacing } from '@/theme';
 
 const FOUND_FORMS = ['трава', 'травы', 'трав'] as const;
 
@@ -43,7 +43,7 @@ export default function HerbListScreen() {
       {herbs.length === 0 ? (
         <EmptyState seed="herbs:empty" icon="filter" text="Ничего не нашлось — уберите часть условий." />
       ) : (
-        <View style={{ gap: spacing.md }}>
+        <View style={{ gap: listLayout.rowGap }}>
           {herbs.map((h) => (
             <HerbRow key={h.id} herb={h} indications={active.indications} />
           ))}

@@ -28,6 +28,9 @@ export const colors = {
   outline: '#A89C88',
   /** Чернила печатей и украшений. */
   ink: '#5A4A3A',
+  /** Чернила печатей: «черновик» — ржаво-коричневые, «проверено» — моховые. */
+  stampDraft: '#8B4A3B',
+  stampChecked: '#4E6142',
   /** Цвет теней. */
   shadow: '#3A2E1F',
   /** Тонкое кольцо вокруг точки уровня доказанности: жёлтая точка иначе теряется на бумаге. */
@@ -90,6 +93,8 @@ const HAND = '"Segoe Print", "Comic Sans MS", cursive';
 export const fonts = {
   /** Заголовки — Cormorant Garamond. */
   display: family('CormorantGaramond_600SemiBold', SERIF),
+  /** Курсив заголовков — надпись на баннере главной. */
+  displayItalic: family('CormorantGaramond_600SemiBold_Italic', SERIF),
   /** Основной текст — Lora (кириллица, хорошо читается мелко). */
   body: family('Lora_400Regular', SERIF),
   bodyItalic: family('Lora_400Regular_Italic', SERIF),
@@ -123,7 +128,7 @@ export const typography = {
   /** Подписи плашек, вкладок, мелких кнопок. */
   label: { fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 17 },
   /** Подписи нижних вкладок. */
-  tab: { fontFamily: fonts.bodyMedium, fontSize: 12, lineHeight: 15 },
+  tab: { fontFamily: fonts.bodyMedium, fontSize: 12, lineHeight: 15, letterSpacing: 0.4 },
   hand: { fontFamily: fonts.hand, fontSize: 21, lineHeight: 25 },
   /** Начало заметки на «штампе» в строке избранного. */
   handSmall: { fontFamily: fonts.hand, fontSize: 18, lineHeight: 20 },
@@ -162,9 +167,15 @@ export const herbLayout = {
   chevron: 16,
   inlineIcon: 18,
   /** Печать «проверено» / «черновик», px. */
-  stamp: 96,
+  stamp: 104,
+  /** «От чего помогает» в краткой карточке: сколько пунктов видно сразу, остальные — под «Показать ещё». */
+  indicationsShown: 4,
+  /** Дополнительный воздух между блоками карточки, px. */
+  blockGap: 12,
   /** Галерея фото и фото двойника в «Подробнее», высота, px. */
   galleryHeight: 260,
+  /** Точка-счётчик под галереей, px. */
+  galleryDot: 8,
   lookalikePhotoHeight: 180,
   /** Ширина экрана, больше которой содержимое не растягивается, px. */
   maxContentWidth: 640,
@@ -173,21 +184,38 @@ export const herbLayout = {
 /** Нижняя панель вкладок: сторона иконки и высота без системного отступа снизу (иконка, подпись, поля), px. */
 export const tabBar = {
   icon: 24,
-  height: 24 + typography.tab.lineHeight + spacing.sm * 2 + spacing.xs,
+  /** Подложка активной иконки: поля по бокам, px (сверху и снизу — четверть). */
+  pillPadding: 14,
+  height: 24 + 14 / 2 + typography.tab.lineHeight + spacing.sm * 2 + spacing.xs,
+} as const;
+
+/** Каталог: плитки главных разделов и воздух между блоками, px. */
+export const catalogLayout = {
+  tileIcon: 34,
+  tileHeight: 128,
+  blockGap: 12,
+} as const;
+
+/** Главная: воздух между блоками и наклон рукописной пометки под баннером. */
+export const homeLayout = {
+  sectionGap: 20,
+  noteRotate: '-2deg',
 } as const;
 
 /** Размеры главной, строк списков, сборов и избранного (макеты 02, 04–06). */
 export const listLayout = {
   /** Рисунок слева в строке травы: ширина и высота, px; фото вместо рисунка — квадрат `rowPhoto`. */
-  rowArtWidth: 84,
-  rowArtHeight: 104,
-  rowPhoto: 76,
+  rowArtWidth: 104,
+  rowArtHeight: 132,
+  rowPhoto: 92,
+  /** Воздух между строками списка трав, px. */
+  rowGap: 20,
   /** «Сердце» избранного в строке, px. */
   rowHeart: 22,
   /** Иконка раздела каталога в строке, px. */
   rowIcon: 26,
   /** Штамп заметки в строке избранного: наибольшая ширина, px, и наклон. */
-  noteStampWidth: 172,
+  noteStampWidth: 230,
   noteStampRotate: '-4deg',
   noteStampSprig: 22,
   /** Веточка у названия приложения и у заголовков вкладок, px. */
@@ -196,13 +224,17 @@ export const listLayout = {
   /** Плитки разделов на главной: иконка, px. */
   tileIcon: 32,
   /** Баннер-картина: высота / ширина (вырезка картины — 2:1). */
-  bannerRatio: 0.5,
+  bannerRatio: 0.44,
+  /** Черта «пером» под надписью баннера, px. */
+  bannerRule: 150,
   /** Сияние под надписью баннера: непрозрачность бумаги в центре. */
   bannerGlow: 0.82,
   /** Карточка «Собирать сейчас»: две на ширину экрана (как на макете 02); рисунок сверху: ширина и высота, px. */
   collectPerScreen: 2,
-  collectArtWidth: 120,
-  collectArtHeight: 120,
+  collectArtWidth: 130,
+  collectArtHeight: 150,
+  /** Черта «пером» под названием в карточке, px. */
+  collectRule: 70,
   /** Рисунки компонентов в карточке сбора: ширина и высота каждого, px. */
   recipeArtWidth: 58,
   recipeArtHeight: 108,
@@ -242,5 +274,5 @@ export const paperEdge = {
   chip: { depth: 1.2, radius: 9 },
   tag: { depth: 0.8, radius: 6 },
   /** Картина-баннер на главной: край глубже — как оборванный лист. */
-  banner: { depth: 5, radius: 4 },
+  banner: { depth: 8, radius: 4 },
 } as const;

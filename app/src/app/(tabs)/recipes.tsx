@@ -75,8 +75,10 @@ export default function RecipesScreen() {
       {recipes.length === 0 ? (
         <EmptyState
           seed="recipes:empty"
-          icon="bowl"
-          text="Сборов пока нет — они появятся в следующих обновлениях базы."
+          icon="cup"
+          withSprig
+          title="Здесь появятся готовые сборы"
+          text="А пока можно сохранять травы в избранное и писать к ним свои заметки."
         />
       ) : (
         <View style={{ gap: spacing.md }}>

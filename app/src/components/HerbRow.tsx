@@ -78,7 +78,7 @@ export function HerbRow({ herb, indications = [], note }: HerbRowProps) {
 
         <View style={{ flex: 1, gap: spacing.xxs }}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: spacing.xs }}>
-            <AppText variant="heading" style={{ flex: 1 }}>
+            <AppText variant="section" style={{ flex: 1 }}>
               {herb.name}
             </AppText>
             {favorite ? (
@@ -87,7 +87,7 @@ export function HerbRow({ herb, indications = [], note }: HerbRowProps) {
               </View>
             ) : null}
           </View>
-          <AppText variant="caption" tone="muted" style={{ fontFamily: fonts.bodyItalic }}>
+          <AppText variant="caption" tone="faint" style={{ fontFamily: fonts.bodyItalic }}>
             {shortLabel(herb.latin)}
           </AppText>
 

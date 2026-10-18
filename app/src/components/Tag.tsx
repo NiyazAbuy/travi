@@ -10,7 +10,7 @@ export function Tag({ label, seed }: { label: string; seed?: string }) {
     <View
       onLayout={onLayout}
       style={[
-        { maxWidth: '100%', paddingHorizontal: spacing.sm, paddingVertical: spacing.xxs },
+        { maxWidth: '100%', paddingHorizontal: spacing.xs + spacing.xxs, paddingVertical: spacing.xxs / 2 },
         size ? null : { backgroundColor: colors.paperChip, borderRadius: radius.sm },
       ]}
     >

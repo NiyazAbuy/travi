@@ -1,15 +1,26 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { favoriteEntries } from '@travy/shared';
+import { countRu, favoriteEntries } from '@travy/shared';
 import { AppText, EmptyState, HerbRow, PaperCard, Screen, ScreenTitle } from '@/components';
 import { useContent } from '@/content/ContentProvider';
-import { colors, spacing } from '@/theme';
+import { colors, listLayout, spacing } from '@/theme';
 import { useUserData } from '@/user/UserDataProvider';
 
 /**
  * Избранное (макет 06): строки как в каталоге, с «сердцем»; если есть заметка — «штамп» с её началом.
  * Травы, которых больше нет в базе, остаются (с заметкой), чтобы записи пользователя не пропадали.
  */
+/** «У вас в избранном 3 травы и 1 заметка» — личная строка под заголовком. */
+function favoriteSummary(entries: { favorite: boolean; note?: unknown }[]): string {
+  const herbs = entries.filter((e) => e.favorite).length;
+  const notes = entries.filter((e) => e.note).length;
+  const parts = [
+    ...(herbs ? [countRu(herbs, ['трава', 'травы', 'трав'])] : []),
+    ...(notes ? [countRu(notes, ['заметка', 'заметки', 'заметок'])] : []),
+  ];
+  return herbs ? 'У вас в избранном ' + parts.join(' и ') : 'Ваши заметки: ' + parts.join(' и ');
+}
+
 export default function FavoritesScreen() {
   const { herbById } = useContent();
   const { data, readOnly } = useUserData();
@@ -18,6 +29,11 @@ export default function FavoritesScreen() {
   return (
     <Screen>
       <ScreenTitle title="Избранное" decoration="heart" />
+      {entries.length > 0 ? (
+        <AppText variant="hand" tone="muted" style={{ textAlign: 'center', marginTop: -spacing.sm }}>
+          {favoriteSummary(entries)}
+        </AppText>
+      ) : null}
       {readOnly && (
         <AppText tone="danger">Не удалось прочитать сохранённые данные — изменения сейчас не сохраняются.</AppText>
       )}
@@ -28,7 +44,7 @@ export default function FavoritesScreen() {
           text="Здесь появятся отмеченные травы и травы с заметками. Отметить траву: «сердце» в карточке или долгое нажатие в списке."
         />
       ) : (
-        <View style={{ gap: spacing.md }}>
+        <View style={{ gap: listLayout.rowGap }}>
           {entries.map((e) =>
             e.herb ? (
               <HerbRow key={e.herbId} herb={e.herb} note={e.note?.text} />

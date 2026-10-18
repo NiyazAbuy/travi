@@ -182,7 +182,7 @@ function FactCard({
   children: ReactNode;
 }) {
   return (
-    <PaperCard seed={seed} padding={spacing.sm} style={{ flex: weight, gap: spacing.xs }}>
+    <PaperCard seed={seed} padding={spacing.sm + spacing.xxs} style={{ flex: weight, gap: spacing.sm }}>
       <View style={{ alignItems: 'center', gap: spacing.xs, paddingTop: spacing.xs, marginBottom: spacing.xs }}>
         {icon}
         <AppText variant="subheading" style={{ textAlign: 'center' }}>
@@ -266,7 +266,11 @@ function StampAndNote({ herb }: { herb: Herb }) {
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-      <Stamp label={herb.status === 'checked' ? 'проверено' : 'черновик'} size={herbLayout.stamp} />
+      <Stamp
+        label={herb.status === 'checked' ? 'проверено' : 'черновик'}
+        size={herbLayout.stamp}
+        color={herb.status === 'checked' ? colors.stampChecked : colors.stampDraft}
+      />
       <View style={{ flex: 1, alignItems: 'center', gap: spacing.xs }}>
         <View style={{ alignItems: 'center' }}>
           <AppText variant="handTitle" tone="muted">
@@ -292,6 +296,7 @@ export default function HerbScreen() {
   const { setFilter } = useListFilter();
   const { isFavorite, toggleFavorite } = useUserData();
   const { width } = useWindowDimensions();
+  const [showAllIndications, setShowAllIndications] = useState(false);
   const herb = id ? herbById.get(id) : undefined;
 
   // открыли по ссылке (веб, обновление страницы) — истории нет, «назад» ведёт на главную
@@ -335,7 +340,7 @@ export default function HerbScreen() {
         onMore={openDetails}
       />
 
-      <View style={{ flexDirection: 'row', gap: spacing.sm, marginHorizontal: -herbLayout.factsBleed }}>
+      <View style={{ flexDirection: 'row', gap: spacing.sm, marginHorizontal: -herbLayout.factsBleed, marginTop: herbLayout.blockGap }}>
         <FactCard
           seed={`${herb.id}:parts`}
           title="Части растения"
@@ -370,14 +375,14 @@ export default function HerbScreen() {
         </FactCard>
       </View>
 
-      <PaperCard seed={`${herb.id}:indications`} style={{ gap: spacing.md }}>
+      <PaperCard seed={`${herb.id}:indications`} style={{ gap: spacing.md, marginTop: herbLayout.blockGap }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
           <AppText variant="heading" accessibilityRole="header">
             От чего помогает
           </AppText>
           <Sprig width={herbLayout.headingSprig} />
         </View>
-        {indications.map((x) => (
+        {(showAllIndications ? indications : indications.slice(0, herbLayout.indicationsShown)).map((x) => (
           <Pressable
             key={x.indication}
             onPress={() => openGroup('indications', x.indication)}
@@ -398,11 +403,25 @@ export default function HerbScreen() {
             </View>
           </Pressable>
         ))}
+        {indications.length > herbLayout.indicationsShown ? (
+          <Pressable
+            onPress={() => setShowAllIndications((v) => !v)}
+            accessibilityRole="button"
+            hitSlop={spacing.sm}
+            style={({ pressed }) => ({ alignSelf: 'flex-start', opacity: pressed ? 0.6 : 1 })}
+          >
+            <AppText variant="hand" tone="accent">
+              {showAllIndications ? 'Свернуть' : `Показать ещё ${indications.length - herbLayout.indicationsShown}`}
+            </AppText>
+          </Pressable>
+        ) : null}
       </PaperCard>
 
-      <StampAndNote herb={herb} />
+      <View style={{ marginTop: herbLayout.blockGap }}>
+        <StampAndNote herb={herb} />
+      </View>
 
-      <View style={{ gap: spacing.md }}>
+      <View style={{ gap: spacing.md, marginTop: herbLayout.blockGap }}>
         <Button
           large
           seed={`${herb.id}:favorite`}

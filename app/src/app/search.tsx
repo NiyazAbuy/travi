@@ -5,7 +5,7 @@ import { filterForGroup, searchContent } from '@travy/shared';
 import { Chip, EmptyState, HerbRow, Screen, SearchField } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
-import { spacing } from '@/theme';
+import { listLayout, spacing } from '@/theme';
 
 /** Поиск (макет 04): поле, найденные группы — плашки (нажатие → список с фильтром), травы — строки как в каталоге. */
 export default function SearchScreen() {
@@ -37,7 +37,7 @@ export default function SearchScreen() {
         <EmptyState seed="search:empty" icon="search" text="Ничего не нашлось — попробуйте другое слово." />
       ) : null}
       {result.herbs.length > 0 ? (
-        <View style={{ gap: spacing.md }}>
+        <View style={{ gap: listLayout.rowGap }}>
           {result.herbs.map((h) => (
             <HerbRow key={h.id} herb={h} />
           ))}

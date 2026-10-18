@@ -10,10 +10,12 @@ export interface ScreenProps {
   padded?: boolean;
   /** false — экран под заголовком стека: верхний отступ уже есть. */
   safeTop?: boolean;
+  /** Промежуток между блоками экрана; по умолчанию spacing.lg. */
+  gap?: number;
 }
 
 /** Экран на бумаге: кремовый фон с зерном (неподвижным при прокрутке) и отступы по краям. */
-export function Screen({ children, scroll = true, padded = true, safeTop = true }: ScreenProps) {
+export function Screen({ children, scroll = true, padded = true, safeTop = true, gap = spacing.lg }: ScreenProps) {
   const padding = padded ? spacing.lg : 0;
   return (
     <SafeAreaView edges={safeTop ? ['top'] : ['bottom']} style={{ flex: 1, backgroundColor: colors.background }}>
@@ -21,12 +23,12 @@ export function Screen({ children, scroll = true, padded = true, safeTop = true 
       {scroll ? (
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ padding, paddingBottom: spacing.xxl, gap: spacing.lg }}
+          contentContainerStyle={{ padding, paddingBottom: spacing.xxl, gap }}
         >
           {children}
         </ScrollView>
       ) : (
-        <View style={{ flex: 1, padding, gap: spacing.lg }}>{children}</View>
+        <View style={{ flex: 1, padding, gap }}>{children}</View>
       )}
     </SafeAreaView>
   );

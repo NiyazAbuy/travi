@@ -33,8 +33,8 @@ export function Stamp({ label, size = 96, color = colors.ink }: StampProps) {
   const c = size / 2;
   const rings = useMemo(
     () => ({
-      outer: inkCircle(`${label}:outer`, c, c, c - 2.5, 1.2),
-      inner: inkCircle(`${label}:inner`, c, c, c - 7, 0.8),
+      outer: inkCircle(`${label}:outer`, c, c, c - 3, 2.6),
+      inner: inkCircle(`${label}:inner`, c, c, c - 8, 1.8),
     }),
     [label, c],
   );
@@ -49,11 +49,12 @@ export function Stamp({ label, size = 96, color = colors.ink }: StampProps) {
       accessible
       accessibilityRole="image"
       accessibilityLabel={label}
-      style={{ width: size, height: size, opacity: 0.85, transform: [{ rotate: '-8deg' }] }}
+      style={{ width: size, height: size, opacity: 0.82, transform: [{ rotate: '-11deg' }] }}
     >
       <Svg width={size} height={size}>
-        <Path d={rings.outer} stroke={color} strokeWidth={1.5} fill="none" strokeLinejoin="round" />
-        <Path d={rings.inner} stroke={color} strokeWidth={0.9} fill="none" strokeLinejoin="round" />
+        {/* штрихи с разрывами — неравномерно легла краска, как у настоящего оттиска */}
+        <Path d={rings.outer} stroke={color} strokeWidth={2.2} fill="none" strokeLinejoin="round" strokeDasharray="34 3 13 2 22 4" />
+        <Path d={rings.inner} stroke={color} strokeWidth={1.1} fill="none" strokeLinejoin="round" strokeDasharray="19 2.5 8 1.5" />
         <G transform={sprig}>
           <Path d={SPRIG_PATHS.stem} stroke={color} strokeWidth={1.4} fill="none" strokeLinecap="round" />
           <Path d={SPRIG_PATHS.leaves} stroke={color} strokeWidth={1.1} fill={color} fillOpacity={0.15} strokeLinejoin="round" />

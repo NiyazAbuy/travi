@@ -3,11 +3,10 @@ import { useId, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import Svg, { ClipPath, Defs, Ellipse, G, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { tornEdgePath } from '@/lib/tornEdge';
-import { colors, listLayout, paperEdge, shadow, spacing } from '@/theme';
+import { colors, fonts, listLayout, paperEdge, shadow, spacing } from '@/theme';
 import { AppText } from './AppText';
-import { Icon } from './Icon';
 import { useLayoutSize } from './PaperShape';
-import { Sprig } from './Sprig';
+import { InkLine } from './InkLine';
 
 /** Поле вокруг картины внутри SVG — под тень, px. */
 const PAD = 10;
@@ -25,8 +24,8 @@ export interface BannerProps {
 }
 
 /**
- * Баннер-картина главной (макет 02): картина с рваным краем и мягкой тенью, надпись — на светлом небе
- * со «сиянием» бумаги под ней (тёмный текст читается на любом месте картины) и веточками-украшением.
+ * Баннер-картина главной: картина с глубоко рваным краем и мягкой тенью, надпись курсивом слева на светлом небе
+ * со «сиянием» бумаги под ней (тёмный текст читается на любом месте картины), под надписью — черта «пером».
  * Край — бумажная «маска»: полоса цвета фона между прямоугольником картины и рваным контуром.
  */
 export function Banner({ source, title, accessibilityLabel, onPress, seed }: BannerProps) {
@@ -67,10 +66,10 @@ export function Banner({ source, title, accessibilityLabel, onPress, seed }: Ban
               </RadialGradient>
             </Defs>
             <Ellipse
-              cx={size.width / 2}
-              cy={size.height * 0.24}
-              rx={size.width * 0.5}
-              ry={size.height * 0.3}
+              cx={size.width * 0.3}
+              cy={size.height * 0.3}
+              rx={size.width * 0.42}
+              ry={size.height * 0.36}
               fill={`url(#${clipId}glow)`}
             />
           </Svg>
@@ -112,14 +111,12 @@ export function Banner({ source, title, accessibilityLabel, onPress, seed }: Ban
       ) : null}
 
       {/* position: relative — на вебе, чтобы надпись была над слоями SVG, а не под ними */}
-      <View style={{ position: 'relative', alignItems: 'center', paddingTop: spacing.md, paddingHorizontal: spacing.lg }}>
-        <AppText variant="section" numberOfLines={2} style={{ textAlign: 'center' }}>
+      <View style={{ position: 'relative', alignItems: 'flex-start', paddingTop: spacing.lg, paddingHorizontal: spacing.lg, gap: spacing.xs }}>
+        <AppText variant="section" numberOfLines={2} style={{ fontFamily: fonts.displayItalic, maxWidth: '62%' }}>
           {title}
         </AppText>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }} importantForAccessibility="no-hide-descendants">
-          <Sprig width={listLayout.titleSprig} color={colors.ink} flip />
-          <Icon name="leaf" size={spacing.lg} color={colors.ink} />
-          <Sprig width={listLayout.titleSprig} color={colors.ink} />
+        <View importantForAccessibility="no-hide-descendants">
+          <InkLine width={listLayout.bannerRule} seed={`${seed}:rule`} />
         </View>
       </View>
     </Pressable>

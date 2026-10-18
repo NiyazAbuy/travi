@@ -1,5 +1,6 @@
 import { Caveat_500Medium } from '@expo-google-fonts/caveat/500Medium';
 import { CormorantGaramond_600SemiBold } from '@expo-google-fonts/cormorant-garamond/600SemiBold';
+import { CormorantGaramond_600SemiBold_Italic } from '@expo-google-fonts/cormorant-garamond/600SemiBold_Italic';
 import { Lora_400Regular } from '@expo-google-fonts/lora/400Regular';
 import { Lora_400Regular_Italic } from '@expo-google-fonts/lora/400Regular_Italic';
 import { Lora_500Medium } from '@expo-google-fonts/lora/500Medium';
@@ -13,6 +14,7 @@ import { useEffect, useState } from 'react';
  */
 export const FONT_FILES = {
   CormorantGaramond_600SemiBold,
+  CormorantGaramond_600SemiBold_Italic,
   Lora_400Regular,
   Lora_400Regular_Italic,
   Lora_500Medium,

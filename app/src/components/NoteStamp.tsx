@@ -5,7 +5,7 @@ import { PaperShape, useLayoutSize } from './PaperShape';
 import { Sprig } from './Sprig';
 
 export interface NoteStampProps {
-  /** Текст заметки: показывается начало, две строки рукописным шрифтом. */
+  /** Текст заметки: показывается начало, до трёх строк рукописным шрифтом. */
   text: string;
   /** Ключ рваного края (например, `note:<id травы>`). */
   seed: string;
@@ -37,7 +37,7 @@ export function NoteStamp({ text, seed }: NoteStampProps) {
           height={size.height}
           fill={colors.paperChip}
           edge={colors.ink}
-          edgeWidth={1}
+          edgeWidth={1.3}
           depth={paperEdge.chip.depth}
           radius={paperEdge.tag.radius}
         />
@@ -48,7 +48,7 @@ export function NoteStamp({ text, seed }: NoteStampProps) {
         </AppText>
         <Sprig width={listLayout.noteStampSprig} color={colors.ink} />
       </View>
-      <AppText variant="handSmall" numberOfLines={2} style={{ color: colors.ink }}>
+      <AppText variant="hand" numberOfLines={3} style={{ color: colors.ink }}>
         {text.trim()}
       </AppText>
     </View>
