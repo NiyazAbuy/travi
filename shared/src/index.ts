@@ -7,3 +7,4 @@ export * from './query';
 export * from './user';
 export * from './sources';
 export * from './text';
+export * from './update';
