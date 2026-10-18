@@ -101,12 +101,17 @@ export const fonts = {
 
 /** Начертание задаётся семейством шрифта, без `fontWeight`: на Android жирность у своих шрифтов дорисовывается грубо. */
 export const typography = {
-  hero: { fontFamily: fonts.display, fontSize: 44, lineHeight: 50 },
+  /** Название приложения на главной — крупнее всего, как на макете 02. */
+  brand: { fontFamily: fonts.display, fontSize: 58, lineHeight: 64 },
+  /** Заголовок экрана-вкладки («Каталог», «Сборы», «Избранное»). */
+  hero: { fontFamily: fonts.display, fontSize: 50, lineHeight: 56 },
   /** Название травы в карточке — крупно, как на макете 03. */
   display: { fontFamily: fonts.display, fontSize: 32, lineHeight: 36 },
   title: { fontFamily: fonts.display, fontSize: 30, lineHeight: 36 },
   /** Заголовок раздела экрана («Собирать сейчас»). */
   section: { fontFamily: fonts.display, fontSize: 25, lineHeight: 30 },
+  /** Заголовок в шапке экранов стека («Травы», «Поиск», «О приложении»). */
+  header: { fontFamily: fonts.display, fontSize: 24, lineHeight: 30 },
   heading: { fontFamily: fonts.display, fontSize: 21, lineHeight: 26 },
   /** Заголовок маленькой карточки (три карточки в ряд на карточке травы). */
   subheading: { fontFamily: fonts.display, fontSize: 18, lineHeight: 21 },
@@ -120,6 +125,10 @@ export const typography = {
   /** Подписи нижних вкладок. */
   tab: { fontFamily: fonts.bodyMedium, fontSize: 12, lineHeight: 15 },
   hand: { fontFamily: fonts.hand, fontSize: 21, lineHeight: 25 },
+  /** Начало заметки на «штампе» в строке избранного. */
+  handSmall: { fontFamily: fonts.hand, fontSize: 18, lineHeight: 20 },
+  /** Надпись «МОЯ ЗАМЕТКА» на штампе — мелкие прописные с разрядкой. */
+  stampCaption: { fontFamily: fonts.display, fontSize: 11, lineHeight: 13, letterSpacing: 1.2 },
   /** Рукописный заголовок заметки («Моя заметка»). */
   handTitle: { fontFamily: fonts.hand, fontSize: 25, lineHeight: 29 },
 } satisfies Record<string, TextStyle>;
@@ -161,6 +170,46 @@ export const herbLayout = {
   maxContentWidth: 640,
 } as const;
 
+/** Нижняя панель вкладок: сторона иконки и высота без системного отступа снизу (иконка, подпись, поля), px. */
+export const tabBar = {
+  icon: 24,
+  height: 24 + typography.tab.lineHeight + spacing.sm * 2 + spacing.xs,
+} as const;
+
+/** Размеры главной, строк списков, сборов и избранного (макеты 02, 04–06). */
+export const listLayout = {
+  /** Рисунок слева в строке травы: ширина и высота, px; фото вместо рисунка — квадрат `rowPhoto`. */
+  rowArtWidth: 84,
+  rowArtHeight: 104,
+  rowPhoto: 76,
+  /** «Сердце» избранного в строке, px. */
+  rowHeart: 22,
+  /** Иконка раздела каталога в строке, px. */
+  rowIcon: 26,
+  /** Штамп заметки в строке избранного: наибольшая ширина, px, и наклон. */
+  noteStampWidth: 172,
+  noteStampRotate: '-4deg',
+  noteStampSprig: 22,
+  /** Веточка у названия приложения и у заголовков вкладок, px. */
+  brandSprig: 54,
+  titleSprig: 46,
+  /** Плитки разделов на главной: иконка, px. */
+  tileIcon: 32,
+  /** Баннер-картина: высота / ширина (вырезка картины — 2:1). */
+  bannerRatio: 0.5,
+  /** Сияние под надписью баннера: непрозрачность бумаги в центре. */
+  bannerGlow: 0.82,
+  /** Карточка «Собирать сейчас»: ширина и рисунок слева, px. */
+  collectWidth: 232,
+  collectArtWidth: 64,
+  collectArtHeight: 112,
+  /** Рисунки компонентов в карточке сбора: ширина и высота каждого, px. */
+  recipeArtWidth: 58,
+  recipeArtHeight: 108,
+  /** Иконка пустого состояния, px. */
+  emptyIcon: 40,
+} as const;
+
 /** Параметры тени под рваным краем: рисуется в том же SVG двумя слоями (без фильтров размытия — дёшево). */
 export interface PaperShadow {
   color: string;
@@ -192,4 +241,6 @@ export const paperEdge = {
   button: { depth: 2.5, radius: 6 },
   chip: { depth: 1.2, radius: 9 },
   tag: { depth: 0.8, radius: 6 },
+  /** Картина-баннер на главной: край глубже — как оборванный лист. */
+  banner: { depth: 5, radius: 4 },
 } as const;

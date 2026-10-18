@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { herbLine, herbOrganSystems, herbParts, nameList, shortLabel, usageSummary } from '../src/query/summary';
+import { herbLine, herbOrganSystems, herbParts, nameList, purposeLabels, shortLabel, usageSummary } from '../src/query/summary';
 import { bundleSchemas, type Dictionaries, type Herb } from '../src/schema';
 import { queryDictionaries, queryHerbs4 } from './query-fixtures';
 
@@ -197,5 +197,27 @@ describe('herbLine', () => {
     // схема требует хотя бы одно показание, поэтому собираем объект напрямую
     const herb = { ...alpha, actions: [], indications: [] } as Herb;
     expect(herbLine(herb, dictionaries())).toBe('');
+  });
+});
+
+describe('purposeLabels', () => {
+  it('системы органов показаний без повторов, в порядке показаний', () => {
+    expect(purposeLabels(['insomnia', 'cough', 'bronchitis'], dictionaries())).toEqual([
+      'Нервная система',
+      'Дыхательная система',
+    ]);
+  });
+
+  it('системы нет в словаре — название показания без уточнения в скобках', () => {
+    const d = dictionaries();
+    d.indications.push({ id: 'odd', name: 'Странное (уточнение)', organ_system: 'missing', synonyms: [] });
+    expect(purposeLabels(['odd', 'rash'], d)).toEqual(['Странное', 'Кожа и раны']);
+  });
+
+  it('неизвестные показания пропускаются, limit ограничивает число плашек', () => {
+    expect(purposeLabels(['nope', 'cough', 'insomnia', 'rash'], dictionaries(), 2)).toEqual([
+      'Дыхательная система',
+      'Нервная система',
+    ]);
   });
 });

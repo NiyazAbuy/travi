@@ -14,13 +14,15 @@ export interface ChipProps {
   filled?: boolean;
   /** Ключ рваного края; по умолчанию — подпись. */
   seed?: string;
+  /** Подпись для экранного диктора, если она отличается от видимой (например, «Убрать условие: …»). */
+  accessibilityLabel?: string;
 }
 
 /**
  * Плашка-«клочок бумаги» с чуть неровным краем: обычная — светлая бумага с тонкой рамкой,
  * выбранная (или акцентная) — заливка шалфеем.
  */
-export function Chip({ label, selected = false, onPress, icon, filled = false, seed }: ChipProps) {
+export function Chip({ label, selected = false, onPress, icon, filled = false, seed, accessibilityLabel }: ChipProps) {
   const { size, onLayout } = useLayoutSize();
   const sage = selected || filled;
   const fill = (pressed: boolean) =>
@@ -31,6 +33,7 @@ export function Chip({ label, selected = false, onPress, icon, filled = false, s
       onPress={onPress}
       onLayout={onLayout}
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ selected }}
       style={({ pressed }) => [
         {

@@ -70,6 +70,26 @@ describe('renderReport', () => {
     expect(html).toContain('Test Author · CC BY-SA 4.0');
   });
 
+  it('рисунок травы: маленький, рядом с фото, с автором и лицензией', () => {
+    const tree = sampleTree();
+    Object.assign(tree.herbs[0]!, { illustration: { file: 'illustration.webp', kind: 'plant' } });
+    tree.photos['plantago-major']!.meta['illustration.webp'] = {
+      author: 'Otto Wilhelm Thomé',
+      license: 'PD',
+      source_url: 'https://commons.wikimedia.org/wiki/File:Plantago.jpg',
+    };
+    const html = render(tree);
+    expect(html).toContain(
+      '<figure class="illustration"><img src="../content/photos/plantago-major/illustration.webp" alt="Рисунок: Подорожник большой" loading="lazy"><figcaption>Рисунок · Otto Wilhelm Thomé · PD',
+    );
+    // рисунок — первым в ряду фото
+    expect(html.indexOf('illustration.webp')).toBeLessThan(html.indexOf('plantago-major/plant.webp'));
+  });
+
+  it('без рисунка — только фото', () => {
+    expect(render()).not.toContain('class="illustration"');
+  });
+
   it('двойник: ядовитый выделен, имя травы из базы', () => {
     const tree = sampleTree();
     tree.herbs[0]!.lookalikes = [{ herb: 'althaea-officinalis', poisonous: true, differences: 'Отличия' }];

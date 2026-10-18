@@ -2,12 +2,7 @@ import { Tabs } from 'expo-router';
 import { View, type ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon, PaperTexture, type IconName } from '@/components';
-import { colors, spacing, typography } from '@/theme';
-
-/** Сторона иконки вкладки, px. */
-const TAB_ICON = 24;
-/** Высота панели без системного отступа снизу: иконка, подпись засечным шрифтом (он выше стандартного) и поля. */
-const TAB_BAR_HEIGHT = TAB_ICON + typography.tab.lineHeight + spacing.sm * 2 + spacing.xs;
+import { colors, tabBar, typography } from '@/theme';
 
 /** Иконка вкладки: тонкий контур; у активной — чуть плотнее и цветом мха. */
 const icon =
@@ -15,7 +10,7 @@ const icon =
   ({ color, focused }: { color: ColorValue; focused: boolean; size: number }) => (
     <Icon
       name={name}
-      size={TAB_ICON}
+      size={tabBar.icon}
       color={typeof color === 'string' ? color : colors.textMuted}
       weight={focused ? 'regular' : 'light'}
     />
@@ -37,7 +32,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          height: TAB_BAR_HEIGHT + insets.bottom,
+          height: tabBar.height + insets.bottom,
           backgroundColor: colors.background,
           borderTopColor: colors.divider,
         },

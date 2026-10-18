@@ -100,3 +100,18 @@ export function herbLine(herb: Herb, dictionaries: Dictionaries): string {
   );
   return nameList(indications.slice(0, 2));
 }
+
+/**
+ * Плашки назначения сбора (спецификация §4.5, макет 05): короткие названия систем органов его показаний,
+ * без повторов, в порядке показаний; у показания без системы — его собственное название без уточнения в скобках.
+ */
+export function purposeLabels(purpose: readonly string[], dictionaries: Dictionaries, limit = 3): string[] {
+  const labels: string[] = [];
+  for (const id of purpose) {
+    const indication = dictionaries.indications.find((i) => i.id === id);
+    const system = dictionaries.organSystems.find((s) => s.id === indication?.organ_system);
+    const label = system?.name ?? (indication ? shortLabel(indication.name) : undefined);
+    if (label !== undefined && !labels.includes(label)) labels.push(label);
+  }
+  return labels.slice(0, limit);
+}

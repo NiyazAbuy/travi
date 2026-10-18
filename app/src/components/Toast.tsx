@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, spacing } from '@/theme';
+import { colors, spacing, tabBar } from '@/theme';
 import { AppText } from './AppText';
 import { PaperCard } from './PaperCard';
 
@@ -27,8 +27,8 @@ export function Toast({ message }: { message: string | null }) {
         position: 'absolute',
         left: spacing.lg,
         right: spacing.lg,
-        // Выше панели вкладок (её высота меньше spacing.xxl * 2).
-        bottom: insets.bottom + spacing.xxl * 2,
+        // Над панелью вкладок (та же высота, что в `(tabs)/_layout.tsx`) с небольшим зазором.
+        bottom: insets.bottom + tabBar.height + spacing.md,
         pointerEvents: 'none',
       }}
     >

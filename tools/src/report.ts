@@ -62,6 +62,8 @@ nav { line-height: 2; }
 .photos { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
 figure { margin: 0; max-width: 300px; }
 figure img { width: 100%; border-radius: 12px; display: block; }
+figure.illustration { max-width: 140px; }
+figure.illustration img { border-radius: 0; }
 figcaption { font-size: 12px; color: var(--muted); }
 dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; }
 dt { color: var(--muted); }
@@ -107,14 +109,17 @@ export function renderReport(content: LoadedContent, opts: ReportOptions): strin
     return ` <span class="refs">${links.join(' ')}</span>`;
   }
 
-  function figure(herbId: string, photo: PhotoRef, alt: string): string {
+  /** Фото (или ботанический рисунок — `illustration`: мельче и без скругления) с подписью и авторством. */
+  function figure(herbId: string, photo: PhotoRef, alt: string, illustration = false): string {
     const meta = content.photoMeta[herbId]?.[photo.file];
     const credit = meta
       ? ` · ${e(meta.author)} · ${e(meta.license)} · <a href="${e(meta.source_url)}">страница файла</a>`
       : '';
     const caption = photo.caption ? `: ${e(photo.caption)}` : '';
     const src = e(opts.photoUrl(herbId, photo.file));
-    return `<figure><img src="${src}" alt="${e(alt)}" loading="lazy"><figcaption>${PHOTO_KIND_LABELS[photo.kind]}${caption}${credit}</figcaption></figure>`;
+    const label = illustration ? 'Рисунок' : PHOTO_KIND_LABELS[photo.kind];
+    const cls = illustration ? ' class="illustration"' : '';
+    return `<figure${cls}><img src="${src}" alt="${e(alt)}" loading="lazy"><figcaption>${label}${caption}${credit}</figcaption></figure>`;
   }
 
   const list = (items: string[]) => (items.length ? `<ul>${items.map((x) => `<li>${x}</li>`).join('')}</ul>` : '<p>—</p>');
@@ -168,7 +173,7 @@ export function renderReport(content: LoadedContent, opts: ReportOptions): strin
 
     return `<article class="card" id="herb-${e(h.id)}">
 <header><h2>${e(h.name)}</h2><p class="latin">${e(h.latin)} · ${name('families', h.family)}</p><span class="badge ${h.status}">${HERB_STATUS_LABELS[h.status]}</span></header>
-<div class="photos">${h.photos.map((p) => figure(h.id, p, h.name)).join('')}</div>
+<div class="photos">${h.illustration ? figure(h.id, h.illustration, `Рисунок: ${h.name}`, true) : ''}${h.photos.map((p) => figure(h.id, p, h.name)).join('')}</div>
 <dl>
 <dt>Другие названия</dt><dd>${h.other_names.map((x) => e(x)).join(', ') || '—'}</dd>
 <dt>Жизненная форма</dt><dd>${LIFE_FORM_LABELS[h.life_form]}</dd>

@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { DisclaimerGate, PaperTexture } from '@/components';
 import { ContentProvider } from '@/content/ContentProvider';
 import { ListFilterProvider } from '@/state/ListFilterProvider';
-import { colors, fonts } from '@/theme';
+import { colors, typography } from '@/theme';
 import { useThemeFonts } from '@/theme/fonts';
 import { UpdateProvider } from '@/update/UpdateProvider';
 import { UserDataProvider } from '@/user/UserDataProvider';
@@ -44,7 +44,7 @@ export default function RootLayout() {
                 headerStyle: { backgroundColor: colors.background },
                 headerBackground: HeaderPaper,
                 headerTintColor: colors.text,
-                headerTitleStyle: { fontFamily: fonts.display, fontSize: 24, color: colors.text },
+                headerTitleStyle: { fontFamily: typography.header.fontFamily, fontSize: typography.header.fontSize, color: colors.text },
                 headerShadowVisible: false,
                 contentStyle: { backgroundColor: colors.background },
               }}

@@ -1,49 +1,57 @@
-import { Image } from 'expo-image';
 import { useRouter, type Href } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { collectNow, emptyFilter, filterForGroup, monthName } from '@travy/shared';
-import { AppText, HerbCard, Icon, Screen, SectionHeader, type IconName } from '@/components';
+import {
+  AppText,
+  Banner,
+  HerbCard,
+  Icon,
+  PaperCard,
+  Screen,
+  ScreenTitle,
+  SearchField,
+  SectionHeader,
+  type IconName,
+} from '@/components';
+import { BANNER } from '@/content/banner';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, listLayout, spacing } from '@/theme';
 
-function Tile({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
+/** Плитка раздела: клочок бумаги с контурной иконкой и подписью. */
+function Tile({ icon, label, seed, onPress }: { icon: IconName; label: string; seed: string; onPress: () => void }) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => ({ flex: 1, alignItems: 'center', gap: spacing.xs, opacity: pressed ? 0.7 : 1 })}
+      accessibilityLabel={label}
+      style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.7 : 1 })}
     >
-      <View
-        style={{
-          width: 56,
-          height: 56,
-          borderRadius: radius.lg,
-          borderWidth: 1,
-          borderColor: colors.border,
-          backgroundColor: colors.surface,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+      <PaperCard
+        seed={seed}
+        padding={spacing.sm}
+        style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.xs, paddingVertical: spacing.md }}
       >
-        <Icon name={icon} size={28} color={colors.accent} />
-      </View>
-      <AppText variant="tiny" tone="muted" style={{ textAlign: 'center' }}>
-        {label}
-      </AppText>
+        <Icon name={icon} size={listLayout.tileIcon} color={colors.ink} />
+        <AppText variant="label" style={{ textAlign: 'center' }}>
+          {label}
+        </AppText>
+      </PaperCard>
     </Pressable>
   );
 }
 
+/**
+ * Главная (макет 02): «Травница» с веточкой, поиск, четыре бумажные плитки разделов,
+ * картина-баннер «Природа — лучшая аптека» и лента «Собирать сейчас · <месяц>».
+ */
 export default function HomeScreen() {
   const router = useRouter();
-  const { bundle, photoSource } = useContent();
+  const { bundle } = useContent();
   const { setFilter } = useListFilter();
   const month = new Date().getMonth() + 1;
   const now = useMemo(() => collectNow(bundle, month), [bundle, month]);
-  const bannerPhoto = (now[0] ?? bundle.herbs[0])?.photos[0];
-  const bannerSource = bannerPhoto ? photoSource(bannerPhoto.path) : null;
 
   const openList = (filter = emptyFilter()) => {
     setFilter(filter);
@@ -53,52 +61,24 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <View>
-        <AppText variant="hero">Травы</AppText>
-        <AppText tone="muted">Знания о травах. Гармония с природой.</AppText>
-      </View>
+      <ScreenTitle title="Травница" variant="brand" />
 
-      <Pressable
-        onPress={() => go('/search')}
-        accessibilityRole="search"
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: spacing.sm,
-          backgroundColor: colors.surface,
-          borderColor: colors.border,
-          borderWidth: 1,
-          borderRadius: radius.pill,
-          paddingHorizontal: spacing.lg,
-          paddingVertical: spacing.md,
-        }}
-      >
-        <Icon name="search" size={22} color={colors.textMuted} />
-        <AppText style={[typography.body, { color: colors.textFaint }]}>Поиск трав, свойств, проблем…</AppText>
-      </Pressable>
+      <SearchField placeholder="Поиск трав и знаний…" onPress={() => go('/search')} />
 
       <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-        <Tile icon="book" label="Каталог" onPress={() => go('/catalog')} />
-        <Tile icon="plant" label="Все травы" onPress={() => openList()} />
-        <Tile icon="heart" label="Избранное" onPress={() => go('/favorites')} />
-        <Tile icon="info" label="О приложении" onPress={() => go('/settings')} />
+        <Tile icon="book" label="Каталог" seed="home:tile:catalog" onPress={() => go('/catalog')} />
+        <Tile icon="plant" label="Все травы" seed="home:tile:herbs" onPress={() => openList()} />
+        <Tile icon="heart" label="Избранное" seed="home:tile:favorites" onPress={() => go('/favorites')} />
+        <Tile icon="info" label="О приложении" seed="home:tile:about" onPress={() => go('/settings')} />
       </View>
 
-      <Pressable
+      <Banner
+        source={BANNER.source}
+        title="Природа — лучшая аптека"
+        accessibilityLabel={`Картина: ${BANNER.author}, «${BANNER.title}». Открывает список всех трав`}
+        seed="home:banner"
         onPress={() => openList()}
-        accessibilityRole="button"
-        style={{ height: 150, borderRadius: radius.lg, overflow: 'hidden', backgroundColor: colors.surfaceRaised }}
-      >
-        {bannerSource && (
-          <Image source={bannerSource} style={{ position: 'absolute', inset: 0 }} contentFit="cover" />
-        )}
-        <View style={{ flex: 1, padding: spacing.lg, justifyContent: 'flex-end', backgroundColor: colors.overlay }}>
-          <AppText variant="title">Природа — лучшая аптека</AppText>
-          <AppText variant="caption" tone="muted">
-            Здесь ты найдёшь силу в простых вещах
-          </AppText>
-        </View>
-      </Pressable>
+      />
 
       <SectionHeader
         title={`Собирать сейчас · ${monthName(month)}`}
@@ -106,9 +86,20 @@ export default function HomeScreen() {
         onAction={now.length ? () => openList(filterForGroup('months', String(month))) : undefined}
       />
       {now.length > 0 ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: spacing.md }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          // поля — под тень и рваный край карточек, иначе их обрезает прокрутка
+          style={{ marginHorizontal: -spacing.lg, marginVertical: -spacing.sm }}
+          contentContainerStyle={{ gap: spacing.md, paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}
+        >
           {now.map((h) => (
-            <HerbCard key={h.id} herb={h} onPress={() => router.push({ pathname: '/herb/[id]', params: { id: h.id } })} />
+            <HerbCard
+              key={h.id}
+              herb={h}
+              month={month}
+              onPress={() => router.push({ pathname: '/herb/[id]', params: { id: h.id } })}
+            />
           ))}
         </ScrollView>
       ) : (

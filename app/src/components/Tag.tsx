@@ -3,8 +3,8 @@ import { colors, paperEdge, radius, spacing } from '@/theme';
 import { AppText } from './AppText';
 import { PaperShape, useLayoutSize } from './PaperShape';
 
-/** Маленькая метка в строке списка: бумажная плашка с тонкой рамкой, не нажимается. */
-export function Tag({ label }: { label: string }) {
+/** Маленькая метка в строке списка: бумажная плашка с тонкой рамкой, не нажимается. `seed` — ключ края (по умолчанию подпись). */
+export function Tag({ label, seed }: { label: string; seed?: string }) {
   const { size, onLayout } = useLayoutSize();
   return (
     <View
@@ -16,7 +16,7 @@ export function Tag({ label }: { label: string }) {
     >
       {size ? (
         <PaperShape
-          seed={label}
+          seed={seed ?? label}
           width={size.width}
           height={size.height}
           fill={colors.paperChip}

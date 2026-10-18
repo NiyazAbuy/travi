@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { PhotoSource } from '@/content/content';
-import { colors, fonts, radius, spacing } from '@/theme';
+import { colors, fonts, listLayout, radius, spacing } from '@/theme';
 import { AppText } from './AppText';
-import { Icon } from './Icon';
+import { Icon, type IconName } from './Icon';
 import { PaperCard } from './PaperCard';
 import { Tag } from './Tag';
 
@@ -18,6 +18,8 @@ export interface ListRowProps {
   image?: PhotoSource | null;
   /** Как вписать картинку: фото — `cover` (по умолчанию), рисунок на прозрачном фоне — `contain`. */
   imageFit?: 'cover' | 'contain';
+  /** Контурная иконка слева вместо картинки (разделы каталога). */
+  icon?: IconName;
   tags?: string[];
   right?: ReactNode;
   onPress?: () => void;
@@ -27,7 +29,7 @@ export interface ListRowProps {
 }
 
 /** Строка списка — бумажная карточка: картинка слева, название, подпись курсивом, метки. */
-export function ListRow({ title, subtitle, image, imageFit = 'cover', tags = [], right, onPress, onLongPress, seed }: ListRowProps) {
+export function ListRow({ title, subtitle, image, imageFit = 'cover', icon, tags = [], right, onPress, onLongPress, seed }: ListRowProps) {
   const imageRadius = imageFit === 'cover' ? radius.sm : 0;
   return (
     <Pressable
@@ -37,6 +39,7 @@ export function ListRow({ title, subtitle, image, imageFit = 'cover', tags = [],
       style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
     >
       <PaperCard seed={seed ?? title} padding={spacing.md} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+        {icon ? <Icon name={icon} size={listLayout.rowIcon} color={colors.ink} /> : null}
         {image === null && (
           <View style={{ width: IMAGE, height: IMAGE, borderRadius: radius.sm, backgroundColor: colors.paperDeep }} />
         )}
@@ -53,7 +56,7 @@ export function ListRow({ title, subtitle, image, imageFit = 'cover', tags = [],
           {tags.length > 0 && (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.xs }}>
               {tags.map((t) => (
-                <Tag key={t} label={t} />
+                <Tag key={t} label={t} seed={`${seed ?? title}:${t}`} />
               ))}
             </View>
           )}

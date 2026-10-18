@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { countRu, describeFilter, pruneFilter, queryHerbs, removeFilterChip, type HerbFilter } from '@travy/shared';
-import { AppText, Chip, FiltersSheet, HerbRow, Screen } from '@/components';
+import { AppText, Chip, EmptyState, FiltersSheet, HerbRow, Screen } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { spacing } from '@/theme';
 
 const FOUND_FORMS = ['трава', 'травы', 'трав'] as const;
 
+/** Список трав с фильтром (макет 04): выбранные условия — плашки шалфеем, ниже — строки трав. */
 export default function HerbListScreen() {
   const { bundle, index } = useContent();
   // Каждый экран списка хранит свой фильтр: общий задаёт лишь начальное значение при открытии.
@@ -25,21 +26,28 @@ export default function HerbListScreen() {
         {chips.map((c) => (
           <Chip
             key={`${c.key}:${c.value}`}
-            label={`${c.label} ×`}
+            seed={`filter:${c.key}:${c.value}`}
+            label={c.label}
+            accessibilityLabel={`Убрать условие: ${c.label}`}
+            icon="close"
             selected
             onPress={() => setFilter(removeFilterChip(active, c))}
           />
         ))}
-        <Chip label="+ фильтр" onPress={() => setSheetOpen(true)} />
+        <Chip seed="filter:add" label="Фильтр" icon="filter" onPress={() => setSheetOpen(true)} />
       </View>
       <AppText variant="caption" tone="muted">
         Найдено {countRu(herbs.length, FOUND_FORMS)}
         {active.indications.length > 0 ? ' · по доказанности' : ' · по алфавиту'}
       </AppText>
       {herbs.length === 0 ? (
-        <AppText tone="muted">Ничего не нашлось — уберите часть условий.</AppText>
+        <EmptyState seed="herbs:empty" icon="filter" text="Ничего не нашлось — уберите часть условий." />
       ) : (
-        herbs.map((h) => <HerbRow key={h.id} herb={h} indications={active.indications} />)
+        <View style={{ gap: spacing.md }}>
+          {herbs.map((h) => (
+            <HerbRow key={h.id} herb={h} indications={active.indications} />
+          ))}
+        </View>
       )}
       <FiltersSheet
         visible={sheetOpen}

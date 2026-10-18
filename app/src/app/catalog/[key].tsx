@@ -1,10 +1,13 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo } from 'react';
+import { View } from 'react-native';
 import { CATALOG_SECTIONS, catalogGroups, filterForGroup, type CatalogKey } from '@travy/shared';
-import { AppText, ListRow, Screen } from '@/components';
+import { EmptyState, ListRow, Screen, Tag } from '@/components';
 import { useContent } from '@/content/ContentProvider';
 import { useListFilter } from '@/state/ListFilterProvider';
+import { spacing } from '@/theme';
 
+/** Раздел каталога: группы — бумажные строки, справа плашка с числом трав; нажатие → список трав с фильтром. */
 export default function CatalogSectionScreen() {
   const router = useRouter();
   const { key } = useLocalSearchParams<{ key: string }>();
@@ -16,7 +19,7 @@ export default function CatalogSectionScreen() {
   if (!section) {
     return (
       <Screen safeTop={false}>
-        <AppText tone="muted">Раздел не найден.</AppText>
+        <EmptyState seed="catalog:missing" icon="book" text="Раздел не найден." />
       </Screen>
     );
   }
@@ -24,21 +27,20 @@ export default function CatalogSectionScreen() {
   return (
     <Screen safeTop={false}>
       <Stack.Screen options={{ title: section.title }} />
-      {groups.map((g) => (
-        <ListRow
-          key={g.value}
-          title={g.label}
-          right={
-            <AppText variant="caption" tone="muted">
-              {g.count}
-            </AppText>
-          }
-          onPress={() => {
-            setFilter(filterForGroup(section.key, g.value));
-            router.push('/herbs');
-          }}
-        />
-      ))}
+      <View style={{ gap: spacing.md }}>
+        {groups.map((g) => (
+          <ListRow
+            key={g.value}
+            seed={`catalog:${section.key}:${g.value}`}
+            title={g.label}
+            right={<Tag label={String(g.count)} seed={`catalog:${section.key}:${g.value}:count`} />}
+            onPress={() => {
+              setFilter(filterForGroup(section.key, g.value));
+              router.push('/herbs');
+            }}
+          />
+        ))}
+      </View>
     </Screen>
   );
 }

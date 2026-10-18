@@ -28,8 +28,8 @@ import {
   Sprig,
   Stamp,
 } from '@/components';
-import type { PhotoSource } from '@/content/content';
 import { useContent } from '@/content/ContentProvider';
+import { herbArt, type HerbArt } from '@/content/herbArt';
 import { useListFilter } from '@/state/ListFilterProvider';
 import { colors, herbLayout, spacing, typography } from '@/theme';
 import { useUserData } from '@/user/UserDataProvider';
@@ -39,19 +39,6 @@ import { useUserData } from '@/user/UserDataProvider';
  * системы органов, описание, три карточки (части, вещества, применение), от чего помогает,
  * печать и заметка, избранное и переход в «Подробнее о траве» — там всё остальное.
  */
-
-/** Картинка справа от названия: ботанический рисунок, а если его нет — первое фото. */
-interface Art {
-  source: PhotoSource;
-  drawing: boolean;
-}
-
-function herbArt(herb: Herb, photoSource: (path: string) => PhotoSource | null): Art | null {
-  const drawing = herb.illustration ? photoSource(herb.illustration.path) : null;
-  if (drawing) return { source: drawing, drawing: true };
-  const photo = herb.photos[0] ? photoSource(herb.photos[0].path) : null;
-  return photo ? { source: photo, drawing: false } : null;
-}
 
 /** Шапка: круглые бумажные кнопки «назад» и «в избранное», как на макете. */
 function TopBar({ onBack, favorite, onToggleFavorite }: { onBack: () => void; favorite?: boolean; onToggleFavorite?: () => void }) {
@@ -74,7 +61,8 @@ function TopBar({ onBack, favorite, onToggleFavorite }: { onBack: () => void; fa
 
 interface HeaderProps {
   herb: Herb;
-  art: Art | null;
+  /** Картинка справа от названия. */
+  art: HerbArt | null;
   contentWidth: number;
   systems: { id: string; name: string }[];
   onSystem: (id: string) => void;
