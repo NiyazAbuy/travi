@@ -4,3 +4,7 @@ coverage/
 *.log
 .expo/
 report/
+app/.expo/
+app/dist/
+app/web-build/
+app/expo-env.d.ts

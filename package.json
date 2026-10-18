@@ -4,19 +4,21 @@
   "type": "module",
   "workspaces": [
     "shared",
-    "tools"
+    "tools",
+    "app"
   ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p shared && tsc -p tools",
+    "typecheck": "tsc -p shared && tsc -p tools && npm run typecheck -w @travy/app",
     "content:check": "tsx tools/src/cli/check.ts",
     "content:build": "tsx tools/src/cli/build.ts",
     "photo:fetch": "tsx tools/src/cli/fetch-photo.ts",
     "sources:verify": "tsx tools/src/cli/verify-sources.ts",
-    "content:report": "tsx tools/src/cli/report.ts"
+    "content:report": "tsx tools/src/cli/report.ts",
+    "app:web": "npm run web -w @travy/app"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
