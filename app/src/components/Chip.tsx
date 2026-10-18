@@ -16,13 +16,15 @@ export interface ChipProps {
   seed?: string;
   /** Подпись для экранного диктора, если она отличается от видимой (например, «Убрать условие: …»). */
   accessibilityLabel?: string;
+  /** Узкие поля — чтобы в узкой колонке (рядом с рисунком травы) помещалось по две плашки в ряд. */
+  dense?: boolean;
 }
 
 /**
  * Плашка-«клочок бумаги» с чуть неровным краем: обычная — светлая бумага с тонкой рамкой,
  * выбранная (или акцентная) — заливка шалфеем.
  */
-export function Chip({ label, selected = false, onPress, icon, filled = false, seed, accessibilityLabel }: ChipProps) {
+export function Chip({ label, selected = false, onPress, icon, filled = false, seed, accessibilityLabel, dense = false }: ChipProps) {
   const { size, onLayout } = useLayoutSize();
   const sage = selected || filled;
   const fill = (pressed: boolean) =>
@@ -41,8 +43,8 @@ export function Chip({ label, selected = false, onPress, icon, filled = false, s
           flexDirection: 'row',
           alignItems: 'center',
           gap: spacing.xs,
-          paddingHorizontal: spacing.md,
-          paddingVertical: spacing.sm,
+          paddingHorizontal: dense ? spacing.sm - spacing.xxs : spacing.md,
+          paddingVertical: dense ? spacing.xs + spacing.xxs : spacing.sm,
         },
         size ? null : { backgroundColor: fill(pressed), borderRadius: radius.md },
       ]}

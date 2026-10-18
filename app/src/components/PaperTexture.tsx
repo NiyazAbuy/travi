@@ -12,7 +12,8 @@ export function PaperTexture({ style }: { style?: StyleProp<ImageStyle> }) {
     <Image
       source={PAPER_TILE}
       resizeMode="repeat"
-      style={[StyleSheet.absoluteFill, { width: undefined, height: undefined, pointerEvents: 'none' }, style]}
+      // width/height 100%: в вебе картинка с absoluteFill иначе остаётся размером с плитку (384 px).
+      style={[StyleSheet.absoluteFill, { width: '100%', height: '100%', pointerEvents: 'none' }, style]}
     />
   );
 }

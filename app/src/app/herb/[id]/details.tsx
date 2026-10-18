@@ -3,6 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import {
+  compareEvidenceDesc,
   EVIDENCE_LABELS,
   filterForGroup,
   herbSourceIds,
@@ -23,7 +24,7 @@ import { AppText, Chip, EvidenceDot, Icon, IconButton, PaperCard, Screen, Sectio
 import { useContent } from '@/content/ContentProvider';
 import { openLink } from '@/lib/openLink';
 import { useListFilter } from '@/state/ListFilterProvider';
-import { colors, herbLayout, radius, spacing, typography } from '@/theme';
+import { colors, fonts, herbLayout, radius, spacing, typography } from '@/theme';
 
 /**
  * «Подробнее о траве» (дизайн §4.4): всё, что не вошло в краткую карточку, — фото с авторством,
@@ -115,6 +116,12 @@ export default function HerbDetailsScreen() {
   if (!herb) {
     return (
       <Screen safeTop={false}>
+        {router.canGoBack() ? null : (
+          // открыли по ссылке, истории нет — без стрелки отсюда не уйти
+          <Stack.Screen
+            options={{ headerLeft: () => <IconButton icon="back" label="На главную" onPress={() => router.replace('/')} /> }}
+          />
+        )}
         <AppText tone="muted">Трава не найдена — возможно, её убрали из базы.</AppText>
       </Screen>
     );
@@ -185,7 +192,7 @@ export default function HerbDetailsScreen() {
         <AppText variant="title" accessibilityRole="header">
           {herb.name}
         </AppText>
-        <AppText variant="latin" tone="muted">
+        <AppText variant="latin" tone="muted" style={{ fontFamily: fonts.bodyItalic }}>
           {herb.latin}
         </AppText>
         {herb.other_names.length > 0 ? (
@@ -214,7 +221,9 @@ export default function HerbDetailsScreen() {
       </Section>
 
       <Section seed={seed('indications')} title="От чего помогает">
-        {herb.indications.map((x, i) => (
+        {[...herb.indications]
+          .sort((a, b) => compareEvidenceDesc(a.evidence.level, b.evidence.level))
+          .map((x, i) => (
           <View key={x.indication} style={{ gap: spacing.xs }}>
             {i > 0 ? <Divider /> : null}
             <Pressable

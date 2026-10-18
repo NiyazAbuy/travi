@@ -69,7 +69,7 @@ export default function HomeScreen() {
         <Tile icon="book" label="Каталог" seed="home:tile:catalog" onPress={() => go('/catalog')} />
         <Tile icon="plant" label="Все травы" seed="home:tile:herbs" onPress={() => openList()} />
         <Tile icon="heart" label="Избранное" seed="home:tile:favorites" onPress={() => go('/favorites')} />
-        <Tile icon="info" label="О приложении" seed="home:tile:about" onPress={() => go('/settings')} />
+        <Tile icon="info" label="Справка" seed="home:tile:about" onPress={() => go('/settings')} />
       </View>
 
       <Banner

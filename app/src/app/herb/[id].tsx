@@ -143,9 +143,9 @@ function HerbHeader({ herb, art, contentWidth, systems, onSystem, onMore }: Head
           </AppText>
         </View>
         {systems.length > 0 ? (
-          <View style={{ marginRight: columnRight, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+          <View style={{ marginRight: columnRight, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs }}>
             {systems.map((s) => (
-              <Chip key={s.id} filled seed={`${herb.id}:system:${s.id}`} label={s.name} onPress={() => onSystem(s.id)} />
+              <Chip key={s.id} filled dense seed={`${herb.id}:system:${s.id}`} label={s.name} onPress={() => onSystem(s.id)} />
             ))}
           </View>
         ) : null}

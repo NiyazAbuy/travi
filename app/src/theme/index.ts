@@ -136,7 +136,7 @@ export const typography = {
 /** Размеры элементов карточки травы и экрана «Подробнее» (макет 03). */
 export const herbLayout = {
   /** Рисунок справа от названия: доля ширины содержимого, высота и насколько он выходит к краю экрана, px. */
-  illustrationShare: 0.44,
+  illustrationShare: 0.4,
   illustrationHeight: 290,
   illustrationBleed: 8,
   /** Рисунок начинается чуть ниже верха названия: цветки на его верхушке не сталкиваются с буквами, px. */
@@ -199,10 +199,10 @@ export const listLayout = {
   bannerRatio: 0.5,
   /** Сияние под надписью баннера: непрозрачность бумаги в центре. */
   bannerGlow: 0.82,
-  /** Карточка «Собирать сейчас»: ширина и рисунок слева, px. */
-  collectWidth: 232,
-  collectArtWidth: 64,
-  collectArtHeight: 112,
+  /** Карточка «Собирать сейчас»: две на ширину экрана (как на макете 02); рисунок сверху: ширина и высота, px. */
+  collectPerScreen: 2,
+  collectArtWidth: 120,
+  collectArtHeight: 120,
   /** Рисунки компонентов в карточке сбора: ширина и высота каждого, px. */
   recipeArtWidth: 58,
   recipeArtHeight: 108,
