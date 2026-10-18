@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   acceptDisclaimer,
+  applyChanges,
   emptyUserData,
   isFavorite,
   parseUserData,
@@ -23,13 +24,30 @@ describe('избранное', () => {
 });
 
 describe('заметки', () => {
-  it('сохраняет текст без лишних пробелов и время', () => {
+  it('сохраняет текст как набран (с пробелами) и время', () => {
     const data = setNote(emptyUserData(), 'alpha', '  растёт у ручья  ', NOW);
-    expect(data.notes.alpha).toEqual({ text: 'растёт у ручья', updatedAt: '2026-10-18T12:00:00.000Z' });
+    expect(data.notes.alpha).toEqual({ text: '  растёт у ручья  ', updatedAt: '2026-10-18T12:00:00.000Z' });
   });
   it('пустой текст удаляет заметку', () => {
     const data = setNote(setNote(emptyUserData(), 'alpha', 'текст', NOW), 'alpha', '   ', NOW);
     expect(data.notes).toEqual({});
+  });
+});
+
+describe('applyChanges', () => {
+  it('применяет изменения по порядку', () => {
+    const result = applyChanges(emptyUserData(), [
+      (d) => toggleFavorite(d, 'alpha'),
+      (d) => toggleFavorite(d, 'beta'),
+      (d) => toggleFavorite(d, 'alpha'),
+      acceptDisclaimer,
+    ]);
+    expect(result.favorites).toEqual(['beta']);
+    expect(result.disclaimerAccepted).toBe(true);
+  });
+  it('пустой список — тот же объект', () => {
+    const data = emptyUserData();
+    expect(applyChanges(data, [])).toBe(data);
   });
 });
 

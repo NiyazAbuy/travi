@@ -62,12 +62,20 @@ export function toggleFavorite(data: UserData, herbId: string): UserData {
 
 export function setNote(data: UserData, herbId: string, text: string, now: Date): UserData {
   const notes = { ...data.notes };
-  const trimmed = text.trim();
-  if (trimmed) notes[herbId] = { text: trimmed, updatedAt: now.toISOString() };
+  // Текст хранится как набран (поле автосохраняется на каждый символ); trim — только чтобы понять, что заметка пуста.
+  if (text.trim()) notes[herbId] = { text, updatedAt: now.toISOString() };
   else delete notes[herbId];
   return { ...data, notes };
 }
 
 export function acceptDisclaimer(data: UserData): UserData {
   return { ...data, disclaimerAccepted: true };
+}
+
+/** Применяет изменения по порядку; для пустого списка возвращает тот же объект. */
+export function applyChanges(
+  data: UserData,
+  changes: ReadonlyArray<(d: UserData) => UserData>,
+): UserData {
+  return changes.reduce((current, change) => change(current), data);
 }
