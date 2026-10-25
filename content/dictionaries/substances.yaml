@@ -71,3 +71,15 @@
   name: Валереновые кислоты (сесквитерпеновые)
   class: sesquiterpenes
   synonyms: ["валереновая кислота", "ацетоксивалереновая кислота"]
+- id: organic-acids
+  name: Органические кислоты
+  class: organic-acids
+  synonyms: ["фруктовые кислоты", "яблочная кислота"]
+- id: ascorbic-acid
+  name: Витамин C (аскорбиновая кислота)
+  class: vitamins
+  synonyms: ["витамин С"]
+- id: pectins
+  name: Пектины
+  class: polysaccharides
+  synonyms: []
