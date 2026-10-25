@@ -19,9 +19,10 @@ import { SCHEMA_VERSION } from '../src/schema';
  * Поэтому изменение любого перечисления — несовместимое изменение: увеличьте SCHEMA_VERSION
  * (приложение покажет «обновите приложение») и только потом обновите снимок ниже.
  * LIFE_FORMS и SOURCING_OPTIONS добавлены до первой установки приложения, поэтому версия осталась 1.
+ * Версия 2 (октябрь 2026): harvest.months может быть пустым (пряности, выращиваемые за рубежом) — схема 1 это отвергала.
  */
 const PINNED = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   enums: {
     EVIDENCE_LEVELS: ['proven', 'traditional', 'folk', 'refuted'],
     SOURCE_TYPES: ['pharmacopoeia', 'monograph', 'systematic_review', 'rct', 'article', 'book', 'reference_book'],

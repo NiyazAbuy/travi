@@ -130,7 +130,7 @@ describe('bundle', () => {
     expect(parsed.herbs[0]).not.toHaveProperty('future_field');
   });
   it('отклоняет другую версию формата', () => {
-    expect(messages(bundleSchemas.contentBundle, { ...bundle(), schemaVersion: 2 })).not.toEqual([]);
+    expect(messages(bundleSchemas.contentBundle, { ...bundle(), schemaVersion: SCHEMA_VERSION + 1 })).not.toEqual([]);
   });
   it('путь фото в сборке — photos/<sha256>.webp', () => {
     expect(messages(bundleSchemas.photo, { ...bundlePhoto, path: 'photos/plant.webp' })).not.toEqual([]);
@@ -260,5 +260,16 @@ describe('коротко о растении (summary)', () => {
   });
   it('пустой summary — ошибка', () => {
     expect(inputSchemas.herbInput.safeParse({ ...sampleHerb('x', 'X'), summary: '' }).success).toBe(false);
+  });
+});
+
+describe('сбор без месяцев (пряности, выращиваемые за рубежом)', () => {
+  it('пустой список месяцев допустим — сроки зависят от страны выращивания', () => {
+    const h = sampleHerb('x', 'X');
+    const herb = { ...h, harvest: [{ ...h.harvest[0]!, months: [] }] };
+    expect(inputSchemas.herbInput.safeParse(herb).success).toBe(true);
+  });
+  it('версия схемы — 2 (пустые месяцы несовместимы со старыми приложениями)', () => {
+    expect(SCHEMA_VERSION).toBe(2);
   });
 });

@@ -17,7 +17,7 @@ import {
  * смена типа, ослабление или ужесточение правил (min, regex, refine) — старое приложение отвергнет такую базу.
  * Перечисления закреплены охранным тестом shared/test/compat.test.ts.
  */
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export const ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const PHOTO_FILE_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*\.webp$/;
@@ -126,7 +126,8 @@ function makeSchemas(o: ObjectMaker) {
 
   const harvest = o({
     part: idSchema,
-    months: z.array(z.number().int().min(1).max(12)).min(1, 'нужен хотя бы один месяц'),
+    // Пусто — сроки зависят от страны выращивания (пряности из тропиков). С версии схемы 2: схема 1 требовала хотя бы один месяц.
+    months: z.array(z.number().int().min(1).max(12)),
     how: text,
     drying: text,
     storage: text,

@@ -97,3 +97,11 @@ describe('collectNow', () => {
     expect(collectNow(content, 1)).toEqual([]);
   });
 });
+
+describe('collectNow: только то, что можно собрать самому', () => {
+  it('трава, которую можно только купить (sourcing: pharmacy), не попадает в «Собирать сейчас»', () => {
+    const [first, ...rest] = content.herbs;
+    const onlyBought = { ...content, herbs: [{ ...first!, sourcing: ['pharmacy' as const] }, ...rest] };
+    expect(collectNow(onlyBought, 6).map((h) => h.id)).not.toContain(first!.id);
+  });
+});

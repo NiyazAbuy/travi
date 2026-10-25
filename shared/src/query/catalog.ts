@@ -91,6 +91,8 @@ export function catalogGroups(content: ContentBundle, key: CatalogKey): CatalogG
 /** «Собирать сейчас»: травы, у которых в этом месяце есть запись сбора. */
 export function collectNow(content: ContentBundle, month: number): Herb[] {
   return content.herbs
+    // только то, что можно собрать самому: дикорастущее или садовое, а не только купленное
+    .filter((h) => h.sourcing.some((s) => s !== 'pharmacy'))
     .filter((h) => h.harvest.some((x) => x.months.includes(month)))
     .sort((a, b) => compareNames(a.name, b.name));
 }
