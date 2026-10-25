@@ -23,7 +23,8 @@ export function imageInfoUrl(fileTitle: string): string {
     formatversion: '2',
     prop: 'imageinfo',
     iiprop: 'url|extmetadata',
-    iiurlwidth: '1600',
+    // 1280 — стандартный размер миниатюр Commons (обычно уже в кэше); нестандартные размеры Commons генерирует на лету и отвечает 429
+    iiurlwidth: '1280',
     titles: normalizeFileTitle(fileTitle),
   });
   return `${API}?${params}`;
