@@ -83,3 +83,7 @@
   name: Пектины
   class: polysaccharides
   synonyms: []
+- id: curcuminoids
+  name: Куркуминоиды (куркумин)
+  class: diarylheptanoids
+  synonyms: ["куркумин", "деметоксикуркумин"]

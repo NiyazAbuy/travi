@@ -67,3 +67,11 @@
   name: Застой желчи (в составе комплексной терапии)
   organ_system: digestive
   synonyms: ["дискинезия желчевыводящих путей", "холецистит"]
+- id: diarrhoea-mild
+  name: Лёгкая диарея
+  organ_system: digestive
+  synonyms: ["понос", "расстройство кишечника"]
+- id: toothache-temporary
+  name: Зубная боль — временно, до стоматолога
+  organ_system: oral
+  synonyms: ["кариес", "боль в зубе"]

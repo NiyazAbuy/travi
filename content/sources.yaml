@@ -566,3 +566,79 @@
   doi: "10.1016/j.joca.2008.03.001"
   pmid: "18407528"
   note: "Osteoarthritis and Cartilage 2008;16(9):965–972. Метаанализ 3 РКИ (287 пациентов, около 3 месяцев): порошок плодов шиповника уменьшал боль по сравнению с плацебо, эффект небольшой–умеренный (ES 0,37), ответ на лечение примерно вдвое чаще (NNT 6). Все исследования поддержаны производителем (Hyben-Vital); авторы считают данные скудными и просят независимые крупные испытания. Прочитана аннотация."
+
+# --- Пряности ---
+
+- id: ema-curcumae-longae-rhizoma
+  type: monograph
+  title: "European Union herbal monograph on Curcuma longa L., rhizoma (Revision 1)"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2018
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-european-union-herbal-monograph-curcuma-longa-l-rhizoma-revision-1_en.pdf"
+  note: "EMA/HMPC/329755/2017, Final, 25 September 2018. Только традиционное применение (4.1): расстройства пищеварения — чувство переполнения, медленное пищеварение, метеоризм."
+
+- id: ema-cinnamomi-cortex
+  type: monograph
+  title: "Community herbal monograph on Cinnamomum verum J.S. Presl, cortex"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2011
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/community-herbal-monograph-cinnamomum-verum-js-presl-cortex_en.pdf"
+  note: "EMA/HMPC/246774/2009, Final, 10 May 2011. Традиционное применение (4.1): 1) лёгкие спазматические жалобы ЖКТ, в т. ч. вздутие и метеоризм; 2) лёгкая диарея."
+
+- id: ema-caryophylli-floris-aetheroleum
+  type: monograph
+  title: "Community herbal monograph on Syzygium aromaticum (L.) Merill et L. M. Perry, floris aetheroleum"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2011
+  url: "https://www.ema.europa.eu/en/documents/herbal-monograph/final-community-herbal-monograph-syzygium-aromaticum-l-merill-et-l-m-perry-floris-aetheroleum_en.pdf"
+  note: "EMA/HMPC/534924/2010, Final, 13 September 2011. Монография на гвоздичное масло (перегонка с паром из высушенных бутонов). Традиционное применение (4.1): 1) лёгкие воспаления во рту и горле; 2) временное облегчение зубной боли при кариесе."
+
+- id: fao-turmeric-postharvest-2004
+  type: reference_book
+  title: "Turmeric: Post-Production Management (Post-harvest Compendium)"
+  authors: ["Plotto A."]
+  publisher: "Food and Agriculture Organization of the United Nations (FAO), AGST"
+  year: 2004
+  url: "https://www.fao.org/3/ax446e/ax446e.pdf"
+  note: "Last reviewed 22/04/2004. Раздел 2.1 Harvest: готовность — когда растение и стебель засыхают, примерно через 7–10 месяцев после посадки; корневища выкапывают, отмачивают от земли, удаляют корни и чешуи. 2.2: перед сушкой корневища варят до мягкости (по рекомендации IISR 45–60 мин), варка — через 2–3 дня после уборки, не позже; сушат до влажности 5–10 %, на солнце 10–15 дней слоем 5–7 см; механическая сушка — оптимум 60 °C; куркума чувствительна к свету."
+
+- id: kau-turmeric-harvesting
+  type: reference_book
+  title: "Turmeric (Curcuma longa) — Harvesting"
+  authors: ["Centre for e-Learning, Kerala Agricultural University (KAU Agri-Infotech Portal)"]
+  year: 2025
+  url: "https://www.celkau.in/crops/spices/Turmeric/harvesting.php"
+  note: "«Time of harvest depends upon variety and usually extends from January to March»; ранние сорта — 7–8 месяцев, средние — 8–9, поздние — 9–10 месяцев после посадки; корневища очищают от земли и сразу обрабатывают. Данные для Кералы (Индия). Год — ориентировочно (страница обновляется), открыта 25.10.2026."
+
+- id: kau-cinnamon-harvesting
+  type: reference_book
+  title: "Cinnamon — Harvesting and Processing"
+  authors: ["Centre for e-Learning, Kerala Agricultural University (KAU Agri-Infotech Portal)"]
+  year: 2025
+  url: "https://www.celkau.in/crops/spices/cinnamon/harvesting.php"
+  note: "«The plants will be ready for harvest in about 3 years after planting»; «Harvesting is done during two seasons, the first in May and second in November»; кору снимают, когда она легко отделяется; «They are dried in shade as direct exposure to sun can result in warping»; трубочки сортируют на сорта. Данные для Кералы (Индия), открыта 25.10.2026."
+
+- id: kau-clove-harvesting
+  type: reference_book
+  title: "Clove — Harvesting and Processing"
+  authors: ["Centre for e-Learning, Kerala Agricultural University (KAU Agri-Infotech Portal)"]
+  year: 2025
+  url: "https://www.celkau.in/crops/spices/clove/harvesting.php"
+  note: "«The trees begin to yield from 7-8 years after planting»; «Buds are harvested when the base of calyx has turned from green to pink in colour»; бутоны отделяют от соцветий руками; сушат сразу; на солнце сушка 4–5 дней, высушенная гвоздика ярко-коричневая и не гнётся при нажатии; сортируют и хранят в сухом месте в мешках. Месяцы сбора на странице не указаны. Открыта 25.10.2026."
+
+- id: ema-curcumae-addendum-2025
+  type: monograph
+  title: "Addendum to Assessment report on Curcuma longa L., rhizoma"
+  authors: ["European Medicines Agency, Committee on Herbal Medicinal Products (HMPC)"]
+  year: 2025
+  url: "https://www.ema.europa.eu/en/documents/herbal-report/final-addendum-assessment-report-curcuma-longa-l-rhizoma_en.pdf"
+  note: "EMA/HMPC/81467/2025, 19 November 2025. Вывод: «hepatotoxicity is a risk associated with turmeric formulations with high bioavailability and high dosage of curcumin/curcuminoids»; в описанных случаях часто был экстракт перца для лучшего всасывания и/или доза выше, чем в монографии, и одновременный приём других лекарств; причинность не установлена. Предупреждение о взаимодействиях с усилителями всасывания куркумина предложено рассмотреть при следующем пересмотре."
+
+- id: label-rotokan-moskovskaya-ff
+  type: reference_book
+  title: "Ротокан — Московская фармфабрика — официальная инструкция по применению (ЛС-000367)"
+  authors: ["ЗАО «Московская фармацевтическая фабрика»"]
+  publisher: "МЕДИ РУ (инструкция, зарегистрированная Минздравом РФ, по данным ГРЛС)"
+  year: 2010
+  url: "https://medi.ru/instrukciya/rotokan_23092/"
+  note: "Регистрационный номер ЛС-000367. Состав на 1000 мл жидкого экстракта: ромашки цветков 500 г, календулы цветков 250 г, тысячелистника травы 250 г; экстрагент — спирт 40 %. Показания (взрослые): афтозный стоматит, пародонтит, язвенно-некротический гингивостоматит; в комплексной терапии — гастродуодениты, хронические энтериты и колиты. Противопоказания: повышенная чувствительность. Полоскание: 1 ч. л. на стакан тёплой кипячёной воды (при хорошей переносимости до 3 ч. л.), 1–2 мин, 2–3 раза в день, 2–5 дней. Побочные: аллергические реакции. Сведений о беременности, кормлении и детях нет. Год на странице не указан — ориентировочно."

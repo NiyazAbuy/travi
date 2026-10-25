@@ -23,3 +23,12 @@
 - id: malvaceae
   name: Мальвовые
   latin: Malvaceae
+- id: zingiberaceae
+  name: Имбирные
+  latin: Zingiberaceae
+- id: lauraceae
+  name: Лавровые
+  latin: Lauraceae
+- id: myrtaceae
+  name: Миртовые
+  latin: Myrtaceae
