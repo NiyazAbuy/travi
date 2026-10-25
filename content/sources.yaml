@@ -266,6 +266,14 @@
   url: "https://www.bayceer.uni-bayreuth.de/zertifizierung_artenkenntnis/de/allgemein/5001/0/7654/Matricaria_chamomilla.pdf"
   note: "Видовой лист курса полевой ботаники, данные для Средней Европы (Германия). Даты на самом листе нет: 2022 — дата файла (HTTP Last-Modified и CreationDate 16.03.2022). Использованные фразы: «Die Blütezeit reicht von Mai bis August» (период цветения); «Der Blütenboden ist kegelförmig, hohl (!) und ohne Spreublätter»; «Die ähnlichen Arten Tripleurospermum perforatum und Anthemis arvensis besitzen beide zum Unterschied zu M. chamomilla einen markigen Blütenboden» (у двойников цветоложе плотное, мозговидное)."
 
+- id: bayreuth-artenkenntnis-tilia-cordata
+  type: reference_book
+  title: "Tilia cordata, Winter-Linde (Qualifizierung Feldbotanik – Bronze)"
+  authors: ["Ökologisch-Botanischer Garten der Universität Bayreuth (Zertifizierung Artenkenntnis, BayCEER)"]
+  year: 2022
+  url: "https://www.bayceer.uni-bayreuth.de/zertifizierung_artenkenntnis/de/allgemein/5001/0/7722/Tilia_cordata.pdf"
+  note: "Видовой лист курса полевой ботаники, данные для Средней Европы. Использованные фразы: «Die Blütezeit reicht von Juni bis Juli»; «wächst in Aue- und Laubmischwäldern und wird auch im Stadtgebiet oft angepflanzt»; «bis zu 30 m hoch werdender Baum»; «Der Blütenstand ist bis zu 10-blütig mit gelblichweißen Kronblättern»; листья «steif, rundlich, herzförmig … fein gezähnt», снизу «blaugrün» с «rostbraune Bärte» в углах жилок; у T. platyphyllos листья мягче, сильнее опушены, бородки беловатые."
+
 - id: ng-2017-sjw-depression
   type: systematic_review
   title: "Clinical use of Hypericum perforatum (St John's wort) in depression: A meta-analysis"

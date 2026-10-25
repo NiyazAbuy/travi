@@ -55,3 +55,7 @@
   name: Мелкие поверхностные раны
   organ_system: skin
   synonyms: ["мелкие раны", "небольшие раны"]
+- id: mental-stress-mild
+  name: Лёгкие проявления стресса
+  organ_system: nervous
+  synonyms: ["нервное напряжение", "стресс"]
