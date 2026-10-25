@@ -23,3 +23,6 @@
 - id: mucolytic
   name: Муколитическое
   synonyms: []
+- id: sedative
+  name: Успокаивающее
+  synonyms: ["седативное"]

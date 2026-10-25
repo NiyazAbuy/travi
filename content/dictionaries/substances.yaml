@@ -67,3 +67,7 @@
   name: Аукубин
   class: iridoids
   synonyms: []
+- id: valerenic-acids
+  name: Валереновые кислоты (сесквитерпеновые)
+  class: sesquiterpenes
+  synonyms: ["валереновая кислота", "ацетоксивалереновая кислота"]
